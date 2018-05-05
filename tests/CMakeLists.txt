@@ -1,9 +1,9 @@
 set( TEST_NAME btree_test )
 
 add_executable( ${TEST_NAME}
-    #    aes.cpp
-    #api110.cpp
-    #approx.cpp
+    #aes.cpp
+    api110.cpp
+    approx.cpp
     blob_manager.cpp
     btree.cpp
     btree_cursor.cpp
@@ -14,8 +14,8 @@ add_executable( ${TEST_NAME}
     changeset.cpp
     check.cpp
     compression.cpp
-    #cppapi.cpp
-    #crc32.cpp
+    cppapi.cpp
+    crc32.cpp
     cursor1.cpp
     cursor2.cpp
     db.cpp
@@ -28,14 +28,14 @@ add_executable( ${TEST_NAME}
     os.cpp
     page.cpp
     page_manager.cpp
-    #recordnumber.cpp
+    recordnumber.cpp
     #recovery.cpp
-    #remote.cpp
-    #simd.cpp
-    #txn.cpp
-    #txn_cursor.cpp
-    #upscaledb.cpp
-    #uqi.cpp
+    remote.cpp
+    simd.cpp
+    txn.cpp
+    txn_cursor.cpp
+    upscaledb.cpp
+    uqi.cpp
     #zint32.cpp
 )
 

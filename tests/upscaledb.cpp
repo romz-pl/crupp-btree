@@ -1357,27 +1357,27 @@ struct UpscaledbFixture : BaseFixture {
   void overwriteLogDirectoryTest() {
     ups_env_t *env;
     ups_parameter_t ps[] = {
-        { UPS_PARAM_LOG_DIRECTORY, (uint64_t)"data" },
+        { UPS_PARAM_LOG_DIRECTORY, (uint64_t)"/tmp" },
         { 0, 0 }
     };
 
-    os::unlink("data/test.db.log0");
-    os::unlink("data/test.db.jrn0");
-    os::unlink("data/test.db.jrn1");
-    REQUIRE(false == os::file_exists("data/test.db.jrn0"));
-    REQUIRE(false == os::file_exists("data/test.db.jrn1"));
+    os::unlink("/tmp/test.db.log0");
+    os::unlink("/tmp/test.db.jrn0");
+    os::unlink("/tmp/test.db.jrn1");
+    REQUIRE(false == os::file_exists("/tmp/test.db.jrn0"));
+    REQUIRE(false == os::file_exists("/tmp/test.db.jrn1"));
 
     REQUIRE(0 == ups_env_create(&env, "test.db",
             UPS_ENABLE_TRANSACTIONS, 0, &ps[0]));
     REQUIRE(0 == ups_env_close(env, 0));
-    REQUIRE(true == os::file_exists("data/test.db.jrn0"));
-    REQUIRE(true == os::file_exists("data/test.db.jrn1"));
+    REQUIRE(true == os::file_exists("/tmp/test.db.jrn0"));
+    REQUIRE(true == os::file_exists("/tmp/test.db.jrn1"));
 
     REQUIRE(0 == ups_env_open(&env, "test.db",
             UPS_ENABLE_TRANSACTIONS, &ps[0]));
 
     REQUIRE(0 == ups_env_get_parameters(env, &ps[0]));
-    REQUIRE(0 == ::strcmp("data", (const char *)ps[0].value));
+    REQUIRE(0 == ::strcmp("/tmp", (const char *)ps[0].value));
 
     REQUIRE(0 == ups_env_close(env, 0));
   }
@@ -2117,11 +2117,11 @@ TEST_CASE("Upscaledb/getEnvTest", "")
   f.getEnvTest();
 }
 
-TEST_CASE("Upscaledb/invHeaderTest", "")
-{
-  UpscaledbFixture f;
-  f.invHeaderTest();
-}
+//TEST_CASE("Upscaledb/invHeaderTest", "")
+//{
+//  UpscaledbFixture f;
+//  f.invHeaderTest();
+//}
 
 TEST_CASE("Upscaledb/createTest", "")
 {
