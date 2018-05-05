@@ -153,26 +153,23 @@ struct BlockCodecBase {
     throw Exception(UPS_INTERNAL_ERROR);
   }
 
-  static bool insert(Index *index, uint32_t *block_data,
-                  uint32_t key, int *pslot) {
+  static bool insert(Index *, uint32_t *, uint32_t , int *) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
 
-  static bool append(Index *index, uint32_t *block_data,
-                  uint32_t key, int *pslot) {
+  static bool append(Index *, uint32_t *, uint32_t , int *) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
 
   template<typename GrowHandler>
-  static void del(Index *index, uint32_t *block_data, int slot,
-                  GrowHandler *grow_handler) {
+  static void del(Index *, uint32_t *, int , GrowHandler *) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
 
-  static uint32_t select(Index *index, uint32_t *block_data, int slot) {
+  static uint32_t select(Index *, uint32_t *, int ) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
@@ -883,7 +880,7 @@ struct BlockKeyList : BaseKeyList {
 
   // Implementation for insert()
   virtual PBtreeNode::InsertResult insert_impl(size_t node_count,
-                  uint32_t key, uint32_t flags) {
+                  uint32_t key, uint32_t ) {
     int slot = 0;
 
     // perform a linear search through the index and get the block

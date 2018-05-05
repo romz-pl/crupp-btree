@@ -64,7 +64,7 @@ struct BaseNodeImpl {
     }
 
     // Checks this node's integrity
-    virtual void check_integrity(Context *context) const {
+    virtual void check_integrity(Context *) const {
     }
 
     // Returns a copy of a key and stores it in |dest|
@@ -407,12 +407,12 @@ struct BaseNodeImpl {
     }
 
     // Returns the record id
-    uint64_t record_id(Context *context, int slot) const {
+    uint64_t record_id(Context *, int slot) const {
       return records.record_id(slot);
     }
 
     // Sets the record id
-    void set_record_id(Context *context, int slot, uint64_t ptr) {
+    void set_record_id(Context *, int slot, uint64_t ptr) {
       records.set_record_id(slot, ptr);
     }
 

@@ -1420,7 +1420,7 @@ write_record:
 
   // Checks the integrity of this node. Throws an exception if there is a
   // violation.
-  void check_integrity(Context *context, size_t node_count) const {
+  void check_integrity(Context *, size_t node_count) const {
     for (size_t i = 0; i < node_count; i++) {
       uint32_t offset = index_.get_absolute_chunk_offset(i);
       if (ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))

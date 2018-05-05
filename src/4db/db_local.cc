@@ -811,7 +811,7 @@ struct MetricsVisitor : public BtreeVisitor {
   }
 
   // called for each node
-  virtual void operator()(Context *context, BtreeNodeProxy *node) {
+  virtual void operator()(Context *, BtreeNodeProxy *node) {
     if (likely(node->is_leaf()))
       node->fill_metrics(&metrics->btree_leaf_metrics);
     else
@@ -1396,7 +1396,7 @@ LocalDb::cursor_move(Cursor *hcursor, ups_key_t *key,
 }
 
 ups_status_t
-LocalDb::close(uint32_t flags)
+LocalDb::close(uint32_t )
 {
   Context context(lenv(this), 0, this);
 
@@ -1611,7 +1611,7 @@ bail:
 }
 
 ups_status_t
-LocalDb::flush_txn_operation(Context *context, LocalTxn *txn, TxnOperation *op)
+LocalDb::flush_txn_operation(Context *context, LocalTxn *, TxnOperation *op)
 {
   ups_status_t st = 0;
   TxnNode *node = op->node;
