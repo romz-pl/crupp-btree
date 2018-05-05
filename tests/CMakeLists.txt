@@ -16,8 +16,8 @@ add_executable( ${TEST_NAME}
     compression.cpp
     #cppapi.cpp
     #crc32.cpp
-    #cursor1.cpp
-    #cursor2.cpp
+    cursor1.cpp
+    cursor2.cpp
     db.cpp
     device.cpp
     #duplicates.cpp
