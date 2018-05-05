@@ -75,7 +75,7 @@ struct DefaultRecordList : BaseRecordList {
   }
 
   // Opens an existing RecordList
-  void open(uint8_t *ptr, size_t range_size_, size_t node_count) {
+  void open(uint8_t *ptr, size_t range_size_, size_t ) {
     size_t capacity = range_size_ / full_record_size();
     range_size = range_size_;
 
@@ -118,7 +118,7 @@ struct DefaultRecordList : BaseRecordList {
   // allocated by the caller
   void record(Context *context, int slot, ByteArray *arena,
                   ups_record_t *record, uint32_t flags,
-                  int duplicate_index) const {
+                  int ) const {
     bool direct_access = ISSET(flags, UPS_DIRECT_ACCESS);
 
     // the record is stored inline
@@ -225,7 +225,7 @@ struct DefaultRecordList : BaseRecordList {
 
   // Copies |count| records from this[sstart] to dest[dstart]
   void copy_to(int sstart, size_t node_count, DefaultRecordList &dest,
-                  size_t other_count, int dstart) {
+                  size_t , int dstart) {
     if (flags)
       ::memcpy(&dest.flags[dstart], &flags[sstart], (node_count - sstart));
     ::memcpy(&dest.data[dstart], &data[sstart],
@@ -238,7 +238,7 @@ struct DefaultRecordList : BaseRecordList {
   }
 
   // Returns the record id
-  uint64_t record_id(int slot, int duplicate_index = 0) const {
+  uint64_t record_id(int slot, int /*duplicate_index*/ = 0) const {
     return data[slot];
   }
 
@@ -285,7 +285,7 @@ struct DefaultRecordList : BaseRecordList {
   }
 
   // Iterates all records, calls the |visitor| on each
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray*, size_t, uint32_t ) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
@@ -333,7 +333,7 @@ struct DefaultRecordList : BaseRecordList {
   }
 
   // Returns the record flags of a given |slot|
-  uint8_t record_flags(int slot, int duplicate_index = 0)
+  uint8_t record_flags(int slot, int /*duplicate_index*/ = 0)
                   const {
     return flags ? flags[slot] : 0;
   }

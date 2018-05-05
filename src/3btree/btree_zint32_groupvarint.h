@@ -523,7 +523,7 @@ struct GroupVarintCodecImpl : BlockCodecBase<GroupVarintIndex> {
   }
 
   static uint32_t estimate_required_size(GroupVarintIndex *index,
-                        uint8_t *block_data, uint32_t key) {
+                        uint8_t*, uint32_t key) {
     // always add one additional byte for the index
     if (key < (1U << 8))
       return index->used_size() + 2;

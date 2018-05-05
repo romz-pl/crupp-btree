@@ -64,7 +64,7 @@ struct InlineRecordList : BaseRecordList {
   }
 
   // Opens an existing RecordList
-  void open(uint8_t *ptr, size_t range_size_, size_t node_count) {
+  void open(uint8_t *ptr, size_t range_size_, size_t ) {
     range_size = range_size_;
     range_data = ByteArrayView(ptr, range_size_);
   }
@@ -113,7 +113,7 @@ struct InlineRecordList : BaseRecordList {
 
   // Updates the record of a key
   void set_record(Context *, int slot, int, ups_record_t *record,
-                  uint32_t flags, uint32_t * = 0) {
+                  uint32_t , uint32_t * = 0) {
     assert(record->size == _record_size);
     // it's possible that the records have size 0 - then don't copy anything
     if (_record_size)
@@ -121,7 +121,7 @@ struct InlineRecordList : BaseRecordList {
   }
 
   // Iterates all records, calls the |visitor| on each
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray *, size_t node_count, uint32_t start) {
     return std::make_pair(&range_data[_record_size * start], node_count - start);
   }
 
@@ -151,7 +151,7 @@ struct InlineRecordList : BaseRecordList {
 
   // Copies |count| records from this[sstart] to dest[dstart]
   void copy_to(int sstart, size_t node_count, InlineRecordList &dest,
-                  size_t other_count, int dstart) {
+                  size_t , int dstart) {
     ::memcpy(&dest.range_data[_record_size * dstart],
                     &range_data[_record_size * sstart],
                     _record_size * (node_count - sstart));
@@ -167,7 +167,7 @@ struct InlineRecordList : BaseRecordList {
   // Change the capacity; for PAX layouts this just means copying the
   // data from one place to the other
   void change_range_size(size_t node_count, uint8_t *new_data_ptr,
-                  size_t new_range_size, size_t capacity_hint) {
+                  size_t new_range_size, size_t ) {
     ::memmove(new_data_ptr, range_data.data, node_count * _record_size);
     range_data = ByteArrayView(new_data_ptr, new_range_size);
     range_size = new_range_size;

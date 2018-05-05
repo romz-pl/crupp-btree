@@ -179,7 +179,7 @@ struct VariableLengthKeyList : BaseKeyList {
   // this KeyList implementation. For variable length keys, the caller
   // must iterate over all keys. The |scan()| interface is only implemented
   // for PAX style layouts.
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray*, size_t, uint32_t) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }

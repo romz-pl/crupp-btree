@@ -151,7 +151,7 @@ struct BtreeCheckAction
   }
 
   // Verifies a single page
-  void verify_page(Page *parent, Page *leftsib, Page *page, uint32_t level) {
+  void verify_page(Page*, Page *leftsib, Page *page, uint32_t ) {
     LocalDb *db = btree->db();
     LocalEnv *env = (LocalEnv *)db->env;
     BtreeNodeProxy *node = btree->get_node_from_page(page);
@@ -273,7 +273,7 @@ struct BtreeCheckAction
     }
   }
 
-  int compare_keys(LocalDb *db, Page *page, int lhs, int rhs) {
+  int compare_keys(LocalDb*, Page *page, int lhs, int rhs) {
     BtreeNodeProxy *node = btree->get_node_from_page(page);
     ups_key_t key1;
     ups_key_t key2;

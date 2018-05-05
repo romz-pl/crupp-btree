@@ -74,7 +74,7 @@ couple(BtreeCursor *cursor, Context *context)
 
 // move cursor to the very first key
 static inline ups_status_t
-move_first(BtreeCursor *cursor, Context *context, uint32_t flags)
+move_first(BtreeCursor *cursor, Context *context, uint32_t )
 {
   BtreeCursorState &st_ = cursor->st_;
   LocalDb *db = (LocalDb *)st_.parent->db;

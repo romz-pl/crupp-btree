@@ -542,7 +542,7 @@ struct DuplicateRecordList : BaseRecordList {
   }
 
   // Opens an existing RecordList
-  void open(uint8_t *ptr, size_t range_size_, size_t node_count) {
+  void open(uint8_t *ptr, size_t range_size_, size_t ) {
     data_ = ptr;
     range_size = range_size_;
     index_.open(data_, range_size);
@@ -936,7 +936,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
 
   // Checks the integrity of this node. Throws an exception if there is a
   // violation.
-  void check_integrity(Context *context, size_t node_count,
+  void check_integrity(Context *, size_t node_count,
                   bool = false) const {
     for (size_t i = 0; i < node_count; i++) {
       uint32_t offset = index_.get_absolute_chunk_offset(i);
@@ -986,7 +986,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
   }
 
   // Iterates all records, calls the |visitor| on each
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray *, size_t , uint32_t ) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
@@ -1468,7 +1468,7 @@ write_record:
   }
 
   // Iterates all records, calls the |visitor| on each
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray *, size_t , uint32_t ) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
