@@ -405,8 +405,8 @@ struct BlockKeyList : BaseKeyList {
 
   // Change the range size. Called when the range of the btree node is
   // re-distributed between KeyList and RecordList (to avoid splits).
-  void change_range_size(size_t node_count, uint8_t *new_data_ptr,
-                  size_t new_range_size, size_t capacity_hint) {
+  void change_range_size(size_t , uint8_t *new_data_ptr,
+                  size_t new_range_size, size_t ) {
     if (data_ != new_data_ptr) {
       ::memmove(new_data_ptr, data_, used_size());
       data_ = new_data_ptr;
@@ -416,7 +416,7 @@ struct BlockKeyList : BaseKeyList {
 
   // "Vacuumizes" the KeyList; packs all blocks tightly to reduce the size
   // that is consumed by this KeyList.
-  void vacuumize(size_t node_count, bool force) {
+  void vacuumize(size_t node_count, bool ) {
     assert(check_integrity(0, node_count));
     assert(block_count() > 0);
 
@@ -499,14 +499,14 @@ struct BlockKeyList : BaseKeyList {
 
   // Returns the size of a key; only required to appease the compiler,
   // but never called
-  size_t key_size(int slot) const {
+  size_t key_size(int ) const {
     assert(!"shouldn't be here");
     return sizeof(uint32_t);
   }
 
   // Returns a pointer to the key's data; only required to appease the
   // compiler, but never called
-  uint8_t *key_data(int slot) {
+  uint8_t *key_data(int ) {
     assert(!"shouldn't be here");
     return 0;
   }
@@ -576,8 +576,8 @@ struct BlockKeyList : BaseKeyList {
 
   // Searches the node for the key and returns the slot of this key
   template<typename Cmp>
-  int find_lower_bound(Context *, size_t node_count, const ups_key_t *hkey,
-                  Cmp &comparator, int *pcmp) {
+  int find_lower_bound(Context *, size_t , const ups_key_t *hkey,
+                  Cmp &, int *pcmp) {
     assert(block_count() > 0);
 
     *pcmp = 0;
@@ -610,8 +610,7 @@ struct BlockKeyList : BaseKeyList {
   // Inserts a key
   template<typename Cmp>
   PBtreeNode::InsertResult insert(Context *, size_t node_count,
-                  const ups_key_t *hkey, uint32_t flags, Cmp &comparator,
-                  int /* unused */ slot) {
+                  const ups_key_t *hkey, uint32_t flags, Cmp &, int) {
     assert(check_integrity(0, node_count));
     assert(hkey->size == sizeof(uint32_t));
 

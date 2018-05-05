@@ -125,7 +125,7 @@ BtreeStatistics::find_hints(uint32_t flags)
 BtreeStatistics::InsertHints
 BtreeStatistics::insert_hints(uint32_t flags)
 {
-  InsertHints hints = {flags, flags, 0, 0, 0, 0, 0};
+  InsertHints hints(flags, flags, 0, nullptr, 0, 0, 0);
 
   /* if the previous insert-operation replaced the upper bound (or
    * lower bound) key then it was actually an append (or prepend) operation.

@@ -332,7 +332,7 @@ struct BaseNodeImpl {
 
     // Splits a node and moves parts of the current node into |other|, starting
     // at the |pivot| slot
-    void split(Context *context, BaseNodeImpl<KeyList, RecordList> *other,
+    void split(Context *, BaseNodeImpl<KeyList, RecordList> *other,
                     int pivot) {
       size_t node_length = node->length();
       size_t other_node_count = other->node->length();
@@ -365,7 +365,7 @@ struct BaseNodeImpl {
     }
 
     // Merges this node with the |other| node
-    void merge_from(Context *context,
+    void merge_from(Context *,
                     BaseNodeImpl<KeyList, RecordList> *other) {
       size_t node_length = node->length();
       size_t other_node_count = other->node->length();
@@ -381,7 +381,7 @@ struct BaseNodeImpl {
 
     // Reorganize this node; re-arranges capacities of KeyList and RecordList
     // in order to free space and avoid splits
-    bool reorganize(Context *context, const ups_key_t *key) const {
+    bool reorganize(Context *, const ups_key_t *) const {
       return false;
     }
 

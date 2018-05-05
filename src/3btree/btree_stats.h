@@ -63,6 +63,32 @@ struct BtreeStatistics {
   };
 
   struct InsertHints {
+
+    InsertHints()
+        : original_flags( 0 )
+        , flags( 0)
+        , leaf_page_addr( 0 )
+        , processed_leaf_page( nullptr )
+        , processed_slot( 0 )
+        , append_count( 0 )
+        , prepend_count( 0 )
+    {
+
+    }
+
+    InsertHints(uint32_t _original_flags, uint32_t _flags, uint64_t _leaf_page_addr, Page *_processed_leaf_page,
+                uint16_t _processed_slot, size_t _append_count, size_t _prepend_count)
+        : original_flags( _original_flags )
+        , flags( _flags )
+        , leaf_page_addr( _leaf_page_addr )
+        , processed_leaf_page( _processed_leaf_page )
+        , processed_slot( _processed_slot )
+        , append_count( _append_count )
+        , prepend_count( _prepend_count )
+    {
+
+    }
+
     // the original flags of ups_insert
     uint32_t original_flags;
 

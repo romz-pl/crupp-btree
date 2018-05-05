@@ -68,7 +68,7 @@ remove_cursor_from_op(TxnCursor *cursor, TxnOperation *op)
 
 static inline ups_status_t
 move_top_in_node(TxnCursor *cursor, TxnNode *node, bool ignore_conflicts,
-                uint32_t flags)
+                uint32_t )
 {
   TxnCursorState &state_ = cursor->state_;
 

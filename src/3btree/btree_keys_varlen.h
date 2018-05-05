@@ -209,8 +209,8 @@ struct VariableLengthKeyList : BaseKeyList {
   // node (otherwise the caller would have split the node).
   template<typename Cmp>
   PBtreeNode::InsertResult insert(Context *context, size_t node_count,
-                              const ups_key_t *key, uint32_t flags,
-                              Cmp &comparator, int slot) {
+                              const ups_key_t *key, uint32_t ,
+                              Cmp &, int slot) {
     _index.insert(node_count, slot);
 
     // now there's one additional slot

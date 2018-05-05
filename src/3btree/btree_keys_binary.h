@@ -125,7 +125,7 @@ struct BinaryKeyList : BaseKeyList {
   // Inserts a key
   template<typename Cmp>
   PBtreeNode::InsertResult insert(Context *, size_t node_count,
-                  const ups_key_t *key, uint32_t flags, Cmp &, int slot) {
+                  const ups_key_t *key, uint32_t , Cmp &, int slot) {
     if (node_count > (size_t)slot)
       ::memmove(&_data[(slot + 1) * _fixed_key_size],
                       &_data[slot * _fixed_key_size],

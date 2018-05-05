@@ -233,7 +233,7 @@ struct VarbyteCodecImpl : BlockCodecBase<VarbyteIndex> {
 
   template<typename GrowHandler>
   static void del(VarbyteIndex *index, uint32_t *block_data, int slot,
-                  GrowHandler *unused) {
+                  GrowHandler *) {
     assert(index->key_count() > 1);
 
     uint8_t *data = (uint8_t *)block_data;
