@@ -155,8 +155,8 @@ struct UpscaledbFixture : BaseFixture {
   }
 
   void readOnlyTest() {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     ups_cursor_t *cursor;
 
     close();
@@ -232,8 +232,8 @@ struct UpscaledbFixture : BaseFixture {
   }
 
   void findTest() {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     REQUIRE(UPS_INV_PARAMETER == ups_db_find(0, 0, &key, &rec, 0));
     REQUIRE(UPS_INV_PARAMETER == ups_db_find(db, 0, 0, &rec, 0));
@@ -242,8 +242,8 @@ struct UpscaledbFixture : BaseFixture {
   }
 
   void findEmptyRecordTest() {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
@@ -865,8 +865,8 @@ struct UpscaledbFixture : BaseFixture {
   }
 
   void insertTest() {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     REQUIRE(UPS_INV_PARAMETER == ups_db_insert(0, 0, &key, &rec, 0));
     key.flags = 0x13;
@@ -899,8 +899,8 @@ struct UpscaledbFixture : BaseFixture {
   }
 
   void insertDuplicateTest() {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     REQUIRE(UPS_INV_PARAMETER ==
         ups_db_insert(db, 0, &key, &rec, UPS_DUPLICATE|UPS_OVERWRITE));
@@ -916,7 +916,7 @@ struct UpscaledbFixture : BaseFixture {
   void negativeInsertBigKeyTest() {
     char buffer[0xff] = {0};
     ups_key_t key = ups_make_key(buffer, sizeof(buffer));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     ups_parameter_t p[] = {
         { UPS_PARAM_KEY_SIZE, 10 },
@@ -935,7 +935,7 @@ struct UpscaledbFixture : BaseFixture {
   void insertBigKeyTest() {
     char buffer[0xffff] = {0};
     ups_key_t key = ups_make_key(buffer, sizeof(buffer));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     close();
     require_create(0);
@@ -959,7 +959,7 @@ struct UpscaledbFixture : BaseFixture {
   }
 
   void eraseTest() {
-    ups_key_t key = {0};
+    ups_key_t key;
 
     REQUIRE(UPS_INV_PARAMETER == ups_db_erase(0, 0, &key, 0));
     REQUIRE(UPS_INV_PARAMETER == ups_db_erase(db, 0, 0, 0));
@@ -972,7 +972,7 @@ struct UpscaledbFixture : BaseFixture {
 
     int value = 1;
     ups_key_t key = ups_make_key(&value, sizeof(value));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     close();
     REQUIRE(0 == ups_env_create(&env1, "test.db", 0, 0664, 0));
@@ -1045,7 +1045,7 @@ struct UpscaledbFixture : BaseFixture {
 
   void cursorMoveTest() {
     ups_cursor_t *cursor;
-    ups_key_t key = {0};
+    ups_key_t key;
 
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
@@ -1073,7 +1073,7 @@ struct UpscaledbFixture : BaseFixture {
 
   void cursorFindTest() {
     ups_cursor_t *cursor;
-    ups_key_t key = {0};
+    ups_key_t key;
 
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
@@ -1084,8 +1084,8 @@ struct UpscaledbFixture : BaseFixture {
 
   void cursorInsertTest() {
     ups_cursor_t *cursor;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
@@ -1106,7 +1106,7 @@ struct UpscaledbFixture : BaseFixture {
     ups_cursor_t *cursor;
     int value = 0;
     ups_key_t key = ups_make_key(&value, sizeof(value));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     value = 1;
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
@@ -1123,7 +1123,7 @@ struct UpscaledbFixture : BaseFixture {
   void replaceKeyTest() {
     /* in-memory */
     char buffer1[32] = {0}, buffer2[7] = {0};
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record(buffer1, sizeof(buffer1));
 
     /* insert a big blob */
@@ -1225,7 +1225,7 @@ struct UpscaledbFixture : BaseFixture {
 
     for (unsigned i = 0; i < 10; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
     }
 
@@ -1249,7 +1249,7 @@ struct UpscaledbFixture : BaseFixture {
     }
     for (unsigned i = 0; i < 100; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
       REQUIRE((unsigned)key.size == rec.size);
       REQUIRE(0 == ::memcmp(key.data, rec.data, key.size));
@@ -1264,7 +1264,7 @@ struct UpscaledbFixture : BaseFixture {
     }
     for (int i = 100; i >= 0; i--) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
       REQUIRE((unsigned)key.size == rec.size);
       REQUIRE(0 == ::memcmp(key.data, rec.data, key.size));
@@ -1282,7 +1282,7 @@ struct UpscaledbFixture : BaseFixture {
     }
     for (unsigned i = 0; i < 10000; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
       REQUIRE((unsigned)key.size == rec.size);
       REQUIRE(0 == ::memcmp(key.data, rec.data, key.size));
@@ -1300,7 +1300,7 @@ struct UpscaledbFixture : BaseFixture {
     }
     for (unsigned i = 1; i <= 10; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
       REQUIRE((unsigned)key.size == rec.size);
       REQUIRE(0 == ::memcmp(key.data, rec.data, key.size));
@@ -1341,7 +1341,7 @@ struct UpscaledbFixture : BaseFixture {
   }
 
   void unlimitedCacheTest() {
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record((void *)"hello", 6);
 
     REQUIRE(0 == ups_env_create(&env, "test.db", UPS_CACHE_UNLIMITED, 0, 0));
@@ -1423,7 +1423,7 @@ struct UpscaledbFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
     // Variable size keys are not allowed
-    ups_record_t rec = {0};
+    ups_record_t rec;
     ups_key_t key = ups_make_key((void *)"12345678", 4);
     REQUIRE(UPS_INV_KEY_SIZE == ups_db_insert(db, 0, &key, &rec, 0));
     rec.size = 22;
@@ -1468,7 +1468,7 @@ struct UpscaledbFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
     // Variable size records are not allowed
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record((void *)"12345678", 8);
     REQUIRE(UPS_INV_RECORD_SIZE == ups_db_insert(db, 0, &key, &rec, 0));
     rec.size = 4;
@@ -1512,8 +1512,8 @@ struct UpscaledbFixture : BaseFixture {
 
     // insert a key
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     REQUIRE(0 == ups_db_insert(db, txn, &key, &rec, 0));
     REQUIRE(0 == ups_txn_commit(txn, 0));
 
@@ -1538,7 +1538,7 @@ struct UpscaledbFixture : BaseFixture {
 
     char buffer[32] = {0};
     ups_key_t key = ups_make_key(buffer, sizeof(buffer));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     while (true) {
       *(int *)&buffer[0] += 1; // make key unique
@@ -1563,7 +1563,7 @@ struct UpscaledbFixture : BaseFixture {
 
     char buffer[32] = {0};
     ups_key_t key = ups_make_key(buffer, sizeof(buffer));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     while (true) {
       *(int *)&buffer[0] += 1; // make key unique
@@ -1592,8 +1592,8 @@ struct UpscaledbFixture : BaseFixture {
     close();
     require_create(inmemory ? UPS_IN_MEMORY : 0, &params[0]);
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     // first insert must succeed
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
@@ -1673,7 +1673,7 @@ struct UpscaledbFixture : BaseFixture {
 
     for (int i = 0; i < 100; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
     }
 
@@ -1758,7 +1758,7 @@ struct UpscaledbFixture : BaseFixture {
     REQUIRE(0 == ups_db_insert(db, txn, &key2, &rec, 0));
     REQUIRE(0 == ups_txn_commit(txn, 0));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_cursor_t *cursor;
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
     REQUIRE(0 == ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_FIRST));
@@ -1797,7 +1797,7 @@ struct UpscaledbFixture : BaseFixture {
 
     for (int i = 0; i < 1000; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
       T t = (T)i;
       REQUIRE(sizeof(T) == rec.size);
@@ -1811,7 +1811,7 @@ struct UpscaledbFixture : BaseFixture {
 
     for (int i = 0; i < 1000; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(UPS_KEY_NOT_FOUND == ups_db_find(db, 0, &key, &rec, 0));
     }
   }
@@ -1853,8 +1853,8 @@ struct UpscaledbFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
     for (int i = 0; i < 500; i++) {
-      ups_key_t key = {0};
-      ups_record_t rec = {0};
+      ups_key_t key;
+      ups_record_t rec;
       REQUIRE(0 == ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT));
       REQUIRE(sizeof(i) == key.size);
       REQUIRE(i == *(int *)key.data);
@@ -2009,11 +2009,11 @@ struct UpscaledbFixture : BaseFixture {
     ops.push_back({UPS_OP_INSERT, key3, rec3, 0});
 
     ups_key_t key4 = ups_make_key(&i2, sizeof(i2));
-    ups_record_t rec4 = {0};
+    ups_record_t rec4;
     ops.push_back({UPS_OP_FIND, key4, rec4, 0});
     ops.push_back({UPS_OP_ERASE, key4, rec4, 0});
 
-    ups_record_t rec5 = {0};
+    ups_record_t rec5;
     ops.push_back({UPS_OP_FIND, key4, rec5, 0});
 
     REQUIRE(0 == ups_db_bulk_operations(db, 0, ops.data(), ops.size(), 0));
@@ -2067,12 +2067,12 @@ struct UpscaledbFixture : BaseFixture {
     int i4 = i2;
     ups_key_t key4 = ups_make_key(&i4, sizeof(i4));
     key4.flags = UPS_KEY_USER_ALLOC;
-    ups_record_t rec4 = {0};
+    ups_record_t rec4;
     ops.push_back({UPS_OP_FIND, key4, rec4, UPS_FIND_LT_MATCH});
 
     int i5 = i2;
     ups_key_t key5 = ups_make_key(&i5, sizeof(i5));
-    ups_record_t rec5 = {0};
+    ups_record_t rec5;
     ops.push_back({UPS_OP_FIND, key5, rec5, UPS_FIND_GT_MATCH});
 
     REQUIRE(0 == ups_db_bulk_operations(db, 0, ops.data(), ops.size(), 0));

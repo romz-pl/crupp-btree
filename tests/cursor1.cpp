@@ -71,7 +71,7 @@ struct BaseCursorFixture : BaseFixture {
     ups_cursor_t *c;
 
     char data[16];
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record(data, sizeof(data));
 
     REQUIRE(0 == ups_cursor_create(&c, db, m_txn, 0));
@@ -491,7 +491,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void eraseInTxnOverwrittenKeyTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     /* insert a key into the Txn */
     REQUIRE(0 == ups_cursor_insert(m_cursor, &key, &rec, 0));
@@ -509,7 +509,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void eraseInTxnOverwrittenFindKeyTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     REQUIRE(UPS_CURSOR_IS_NIL == ups_cursor_erase(m_cursor, 0));
 
@@ -593,8 +593,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void moveFirstInEmptyTxnTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the btree */
     REQUIRE(0 == btree_index()->insert(context.get(), 0, &key, &rec, 0));
@@ -610,8 +610,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     const char *ext = "123456789012345678901234567890";
     ups_key_t key = ups_make_key((void *)ext, 31);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the btree */
     REQUIRE(0 == btree_index()->insert(context.get(), 0, &key, &rec, 0));
@@ -626,8 +626,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void moveFirstInTxnTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the Txn */
     REQUIRE(0 == ups_cursor_insert(m_cursor, &key, &rec, 0));
@@ -642,8 +642,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     const char *ext = "123456789012345678901234567890";
     ups_key_t key = ups_make_key((void *)ext, 31);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2 ;
+    ups_record_t rec2;
 
     /* insert a key into the Txn */
     REQUIRE(0 == ups_cursor_insert(m_cursor, &key, &rec, 0));
@@ -657,8 +657,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void moveFirstIdenticalTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the btree */
     REQUIRE(0 == btree_index()->insert(context.get(), 0, &key, &rec, 0));
@@ -678,8 +678,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstSmallerInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -701,8 +701,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstSmallerInTxnExtendedKeyTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     const char *ext1 = "111111111111111111111111111111";
     const char *ext2 = "222222222222222222222222222222";
     key.size = 31;
@@ -726,8 +726,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstSmallerInBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -749,8 +749,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstSmallerInBtreeExtendedKeyTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     const char *ext1 = "111111111111111111111111111111";
     const char *ext2 = "222222222222222222222222222222";
     key.size = 31;
@@ -774,8 +774,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstErasedInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -797,8 +797,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstErasedInTxnExtendedKeyTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     const char *ext1 = "111111111111111111111111111111";
     key.size = 31;
     rec.size = 6;
@@ -821,8 +821,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstErasedInsertedInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -847,8 +847,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveFirstSmallerInBtreeErasedInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -879,8 +879,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void moveLastInEmptyTxnTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the btree */
     REQUIRE(0 == btree_index()->insert(context.get(), 0, &key, &rec, 0));
@@ -896,8 +896,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     const char *ext = "123456789012345678901234567890";
     ups_key_t key = ups_make_key((void *)ext, 31);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the btree */
     REQUIRE(0 == btree_index()->insert(context.get(), 0, &key, &rec, 0));
@@ -912,8 +912,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void moveLastInTxnTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the Txn */
     REQUIRE(0 == ups_cursor_insert(m_cursor, &key, &rec, 0));
@@ -928,8 +928,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     const char *ext = "123456789012345678901234567890";
     ups_key_t key = ups_make_key((void *)ext, 31);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the Txn */
     REQUIRE(0 == ups_cursor_insert(m_cursor, &key, &rec, 0));
@@ -943,8 +943,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   void moveLastIdenticalTest() {
     ups_key_t key = ups_make_key((void *)"12345", 6);
     ups_record_t rec = ups_make_record((void *)"abcde", 6);
-    ups_key_t key2 = {0};
-    ups_record_t rec2 = {0};
+    ups_key_t key2;
+    ups_record_t rec2;
 
     /* insert a key into the btree */
     REQUIRE(0 == btree_index()->insert(context.get(), 0, &key, &rec, 0));
@@ -963,8 +963,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastSmallerInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -986,8 +986,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastSmallerInTxnExtendedKeyTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     const char *ext1 = "111111111111111111111111111111";
     const char *ext2 = "222222222222222222222222222222";
     key.size = 31;
@@ -1011,8 +1011,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastSmallerInBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1034,8 +1034,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastSmallerInBtreeExtendedKeyTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     const char *ext1 = "111111111111111111111111111111";
     const char *ext2 = "222222222222222222222222222222";
     key.size = 31;
@@ -1059,8 +1059,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastErasedInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1082,8 +1082,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastErasedInTxnExtendedKeyTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     const char *ext1 = "111111111111111111111111111111";
     key.size = 31;
     rec.size = 6;
@@ -1106,8 +1106,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastErasedInsertedInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1133,8 +1133,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveLastSmallerInBtreeErasedInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1161,8 +1161,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextInEmptyTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1195,8 +1195,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextInEmptyBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1226,8 +1226,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextSmallerInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1253,8 +1253,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextSmallerInBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1280,8 +1280,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextSmallerInTxnSequenceTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1333,8 +1333,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextSmallerInBtreeSequenceTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1386,8 +1386,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextOverErasedItemTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1421,8 +1421,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextOverIdenticalItemsTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1468,8 +1468,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveBtreeThenNextOverIdenticalItemsTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1523,8 +1523,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveTxnThenNextOverIdenticalItemsTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1577,8 +1577,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextOverIdenticalItemsThenBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1632,8 +1632,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveNextOverIdenticalItemsThenTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1718,8 +1718,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
 #define BTREE 1
 #define TXN   2
   ups_status_t compare(const char *key, const char *rec, int where) {
-    ups_key_t k = {0};
-    ups_record_t r = {0};
+    ups_key_t k;
+    ups_record_t r;
     ups_status_t st = ups_cursor_move(m_cursor, &k, &r, UPS_CURSOR_NEXT);
     if (st)
       return st;
@@ -1739,8 +1739,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   ups_status_t comparePrev(const char *key, const char *rec, int where) {
-    ups_key_t k = {0};
-    ups_record_t r = {0};
+    ups_key_t k;
+    ups_record_t r;
     ups_status_t st = ups_cursor_move(m_cursor, &k, &r, UPS_CURSOR_PREVIOUS);
     if (st)
       return st;
@@ -1871,8 +1871,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousInEmptyTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1905,8 +1905,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousInEmptyBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1936,8 +1936,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousSmallerInTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1963,8 +1963,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousSmallerInBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -1990,8 +1990,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousSmallerInTxnSequenceTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2043,8 +2043,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousSmallerInBtreeSequenceTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2096,8 +2096,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousOverErasedItemTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2131,8 +2131,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousOverIdenticalItemsTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2178,8 +2178,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveBtreeThenPreviousOverIdenticalItemsTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2237,8 +2237,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void moveTxnThenPreviousOverIdenticalItemsTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2298,8 +2298,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousOverIdenticalItemsThenBtreeTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2360,8 +2360,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
   }
 
   void movePreviousOverIdenticalItemsThenTxnTest() {
-    ups_key_t key = {0}, key2 = {0};
-    ups_record_t rec = {0}, rec2 = {0};
+    ups_key_t key, key2;
+    ups_record_t rec, rec2;
     key.size = 6;
     rec.size = 6;
 
@@ -2707,7 +2707,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("44444", "aaaad"));
     REQUIRE(0 == insertBtree("55555", "aaaae"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2726,7 +2726,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("66666", "aaaaf"));
     REQUIRE(0 == insertTxn  ("77777", "aaaag"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"44444";
     REQUIRE(0 ==
@@ -2744,7 +2744,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("44444", "aaaad"));
     REQUIRE(0 == insertBtree("55555", "aaaae"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2762,7 +2762,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertTxn  ("44444", "aaaae"));
     REQUIRE(0 == insertTxn  ("55555", "aaaaf"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2780,7 +2780,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("44444", "aaaae"));
     REQUIRE(0 == insertBtree("55555", "aaaaf"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2799,7 +2799,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("66666", "aaaaf"));
     REQUIRE(0 == insertTxn  ("77777", "aaaag"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"44444";
     REQUIRE(0 ==
@@ -2818,7 +2818,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("44444", "aaaae"));
     REQUIRE(0 == insertBtree("55555", "aaaaf"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2836,7 +2836,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("44444", "aaaae"));
     REQUIRE(0 == insertBtree("55555", "aaaaf"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2853,7 +2853,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertTxn  ("44444", "aaaad"));
     REQUIRE(0 == insertTxn  ("55555", "aaaae"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2870,7 +2870,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertTxn  ("44444", "aaaad"));
     REQUIRE(0 == insertTxn  ("55555", "aaaae"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2889,7 +2889,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertTxn  ("66666", "aaaaf"));
     REQUIRE(0 == insertBtree("77777", "aaaag"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"44444";
     REQUIRE(0 ==
@@ -2909,7 +2909,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertTxn  ("66666", "aaaaf"));
     REQUIRE(0 == insertBtree("77777", "aaaag"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"44444";
     REQUIRE(0 ==
@@ -2928,7 +2928,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertBtree("44444", "aaaae"));
     REQUIRE(0 == insertBtree("55555", "aaaaf"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2945,10 +2945,10 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 == insertTxn  ("44444", "aaaad"));
     REQUIRE(0 == insertTxn  ("55555", "aaaae"));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"33333";
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 6;
     rec.data = (void *)"33333";
     REQUIRE(0 ==
@@ -2973,7 +2973,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 ==
           ups_cursor_clone(m_cursor, &cursor2));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(0 ==
@@ -2995,12 +2995,12 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 ==
           ups_cursor_clone(m_cursor, &cursor2));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(0 ==
           ups_cursor_find(m_cursor, &key, 0, 0));
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 6;
     rec.data = (void *)"11111";
     REQUIRE(0 ==
@@ -3022,10 +3022,10 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 ==
           ups_cursor_create(&cursor3, db, m_txn, 0));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"11111";
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 6;
     rec.data = (void *)"33333";
     REQUIRE(0 ==
@@ -3051,7 +3051,7 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 ==
           ups_cursor_clone(m_cursor, &cursor2));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(0 ==
@@ -3081,8 +3081,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
     REQUIRE(0 ==
           ups_cursor_create(&cursor2, db, txn2, 0));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     key.size = 6;
     key.data = (void *)"11112";
     REQUIRE(0 ==
@@ -3109,8 +3109,8 @@ struct LongTxnCursorFixture : public BaseCursorFixture {
 
   ups_status_t move(const char *key, const char *rec, uint32_t flags,
         ups_cursor_t *cursor = 0) {
-    ups_key_t k = {0};
-    ups_record_t r = {0};
+    ups_key_t k;
+    ups_record_t r;
     ups_status_t st;
 
     if (!cursor)

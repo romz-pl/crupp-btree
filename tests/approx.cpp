@@ -80,7 +80,7 @@ struct ApproxFixture : BaseFixture {
   ups_status_t find(uint32_t flags, const char *search, const char *expected) {
     ups_key_t k = ups_make_key((void *)search,
                     (uint16_t)(::strlen(search) + 1));
-    ups_record_t r = {0};
+    ups_record_t r;
 
     ups_status_t st = ups_db_find(db, txn, &k, &r, flags);
     if (st)
@@ -463,7 +463,7 @@ struct ApproxFixture : BaseFixture {
     char keydata[41];
     ::memcpy(&keydata[0], "10", 3);
     ups_key_t key = ups_make_key((void *)keydata, sizeof(keydata));
-    ups_record_t rec = {0};
+    ups_record_t rec;
     REQUIRE(0 == ups_db_find(db, 0, &key, &rec, UPS_FIND_GEQ_MATCH));
     REQUIRE(0 == ::strcmp((char *)key.data, "11"));
     REQUIRE(0 == ::strcmp((char *)rec.data, "11"));
@@ -474,7 +474,7 @@ struct ApproxFixture : BaseFixture {
     REQUIRE(0 == eraseTxn("aa"));
 
     ups_key_t key = ups_make_key((void *)"aa", 3);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     REQUIRE(0 == ups_db_find(db, txn, &key, &rec, UPS_FIND_GEQ_MATCH));
   }
@@ -515,8 +515,8 @@ struct ApproxFixture : BaseFixture {
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c, db, txn, 0));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     REQUIRE(0 == ups_cursor_find(c, &key1, &rec, UPS_FIND_GEQ_MATCH));
     REQUIRE(1u == *(unsigned long long *)key1.data);
@@ -587,8 +587,8 @@ struct ApproxFixture : BaseFixture {
     close();
     require_create(0, envparam, UPS_FORCE_RECORDS_INLINE, &dbparam[0]);
 
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     std::vector<uint8_t> rec(32);
     DbProxy dbp(db);
 
@@ -602,10 +602,10 @@ struct ApproxFixture : BaseFixture {
                     == ups_db_find(db, 0, &key, &record, UPS_FIND_LT_MATCH));
 
     for (int i = 1; i < 5000; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i - 1, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_LT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -637,8 +637,8 @@ struct ApproxFixture : BaseFixture {
     close();
     require_create(0, envparam, UPS_FORCE_RECORDS_INLINE, &dbparam[0]);
 
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     std::vector<uint8_t> rec(32);
     DbProxy dbp(db);
 
@@ -650,7 +650,7 @@ struct ApproxFixture : BaseFixture {
     for (int i = 0; i < 10000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i & 1 ? i - 1 : i, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_LEQ_MATCH));
       REQUIRE(key2.size == key.size);
@@ -682,8 +682,8 @@ struct ApproxFixture : BaseFixture {
     close();
     require_create(0, envparam, UPS_FORCE_RECORDS_INLINE, &dbparam[0]);
 
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     std::vector<uint8_t> rec(32);
     DbProxy dbp(db);
 
@@ -695,7 +695,7 @@ struct ApproxFixture : BaseFixture {
     for (int i = 0; i < 5000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i + 1, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_GT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -731,8 +731,8 @@ struct ApproxFixture : BaseFixture {
     close();
     require_create(0, envparam, UPS_FORCE_RECORDS_INLINE, &dbparam[0]);
 
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     std::vector<uint8_t> rec(32);
     DbProxy dbp(db);
 
@@ -744,7 +744,7 @@ struct ApproxFixture : BaseFixture {
     for (int i = 0; i < 10000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i & 1 ? i + 1 : i, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_GEQ_MATCH));
       REQUIRE(key2.size == key.size);
@@ -780,7 +780,7 @@ struct ApproxFixture : BaseFixture {
     require_create(UPS_ENABLE_TRANSACTIONS, envparam,
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
-    ups_key_t key = {0};
+    ups_key_t key;
     std::vector<uint8_t> rec(32);
     DbProxy dbp(db);
 
@@ -790,14 +790,14 @@ struct ApproxFixture : BaseFixture {
     }
 
     gen.generate(0, &key);
-    ups_record_t record = {0};
+    ups_record_t record;
     REQUIRE(UPS_KEY_NOT_FOUND
                     == ups_db_find(db, txn, &key, &record, UPS_FIND_LT_MATCH));
 
     for (int i = 1; i < 5000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i - 1, &key2);
       REQUIRE(0 == ups_db_find(db, txn, &key, &record, UPS_FIND_LT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -831,7 +831,7 @@ struct ApproxFixture : BaseFixture {
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i < 10000; i += 2) {
@@ -839,11 +839,11 @@ struct ApproxFixture : BaseFixture {
       dbp.require_insert(txn, &key, rec);
     }
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 10000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i & 1 ? i - 1 : i, &key2);
       REQUIRE(0 == ups_db_find(db, txn, &key, &record, UPS_FIND_LEQ_MATCH));
       REQUIRE(key2.size == key.size);
@@ -877,7 +877,7 @@ struct ApproxFixture : BaseFixture {
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 1; i <= 5000; i++) {
@@ -885,11 +885,11 @@ struct ApproxFixture : BaseFixture {
       dbp.require_insert(txn, &key, rec);
     }
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 5000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i + 1, &key2);
       REQUIRE(0 == ups_db_find(db, txn, &key, &record, UPS_FIND_GT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -927,7 +927,7 @@ struct ApproxFixture : BaseFixture {
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i <= 10000; i += 2) {
@@ -935,11 +935,11 @@ struct ApproxFixture : BaseFixture {
       dbp.require_insert(txn, &key, rec);
     }
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 10000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i & 1 ? i + 1 : i, &key2);
       REQUIRE(0 == ups_db_find(db, txn, &key, &record, UPS_FIND_GEQ_MATCH));
       REQUIRE(key2.size == key.size);
@@ -976,7 +976,7 @@ struct ApproxFixture : BaseFixture {
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i < 5000; i++) {
@@ -984,7 +984,7 @@ struct ApproxFixture : BaseFixture {
       dbp.require_insert(&key, rec);
     }
 
-    ups_record_t record = {0};
+    ups_record_t record;
     gen.generate(0, &key);
     REQUIRE(UPS_KEY_NOT_FOUND
                     == ups_db_find(db, 0, &key, &record, UPS_FIND_LT_MATCH));
@@ -992,7 +992,7 @@ struct ApproxFixture : BaseFixture {
     for (int i = 1; i < 5000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i - 1, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_LT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -1026,7 +1026,7 @@ struct ApproxFixture : BaseFixture {
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i < 10000; i += 2) {
@@ -1034,11 +1034,11 @@ struct ApproxFixture : BaseFixture {
       dbp.require_insert(&key, rec);
     }
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 10000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i & 1 ? i - 1 : i, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_LEQ_MATCH));
       REQUIRE(key2.size == key.size);
@@ -1072,7 +1072,7 @@ struct ApproxFixture : BaseFixture {
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 1; i <= 5000; i++) {
@@ -1080,11 +1080,11 @@ struct ApproxFixture : BaseFixture {
       dbp.require_insert(&key, rec);
     }
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 5000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i + 1, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_GT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -1122,7 +1122,7 @@ struct ApproxFixture : BaseFixture {
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i <= 10000; i += 2) {
@@ -1130,11 +1130,11 @@ struct ApproxFixture : BaseFixture {
       dbp.require_insert(&key, rec);
     }
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 10000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i & 1 ? i + 1 : i, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_GEQ_MATCH));
       REQUIRE(key2.size == key.size);
@@ -1170,7 +1170,7 @@ struct ApproxFixture : BaseFixture {
     require_create(UPS_ENABLE_TRANSACTIONS, envparam,
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i < 5000; i += 4) {
@@ -1191,7 +1191,7 @@ struct ApproxFixture : BaseFixture {
 
     txn = 0;
 
-    ups_record_t record = {0};
+    ups_record_t record;
     gen.generate(0, &key);
     REQUIRE(UPS_KEY_NOT_FOUND
                     == ups_db_find(db, 0, &key, &record, UPS_FIND_LT_MATCH));
@@ -1199,7 +1199,7 @@ struct ApproxFixture : BaseFixture {
     for (int i = 1; i < 5000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i - 1, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_LT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -1232,7 +1232,7 @@ struct ApproxFixture : BaseFixture {
     require_create(UPS_ENABLE_TRANSACTIONS, envparam,
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 1; i <= 5000; i += 4) {
@@ -1252,11 +1252,11 @@ struct ApproxFixture : BaseFixture {
     }
     txn = 0;
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 5000; i++) {
       gen.generate(i, &key);
 
-      ups_key_t key2 = {0};
+      ups_key_t key2;
       gen2.generate(i + 1, &key2);
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_GT_MATCH));
       REQUIRE(key2.size == key.size);
@@ -1293,7 +1293,7 @@ struct ApproxFixture : BaseFixture {
     require_create(UPS_ENABLE_TRANSACTIONS, envparam,
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i < 10000; i += 5) {
@@ -1315,9 +1315,9 @@ struct ApproxFixture : BaseFixture {
     }
     txn = 0;
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 10000; i += 5) {
-      ups_key_t key2 = {0};
+      ups_key_t key2;
 
       gen.generate(i, &key);
       gen2.generate(i, &key2);
@@ -1376,7 +1376,7 @@ struct ApproxFixture : BaseFixture {
     require_create(UPS_ENABLE_TRANSACTIONS, envparam,
                     UPS_ENABLE_DUPLICATE_KEYS, dbparam);
     std::vector<uint8_t> rec(32);
-    ups_key_t key = {0};
+    ups_key_t key;
     DbProxy dbp(db);
 
     for (int i = 0; i < 10000; i += 5) {
@@ -1398,9 +1398,9 @@ struct ApproxFixture : BaseFixture {
     }
     txn = 0;
 
-    ups_record_t record = {0};
+    ups_record_t record;
     for (int i = 0; i < 10000; i += 5) {
-      ups_key_t key2 = {0};
+      ups_key_t key2;
 
       gen.generate(i, &key);
       gen2.generate(i, &key2);

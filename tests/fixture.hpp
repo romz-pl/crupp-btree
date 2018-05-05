@@ -101,8 +101,8 @@ struct BaseFixture {
 
   BaseFixture &require_parameter(uint32_t name, uint64_t value) {
     ups_parameter_t params[] = {
-        { name, 0 },
-        { 0, 0 }
+        ups_parameter_t{ name, 0 },
+        ups_parameter_t{ 0, 0 }
     };
     REQUIRE(0 == ups_env_get_parameters(env, params));
     REQUIRE(value == params[0].value);
@@ -454,7 +454,7 @@ struct DbProxy {
                   std::vector<uint8_t> &record, uint32_t flags,
                   ups_status_t status = 0) {
     ups_key_t k = ups_make_key(key.data(), (uint16_t)key.size());
-    ups_record_t r = {0};
+    ups_record_t r;
     if (status) {
       REQUIRE(status == ups_db_find(db, 0, &k, &r, flags));
     }
@@ -510,7 +510,7 @@ struct DbProxy {
                   uint32_t record_size, uint32_t flags,
                   ups_status_t status = 0) {
     ups_key_t k = ups_make_key(key, key_size);
-    ups_record_t r = {0};
+    ups_record_t r;
     if (status) {
       REQUIRE(status == ups_db_find(db, 0, &k, &r, flags));
     }
@@ -592,7 +592,7 @@ struct BtreeNodeProxyProxy {
 
   BtreeNodeProxyProxy &require_key(Context *context, int slot, ups_key_t *key) {
     ByteArray arena;
-    ups_key_t k = {0};
+    ups_key_t k;
     node->key(context, slot, &arena, &k);
     REQUIRE(k.size == key->size);
     REQUIRE(0 == ::memcmp(k.data, key->data, k.size));

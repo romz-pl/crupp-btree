@@ -212,7 +212,7 @@ static inline ups_status_t
 check_if_btree_key_is_erased_or_overwritten(LocalCursor *cursor,
                 Context *context)
 {
-  ups_key_t key = {0};
+  ups_key_t key;
 
   ups_status_t st = cursor->btree_cursor.move(context, &key,
                         &cursor->db->key_arena(cursor->txn), 0, 0, 0);

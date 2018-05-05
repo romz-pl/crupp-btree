@@ -60,8 +60,8 @@ struct TxnCursorFixture : BaseFixture {
 
   void getKeyFromCoupledCursorTest() {
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_key_t k = {0};
-    ups_record_t record = {0};
+    ups_key_t k;
+    ups_record_t record;
 
     TxnProxy txnp(env);
     TxnNode *node = create_transaction_node(&key);
@@ -78,7 +78,7 @@ struct TxnCursorFixture : BaseFixture {
   }
 
   void getKeyFromCoupledCursorUserAllocTest() {
-    ups_record_t record = {0};
+    ups_record_t record;
     ups_key_t key = ups_make_key((void *)"hello", 5);
 
     char buffer[1024] = {0};
@@ -102,9 +102,9 @@ struct TxnCursorFixture : BaseFixture {
   }
 
   void getKeyFromCoupledCursorEmptyKeyTest() {
-    ups_key_t k = {0};
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t k;
+    ups_key_t key;
+    ups_record_t record;
 
     TxnProxy txnp(env);
     TxnNode *node = create_transaction_node(&key);
@@ -123,8 +123,8 @@ struct TxnCursorFixture : BaseFixture {
 
   void getKeyFromNilCursorTest() {
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_key_t k = {0};
-    ups_record_t record = {0};
+    ups_key_t k;
+    ups_record_t record;
 
     TxnProxy txnp(env);
     TxnNode *node = create_transaction_node(&key);
@@ -139,8 +139,8 @@ struct TxnCursorFixture : BaseFixture {
   }
 
   void getRecordFromCoupledCursorTest() {
-    ups_key_t key = {0};
-    ups_record_t r = {0};
+    ups_key_t key;
+    ups_record_t r;
     ups_record_t record = ups_make_record((void *)"hello", 5);
 
     TxnProxy txnp(env);
@@ -160,8 +160,8 @@ struct TxnCursorFixture : BaseFixture {
   }
 
   void getRecordFromCoupledCursorUserAllocTest() {
-    ups_key_t key = {0};
-    ups_record_t r = {0};
+    ups_key_t key;
+    ups_record_t r;
     ups_record_t record = ups_make_record((void *)"hello", 5);
 
     char buffer[1024] = {0};
@@ -185,9 +185,9 @@ struct TxnCursorFixture : BaseFixture {
   }
 
   void getRecordFromCoupledCursorEmptyRecordTest() {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
-    ups_record_t r = {0};
+    ups_key_t key;
+    ups_record_t record;
+    ups_record_t r;
 
     TxnProxy txnp(env);
     TxnNode *node = create_transaction_node(&key);
@@ -206,9 +206,9 @@ struct TxnCursorFixture : BaseFixture {
   }
 
   void getRecordFromNilCursorTest() {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
-    ups_record_t r = {0};
+    ups_key_t key;
+    ups_record_t record;
+    ups_record_t r;
 
     TxnProxy txnp(env);
     TxnNode *node = create_transaction_node(&key);
@@ -223,12 +223,12 @@ struct TxnCursorFixture : BaseFixture {
 
   ups_status_t insert(ups_txn_t *txn, const char *key, const char *record = 0,
                   uint32_t flags = 0) {
-    ups_key_t k = {0};
+    ups_key_t k;
     if (key) {
       k.data = (void *)key;
       k.size = ::strlen(key) + 1;
     }
-    ups_record_t r = {0};
+    ups_record_t r;
     if (record) {
       r.data = (void *)record;
       r.size = sizeof(record);
@@ -238,12 +238,12 @@ struct TxnCursorFixture : BaseFixture {
 
   ups_status_t insertCursor(ups_cursor_t *cursor, const char *key,
                   const char *record = 0, uint32_t flags = 0) {
-    ups_key_t k = {0};
+    ups_key_t k;
     if (key) {
       k.data = (void *)key;
       k.size = ::strlen(key) + 1;
     }
-    ups_record_t r = {0};
+    ups_record_t r;
     if (record) {
       r.data = (void *)record;
       r.size = ::strlen(record) + 1;
@@ -252,7 +252,7 @@ struct TxnCursorFixture : BaseFixture {
   }
 
   ups_status_t erase(ups_txn_t *txn, const char *key) {
-    ups_key_t k = {0};
+    ups_key_t k;
     if (key) {
       k.data = (void *)key;
       k.size = ::strlen(key) + 1;
@@ -267,7 +267,7 @@ struct TxnCursorFixture : BaseFixture {
   ups_status_t findCursor(ups_cursor_t *c, const char *key,
                   const char *record = 0) {
     TxnCursor *cursor = txn_cursor(c);
-    ups_key_t k = {0};
+    ups_key_t k;
     if (key) {
       k.data = (void *)key;
       k.size = ::strlen(key) + 1;
@@ -276,7 +276,7 @@ struct TxnCursorFixture : BaseFixture {
     if (st)
       return st;
     if (record) {
-      ups_record_t r = {0};
+      ups_record_t r;
       cursor->copy_coupled_record(&r);
       REQUIRE(r.size == strlen(record) + 1);
       REQUIRE(0 == ::memcmp(r.data, record, r.size));
@@ -286,7 +286,7 @@ struct TxnCursorFixture : BaseFixture {
 
   ups_status_t moveCursor(ups_cursor_t *c, const char *key, uint32_t flags) {
     TxnCursor *cursor = txn_cursor(c);
-    ups_key_t k = {0};
+    ups_key_t k;
     ups_status_t st = cursor->move(flags);
     if (st)
       return st;
@@ -873,7 +873,7 @@ struct TxnCursorFixture : BaseFixture {
     {
       uint64_t k = 0;
       ups_key_t key = ups_make_key(&k, sizeof(k));
-      ups_record_t record = {0};
+      ups_record_t record;
       REQUIRE(0 == ups_db_find(db, 0, &key, &record, UPS_FIND_GEQ_MATCH));
       REQUIRE(key.size == 8);
       REQUIRE(*(uint64_t *)key.data == 10);
@@ -882,7 +882,7 @@ struct TxnCursorFixture : BaseFixture {
     {
       uint64_t k = 0;
       ups_key_t key = ups_make_key(&k, sizeof(k));
-      ups_record_t record = {0};
+      ups_record_t record;
       REQUIRE(0 == ups_cursor_find(cursor, &key, &record, UPS_FIND_GEQ_MATCH));
       REQUIRE(key.size == 8);
       REQUIRE(*(uint64_t *)key.data == 10);
@@ -901,7 +901,7 @@ struct TxnCursorFixture : BaseFixture {
 
     for (int i = 0; i < 4; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t record = {0};
+      ups_record_t record;
       REQUIRE(0 == ups_db_insert(db, 0, &key, &record, 0));
     }
 
@@ -931,14 +931,14 @@ struct TxnCursorFixture : BaseFixture {
     int i = 0;
     for (; i < 4; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t record = {0};
+      ups_record_t record;
 
       REQUIRE(0 == ups_db_insert(db, 0, &key, &record, 0));
     }
 
     i = 3;
     ups_key_t key = ups_make_key(&i, sizeof(i));
-    ups_record_t record = {0};
+    ups_record_t record;
     REQUIRE(0 == ups_db_insert(db, 0, &key, &record, UPS_DUPLICATE));
 
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));

@@ -199,17 +199,33 @@ typedef struct ups_cursor_t ups_cursor_t;
  * recommended to use @a UPS_RECORD_USER_ALLOC or have each thread manage its
  * own Txn.
  */
-typedef struct {
-  /** The size of the record data, in bytes */
-  uint32_t size;
+struct ups_record_t {
 
-  /** Pointer to the record data */
-  void *data;
+    ups_record_t()
+        : size( 0 )
+        , data( nullptr )
+        , flags( 0 )
+    {
 
-  /** The record flags; see @ref UPS_RECORD_USER_ALLOC */
-  uint32_t flags;
+    }
 
-} ups_record_t;
+    ups_record_t( uint32_t _size, void* _ptr, uint32_t _flags )
+        : size( _size )
+        , data( _ptr )
+        , flags( _flags )
+    {
+
+    }
+
+    /** The size of the record data, in bytes */
+    uint32_t size;
+
+    /** Pointer to the record data */
+    void *data;
+
+    /** The record flags; see @ref UPS_RECORD_USER_ALLOC */
+    uint32_t flags;
+};
 
 /** Flag for @ref ups_record_t (only really useful in combination with
  * @ref ups_cursor_move, @ref ups_cursor_find and @ref ups_db_find)
@@ -222,7 +238,10 @@ typedef struct {
  * Usage:
  *    ups_record_t rec = ups_make_record(ptr, size);
  */
-#define ups_make_record(PTR, SIZE) { SIZE, PTR, 0 }
+inline ups_record_t ups_make_record( void* PTR, uint32_t SIZE )
+{
+    return ups_record_t( SIZE, PTR, 0 );
+}
 
 /**
  * A generic key.
@@ -250,20 +269,39 @@ typedef struct {
  * recommended to use @a UPS_KEY_USER_ALLOC or have each thread manage its
  * own Txn.
  */
-typedef struct {
-  /** The size of the key, in bytes */
-  uint16_t size;
+struct ups_key_t {
 
-  /** The data of the key */
-  void *data;
+    ups_key_t()
+        : size( 0 )
+        , data( nullptr )
+        , flags( 0 )
+        , _flags( 0 )
+    {
 
-  /** The key flags; see @ref UPS_KEY_USER_ALLOC */
-  uint32_t flags;
+    }
 
-  /** For internal use */
-  uint32_t _flags;
+    ups_key_t( uint16_t asize, void *adata, uint32_t aflags, uint32_t a_flags)
+        : size( asize )
+        , data( adata )
+        , flags( aflags )
+        , _flags( a_flags )
+    {
 
-} ups_key_t;
+    }
+
+    /** The size of the key, in bytes */
+    uint16_t size;
+
+    /** The data of the key */
+    void *data;
+
+    /** The key flags; see @ref UPS_KEY_USER_ALLOC */
+    uint32_t flags;
+
+    /** For internal use */
+    uint32_t _flags;
+
+};
 
 /**
  * A macro to statically initialize a @ref ups_key_t structure.
@@ -271,7 +309,10 @@ typedef struct {
  * Usage:
  *    ups_key_t key = ups_make_key(ptr, size);
  */
-#define ups_make_key(PTR, SIZE) { SIZE, PTR, 0, 0 }
+inline ups_key_t ups_make_key( void* PTR, uint16_t SIZE )
+{
+    return ups_key_t( SIZE, PTR, 0, 0 );
+}
 
 /** Flag for @ref ups_key_t (only really useful in combination with
  * @ref ups_cursor_move, @ref ups_cursor_find and @ref ups_db_find)
@@ -295,14 +336,28 @@ typedef struct {
  *   };
  * </pre>
  */
-typedef struct {
-  /** The name of the parameter; all UPS_PARAM_*-constants */
-  uint32_t name;
+struct ups_parameter_t {
 
-  /** The value of the parameter. */
-  uint64_t value;
+    ups_parameter_t()
+        : name( 0 )
+        , value( 0 )
+    {
 
-} ups_parameter_t;
+    }
+
+    ups_parameter_t( uint32_t _name, uint64_t _value )
+        : name( _name )
+        , value( _value )
+    {
+
+    }
+
+    /** The name of the parameter; all UPS_PARAM_*-constants */
+    uint32_t name;
+
+    /** The value of the parameter. */
+    uint64_t value;
+};
 
 
 /**

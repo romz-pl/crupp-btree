@@ -76,7 +76,7 @@ struct BtreeDefaultFixture : BaseFixture {
 
   ups_key_t makeKey(int i, char *buffer) {
     sprintf(buffer, "%08d", i);
-    ups_key_t key = {0};
+    ups_key_t key;
     key.data = &buffer[0];
     if (key_size != UPS_KEY_SIZE_UNLIMITED)
       key.size = key_size;
@@ -86,8 +86,8 @@ struct BtreeDefaultFixture : BaseFixture {
   }
 
   void insertCursorTest(const IntVector &inserts) {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     char buffer[BUFFER] = {0};
 
     int i = 0;
@@ -155,8 +155,8 @@ struct BtreeDefaultFixture : BaseFixture {
   }
 
   void insertExtendedTest(const IntVector &inserts) {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     char buffer[512] = {0};
 
     for (IntVector::const_iterator it = inserts.begin();
@@ -180,8 +180,8 @@ struct BtreeDefaultFixture : BaseFixture {
   }
 
   void eraseExtendedTest(const IntVector &inserts) {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     char buffer[512] = {0};
 
     for (IntVector::const_iterator it = inserts.begin();
@@ -202,7 +202,7 @@ struct BtreeDefaultFixture : BaseFixture {
   }
 
   void eraseCursorTest(const IntVector &inserts) {
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_cursor_t *cursor;
     char buffer[BUFFER] = {0};
 
@@ -223,8 +223,8 @@ struct BtreeDefaultFixture : BaseFixture {
   }
 
   void insertFindTest(const IntVector &inserts) {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     char buffer[BUFFER] = {0};
 
     for (IntVector::const_iterator it = inserts.begin();
@@ -243,8 +243,8 @@ struct BtreeDefaultFixture : BaseFixture {
   }
 
   void insertSplitTest(IntVector &inserts, bool test_find, bool test_cursor) {
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     char buffer[BUFFER] = {0};
 
     g_BTREE_INSERT_SPLIT_HOOK = split_hook;
@@ -630,7 +630,7 @@ struct DuplicateTableFixture : BaseFixture {
     ByteArray arena(fixed_record_size != UPS_RECORD_SIZE_UNLIMITED
                         ? fixed_record_size
                         : 1024);
-    ups_record_t record = {0};
+    ups_record_t record;
     record.data = arena.data();
 
     const uint8_t *p = record_data;
@@ -666,7 +666,7 @@ struct DuplicateTableFixture : BaseFixture {
     REQUIRE(dt.record_capacity() == 0);
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     char buffer[1024] = {0};
     record.data = &buffer[0];
     record.size = (uint32_t)record_size;
@@ -705,7 +705,7 @@ struct DuplicateTableFixture : BaseFixture {
     REQUIRE(dt.record_capacity() == 0);
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     char buffer[1024] = {0};
     record.data = &buffer[0];
     record.size = (uint32_t)record_size;
@@ -750,7 +750,7 @@ struct DuplicateTableFixture : BaseFixture {
     std::vector<std::vector<uint8_t> > model;
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     uint8_t buf[1024] = {0};
     record.data = &buf[0];
     record.size = (uint32_t)record_size;
@@ -798,7 +798,7 @@ struct DuplicateTableFixture : BaseFixture {
     std::vector<std::vector<uint8_t> > model;
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     uint8_t buf[1024] = {0};
     record.data = &buf[0];
     record.size = (uint32_t)record_size;
@@ -845,7 +845,7 @@ struct DuplicateTableFixture : BaseFixture {
     std::vector<std::vector<uint8_t> > model;
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     uint8_t buf[1024] = {0};
     record.data = &buf[0];
     record.size = (uint32_t)record_size;
@@ -895,7 +895,7 @@ struct DuplicateTableFixture : BaseFixture {
     std::vector<std::vector<uint8_t> > model;
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     uint8_t buf[1024] = {0};
     record.data = &buf[0];
     record.size = (uint32_t)record_size;
@@ -945,7 +945,7 @@ struct DuplicateTableFixture : BaseFixture {
     std::vector<std::vector<uint8_t> > model;
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     uint8_t buf[1024] = {0};
     record.data = &buf[0];
     record.size = (uint32_t)record_size;
@@ -993,7 +993,7 @@ struct DuplicateTableFixture : BaseFixture {
     std::vector<std::vector<uint8_t> > model;
 
     // fill it
-    ups_record_t record = {0};
+    ups_record_t record;
     uint8_t buf[1024] = {0};
     record.data = &buf[0];
     for (int i = 0; i < num_records; i++) {
@@ -1107,7 +1107,7 @@ TEST_CASE("BtreeDefault/DuplicateTable/createReopenTest", "")
       Context context(f.lenv(), 0, f.ldb());
 
       char buffer[16] = {0};
-      ups_record_t record = {0};
+      ups_record_t record;
       record.data = &buffer[0];
       record.size = 16;
       for (int i = 0; i < num_records; i++) {
@@ -1130,7 +1130,7 @@ TEST_CASE("BtreeDefault/DuplicateTable/createReopenTest", "")
       Context context(f.lenv(), 0, f.ldb());
 
       char buffer[16] = {0};
-      ups_record_t record = {0};
+      ups_record_t record;
       record.data = &buffer[0];
       record.size = 16;
       for (int i = 0; i < num_records; i++) {

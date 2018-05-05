@@ -749,8 +749,8 @@ struct JournalFixture : BaseFixture {
 
     ups_cursor_t *cursor;
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     while (ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT) == 0) {
       REQUIRE(key.size == kvec.size());
       REQUIRE(0 == ::strcmp((const char *)kvec.data(), (const char *)key.data));
@@ -799,8 +799,8 @@ struct JournalFixture : BaseFixture {
 
     ups_cursor_t *cursor;
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     while (ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT) == 0) {
       if (j < 64) {
         REQUIRE(key.size == kvec1.size());
@@ -858,8 +858,8 @@ struct JournalFixture : BaseFixture {
     // verify the database
     ups_cursor_t *cursor;
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     while (ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT) == 0) {
       if (j < limit) {
         REQUIRE(key.size == kvec1.size());
@@ -918,8 +918,8 @@ struct JournalFixture : BaseFixture {
     // verify the database
     ups_cursor_t *cursor;
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     while (ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT) == 0) {
       i--;
       REQUIRE(key.size == kvec.size());
@@ -984,8 +984,8 @@ struct JournalFixture : BaseFixture {
     // now verify that the database is complete
     ups_cursor_t *cursor;
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     while (ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT) == 0) {
       REQUIRE(key.size == kvec1.size());
       REQUIRE(0 == ::strcmp((const char *)kvec1.data(),

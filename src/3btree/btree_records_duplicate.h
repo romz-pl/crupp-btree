@@ -118,7 +118,7 @@ struct DuplicateTable {
 
   // Reads the table from disk
   void open(Context *context, uint64_t table_id) {
-    ups_record_t record = {0};
+    ups_record_t record;
     _blob_manager->read(context, table_id, &record, UPS_FORCE_DEEP_COPY,
                     &_table);
     _table_id = table_id;
@@ -410,7 +410,7 @@ struct DuplicateTable {
   // table-id
   uint64_t flush_duplicate_table(Context *context,
                   BlobManager::Region *regions, size_t used_regions) {
-    ups_record_t record = {0};
+    ups_record_t record;
     record.data = _table.data();
     record.size = _table.size();
     if (unlikely(!_table_id))

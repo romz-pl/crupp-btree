@@ -155,8 +155,8 @@ struct BaseNodeImpl {
       }
 
       // still here? then we have to use iterators
-      ups_key_t key = {0};
-      ups_record_t record = {0};
+      ups_key_t key;
+      ups_record_t record;
       ByteArray record_arena;
       size_t node_length = node->length();
 
@@ -303,7 +303,7 @@ struct BaseNodeImpl {
                                 keys.key_size(rhs));
       }
       else {
-        ups_key_t tmp = {0};
+        ups_key_t tmp;
         keys.key(context, rhs, &private_arena, &tmp, false);
         return cmp(lhs->data, lhs->size, tmp.data, tmp.size);
       }

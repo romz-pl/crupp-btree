@@ -212,8 +212,8 @@ struct BtreeCheckAction
     // the smallest item of this page
     if (leftsib) {
       BtreeNodeProxy *sibnode = btree->get_node_from_page(leftsib);
-      ups_key_t key1 = {0};
-      ups_key_t key2 = {0};
+      ups_key_t key1;
+      ups_key_t key2;
 
       node->check_integrity(context);
 
@@ -275,8 +275,8 @@ struct BtreeCheckAction
 
   int compare_keys(LocalDb *db, Page *page, int lhs, int rhs) {
     BtreeNodeProxy *node = btree->get_node_from_page(page);
-    ups_key_t key1 = {0};
-    ups_key_t key2 = {0};
+    ups_key_t key1;
+    ups_key_t key2;
 
     node->key(context, lhs, &barray1, &key1);
     node->key(context, rhs, &barray2, &key2);

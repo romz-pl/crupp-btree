@@ -76,7 +76,7 @@ struct ResultProxy {
   }
 
   ResultProxy &require_key(int row, void *data, uint32_t size) {
-    ups_key_t key = {0};
+    ups_key_t key;
     uqi_result_get_key(result, row, &key);
     REQUIRE(key.size == size);
     REQUIRE(0 == ::memcmp(key.data, data, size));
@@ -84,7 +84,7 @@ struct ResultProxy {
   }
 
   ResultProxy &require_record(int row, void *data, uint32_t size) {
-    ups_record_t record = {0};
+    ups_record_t record;
     uqi_result_get_record(result, row, &record);
     REQUIRE(record.size == size);
     REQUIRE(0 == ::memcmp(record.data, data, size));
@@ -250,8 +250,8 @@ struct UqiFixture : BaseFixture {
   }
 
   void countTest(uint64_t count) {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
 
     // insert a few keys
     for (uint32_t i = 0; i < count; i++) {
@@ -268,7 +268,7 @@ struct UqiFixture : BaseFixture {
   void cursorTest() {
     int i;
     ups_key_t key = ups_make_key(&i, sizeof(i));
-    ups_record_t record = {0};
+    ups_record_t record;
     uint64_t sum = 0;
 
     // insert a few keys
@@ -307,7 +307,7 @@ struct UqiFixture : BaseFixture {
     uint64_t sum = 0;
 
     ups_key_t key = ups_make_key(&i, sizeof(i));
-    ups_record_t record = {0};
+    ups_record_t record;
 
     // insert a few keys
     for (; i < 100; i++) {
@@ -391,7 +391,7 @@ struct UqiFixture : BaseFixture {
   void invalidCursorTest() {
     int i;
     ups_key_t key = ups_make_key(&i, sizeof(i));
-    ups_record_t record = {0};
+    ups_record_t record;
     uint32_t sum = 0;
 
     // create an empty second database
@@ -426,7 +426,7 @@ struct UqiFixture : BaseFixture {
   }
 
   void sumTest(int count) {
-    ups_record_t record = {0};
+    ups_record_t record;
     uint64_t sum = 0;
 
     // insert a few keys
@@ -445,7 +445,7 @@ struct UqiFixture : BaseFixture {
     ups_key_t key1 = ups_make_key((void *)"hello again", 11);
     ups_key_t key2 = ups_make_key((void *)"ich sag einfach", 16);
     ups_key_t key3 = ups_make_key((void *)"hello again...", 14);
-    ups_record_t record = {0};
+    ups_record_t record;
 
     // insert a few keys
     REQUIRE(0 == ups_db_insert(db, 0, &key1, &record, 0));
@@ -460,8 +460,8 @@ struct UqiFixture : BaseFixture {
   }
 
   void closedDatabaseTest() {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     uint64_t sum = 0;
 
     // insert a few keys
@@ -489,7 +489,7 @@ struct UqiFixture : BaseFixture {
 
   ups_status_t insertBtree(uint32_t key) {
     ups_key_t k = ups_make_key(&key, sizeof(key));
-    ups_record_t r = {0};
+    ups_record_t r;
 
     Context context(lenv(), 0, 0);
     return btree_index()->insert(&context, 0, &k, &r, 0);
@@ -497,7 +497,7 @@ struct UqiFixture : BaseFixture {
 
   ups_status_t insertBtree(const std::string &key) {
     ups_key_t k = ups_make_key((void *)key.c_str(), (uint16_t)key.size());
-    ups_record_t r = {0};
+    ups_record_t r;
 
     Context context(lenv(), 0, 0);
     return btree_index()->insert(&context, 0, &k, &r, 0);
@@ -505,13 +505,13 @@ struct UqiFixture : BaseFixture {
 
   ups_status_t insertTxn(ups_txn_t *txn, uint32_t key) {
     ups_key_t k = ups_make_key(&key, sizeof(key));
-    ups_record_t r = {0};
+    ups_record_t r;
     return ups_db_insert(db, txn, &k, &r, 0);
   }
 
   ups_status_t insertTxn(ups_txn_t *txn, const std::string &key) {
     ups_key_t k = ups_make_key((void *)key.c_str(), (uint16_t)key.size());
-    ups_record_t r = {0};
+    ups_record_t r;
     return ups_db_insert(db, txn, &k, &r, 0);
   }
 
@@ -668,8 +668,8 @@ struct UqiFixture : BaseFixture {
   }
 
   void sumIfTest(int count) {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     uint64_t sum = 0;
 
     // insert a few keys
@@ -694,8 +694,8 @@ struct UqiFixture : BaseFixture {
   }
 
   void averageTest(int count) {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     double sum = 0;
 
     // insert a few keys
@@ -714,8 +714,8 @@ struct UqiFixture : BaseFixture {
   }
 
   void averageIfTest(int count) {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     double sum = 0;
     int c = 0;
 
@@ -745,8 +745,8 @@ struct UqiFixture : BaseFixture {
   }
 
   void countIfTest(int count) {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     char buffer[200] = {0};
     uint64_t c = 0;
 
@@ -773,8 +773,8 @@ struct UqiFixture : BaseFixture {
   }
 
   void countDistinctIfTest(int count) {
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     char buffer[200] = {0};
     uint64_t c = 0;
 
@@ -1134,8 +1134,8 @@ struct QueryFixture : BaseFixture {
       .require_key_type(UPS_TYPE_BINARY)
       .require_record_type(UPS_TYPE_UINT32);
 
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
     for (int i = 0; i < 10; i++) {
       rp.require_key(i, (void *)keys[i], ::strlen(keys[i]))
         .require_record(i, &i, sizeof(i));
@@ -1245,7 +1245,7 @@ struct QueryFixture : BaseFixture {
   }
 
   void valueTest() {
-    ups_record_t record = {0};
+    ups_record_t record;
     int count = 1000;
 
     // insert a few keys
@@ -1302,7 +1302,7 @@ struct QueryFixture : BaseFixture {
   }
 
   void binaryValueTest() {
-    ups_record_t record = {0};
+    ups_record_t record;
     int count = 200;
     char buffer[16] = {0};
 
@@ -1320,7 +1320,7 @@ struct QueryFixture : BaseFixture {
 
     buffer[0] = 0;
     for (int i = 0; i < count; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       uint16_t size = sizeof(buffer) - (i % 5);
       rp.require_key(i, buffer, size);
       buffer[0]++;
@@ -1564,11 +1564,11 @@ struct QueryFixture : BaseFixture {
     for (uint32_t i = 0; i < row_count; i++)
       it--;
     for (uint32_t i = 0; i < row_count; i++, it++) {
-      ups_record_t rec = {0};
+      ups_record_t rec;
       uqi_result_get_record(result, i, &rec);
       REQUIRE(sizeof(uint32_t) == rec.size);
       REQUIRE(it->first == *(uint32_t *)rec.data);
-      ups_key_t key = {0};
+      ups_key_t key;
       uqi_result_get_key(result, i, &key);
       REQUIRE(16 == key.size);
       REQUIRE(0 == ::memcmp(it->second.data(), key.data, key.size));
@@ -1579,11 +1579,11 @@ struct QueryFixture : BaseFixture {
     uint32_t row_count = uqi_result_get_row_count(result);
     Map::iterator it = inserted.begin();
     for (uint32_t i = 0; i < row_count; i++, it++) {
-      ups_record_t rec = {0};
+      ups_record_t rec;
       uqi_result_get_record(result, i, &rec);
       REQUIRE(sizeof(uint32_t) == rec.size);
       REQUIRE(it->first == *(uint32_t *)rec.data);
-      ups_key_t key = {0};
+      ups_key_t key;
       uqi_result_get_key(result, i, &key);
       REQUIRE(16 == key.size);
       REQUIRE(0 == ::memcmp(it->second.data(), key.data, key.size));
@@ -1679,7 +1679,7 @@ struct QueryFixture : BaseFixture {
     close();
     ups_parameter_t params[] = {
         {UPS_PARAM_KEY_TYPE, UPS_TYPE_UINT32},
-        {0, }
+        {0, 0}
     };
 
     require_create(UPS_ENABLE_TRANSACTIONS, nullptr, 0, params);
@@ -1692,7 +1692,7 @@ struct QueryFixture : BaseFixture {
 
     for (int i = 0; i < 4; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t record = {0};
+      ups_record_t record;
 
       REQUIRE(0 == ups_db_insert(db, txn, &key, &record, 0));
     }

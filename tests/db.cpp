@@ -54,7 +54,7 @@ struct DbFixture : BaseFixture {
   }
 
   void defaultCompareTest() {
-    ups_key_t key1 = {0}, key2 = {0};
+    ups_key_t key1, key2;
     key1.data = (void *)"abc";
     key1.size = 3;
     key2.data = (void *)"abc";

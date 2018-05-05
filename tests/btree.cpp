@@ -106,7 +106,7 @@ struct BtreeFixture : BaseFixture {
 
     char buffer[100] = {0};
     ups_key_t key = ups_make_key(buffer, (uint16_t)(size + 1));
-    ups_record_t rec = {0};
+    ups_record_t rec;
     REQUIRE(UPS_INV_KEY_SIZE == ups_db_insert(db, 0, &key, &rec, 0));
     REQUIRE(UPS_INV_KEY_SIZE == ups_cursor_insert(cursor, &key, &rec, 0));
     key.size = size - 1;

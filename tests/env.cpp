@@ -138,8 +138,8 @@ struct EnvFixture {
 
   void readOnlyTest() {
     ups_db_t *db2;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     ups_cursor_t *cursor;
 
     BaseFixture bf;
@@ -265,7 +265,7 @@ struct EnvFixture {
         REQUIRE(0 == ups_env_open_db(bf.env, &db[i], i + 1, 0, 0));
       
       ups_key_t key = ups_make_key(buffer, sizeof(buffer));
-      ups_record_t record = {0};
+      ups_record_t record;
       *(int *)&buffer[0] = i;
 
       REQUIRE(0 == ups_db_find(db[i], 0, &key, &record, 0));
@@ -332,7 +332,7 @@ struct EnvFixture {
       for (int j = 0; j < MAX_ITEMS; j++) {
         int value = j * (i + 1);
         ups_key_t key = ups_make_key(&value, sizeof(value));
-        ups_record_t rec = {0};
+        ups_record_t rec;
 
         REQUIRE(0 == ups_db_find(db[i], 0, &key, &rec, 0));
         REQUIRE(value == *(int *)rec.data);
@@ -347,7 +347,7 @@ struct EnvFixture {
         for (int j = 0; j < MAX_ITEMS; j++) {
           int value = j * (i + 1);
           ups_key_t key = ups_make_key(&value, sizeof(value));
-          ups_record_t rec = {0};
+          ups_record_t rec;
 
           REQUIRE(0 == ups_db_find(db[i], 0, &key, &rec, 0));
           REQUIRE(value == *(int *)rec.data);
@@ -381,7 +381,7 @@ struct EnvFixture {
       for (int j = 0; j < MAX_ITEMS; j++) {
         ::sprintf(buffer, "%08x%08x", j, i + 1);
         ups_key_t key = ups_make_key(&buffer, sizeof(buffer));
-        ups_record_t rec = {0};
+        ups_record_t rec;
         REQUIRE(0 == ups_db_find(db[i], 0, &key, &rec, 0));
         REQUIRE((uint32_t)sizeof(buffer) == rec.size);
         REQUIRE(0 == ::memcmp(buffer, rec.data, rec.size));
@@ -395,7 +395,7 @@ struct EnvFixture {
         for (int j = 0; j < MAX_ITEMS; j++) {
           ::sprintf(buffer, "%08x%08x", j, i + 1);
           ups_key_t key = ups_make_key(&buffer, sizeof(buffer));
-          ups_record_t rec = {0};
+          ups_record_t rec;
           REQUIRE(0 == ups_db_find(db[i], 0, &key, &rec, 0));
           REQUIRE((uint32_t)sizeof(buffer) == rec.size);
           REQUIRE(0 == ::memcmp(buffer, rec.data, rec.size));
@@ -428,7 +428,7 @@ struct EnvFixture {
       for (int j = 0; j < MAX_ITEMS; j++) {
         ::sprintf(buffer, "%08x%08x", j, i + 1);
         ups_key_t key = ups_make_key(&buffer, sizeof(buffer));
-        ups_record_t rec = {0};
+        ups_record_t rec;
         REQUIRE(0 == ups_db_find(db[i], 0, &key, &rec, 0));
         REQUIRE((uint32_t)sizeof(buffer) == rec.size);
         REQUIRE(0 == ::memcmp(buffer, rec.data, rec.size));
@@ -450,7 +450,7 @@ struct EnvFixture {
         for (int j = 0; j < MAX_ITEMS; j++) {
           ::sprintf(buffer, "%08x%08x", j, i + 1);
           ups_key_t key = ups_make_key(&buffer, sizeof(buffer));
-          ups_record_t rec = {0};
+          ups_record_t rec;
 
           if (j & 1) { // must exist
             REQUIRE(0 == ups_db_find(db[i], 0, &key, &rec, 0));
@@ -493,8 +493,8 @@ struct EnvFixture {
       REQUIRE(0 == ups_cursor_create(&cursor[i], db[i], 0, 0));
       for (int j = 0; j < MAX_ITEMS; j++) {
         ::sprintf(buffer, "%08x%08x", j, i + 1);
-        ups_key_t key = {0};
-        ups_record_t rec = {0};
+        ups_key_t key;
+        ups_record_t rec;
 
         REQUIRE(0 == ups_cursor_move(cursor[i], &key, &rec, UPS_CURSOR_NEXT));
         REQUIRE((uint32_t)(::strlen(buffer) + 1) == rec.size);
@@ -522,7 +522,7 @@ struct EnvFixture {
         for (int j = 0; j < MAX_ITEMS; j++) {
           ::sprintf(buffer, "%08x%08x", j, i + 1);
           ups_key_t key = ups_make_key(buffer, (uint16_t)(::strlen(buffer) + 1));
-          ups_record_t rec = {0};
+          ups_record_t rec;
 
           if (j & 1) { // must exist
             REQUIRE(0 == ups_cursor_find(cursor[i], &key, 0, 0));
@@ -575,7 +575,7 @@ struct EnvFixture {
       for (int j = 0; j < MAX_ITEMS; j++) {
         ::sprintf(buffer, "%08x%08x", j, i + 1);
         ups_key_t key = ups_make_key(buffer, (uint16_t)(::strlen(buffer) + 1));
-        ups_record_t rec = {0};
+        ups_record_t rec;
 
 		REQUIRE(0 == ups_db_find(db[i], 0, &key, &rec, 0));
         REQUIRE(rec.size == ::strlen(buffer) + 1);

@@ -118,8 +118,8 @@ struct BtreeCursorFixture : BaseFixture {
       REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
     }
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     REQUIRE(0 == ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(0 == *(int *)key.data);
     REQUIRE(0 == *(int *)rec.data);
@@ -216,7 +216,7 @@ struct BtreeCursorFixture : BaseFixture {
     ups_cursor_t *cursor, *cursor2;
     int value = 0;
     ups_key_t key = ups_make_key(&value, sizeof(value));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     value = 1;
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
@@ -241,7 +241,7 @@ struct BtreeCursorFixture : BaseFixture {
     ups_key_t key1 = ups_make_key(&v1, sizeof(v1));
     ups_key_t key2 = ups_make_key(&v2, sizeof(v2));
     ups_key_t key3 = ups_make_key(&v3, sizeof(v3));
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
     BtreeCursor *btc = &((LocalCursor *)c)->btree_cursor;

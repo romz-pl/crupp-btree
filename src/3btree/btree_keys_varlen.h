@@ -144,7 +144,7 @@ struct VariableLengthKeyList : BaseKeyList {
   // Copies a key into |dest|
   void key(Context *context, int slot, ByteArray *arena, ups_key_t *dest,
                   bool deep_copy = true) {
-    ups_key_t tmp = {0};
+    ups_key_t tmp;
     uint32_t offset = _index.get_chunk_offset(slot);
     uint8_t *p = _index.get_chunk_data_by_offset(offset);
 
@@ -218,7 +218,7 @@ struct VariableLengthKeyList : BaseKeyList {
 
     uint32_t key_flags = 0;
     // try to compress the key
-    ups_key_t helper = {0};
+    ups_key_t helper;
     if (_compressor && compress(key, &helper)) {
       key_flags = BtreeKey::kCompressed;
       key = &helper;
@@ -320,7 +320,7 @@ struct VariableLengthKeyList : BaseKeyList {
         }
 
         // make sure that the extended blob can be loaded
-        ups_record_t record = {0};
+        ups_record_t record;
         _blob_manager->read(context, blobid, &record, 0, &arena);
 
         // compare it to the cached key (if there is one)
@@ -386,7 +386,7 @@ struct VariableLengthKeyList : BaseKeyList {
 
   // Prints a slot to |out| (for debugging)
   void print(Context *context, int slot, std::stringstream &out) {
-    ups_key_t tmp = {0};
+    ups_key_t tmp;
     if (ISSET(get_key_flags(slot), BtreeKey::kExtendedKey)) {
       get_extended_key(context, get_extended_blob_id(slot), &tmp);
     }
@@ -468,7 +468,7 @@ struct VariableLengthKeyList : BaseKeyList {
     }
 
     ByteArray arena;
-    ups_record_t record = {0};
+    ups_record_t record;
     _blob_manager->read(context, blob_id, &record, UPS_FORCE_DEEP_COPY,
                     &arena);
     (*_extkey_cache)[blob_id] = arena;
@@ -482,7 +482,7 @@ struct VariableLengthKeyList : BaseKeyList {
     if (unlikely(!_extkey_cache))
       _extkey_cache.reset(new ExtKeyCache());
 
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.data = key->data;
     rec.size = key->size;
 

@@ -534,8 +534,8 @@ recover_journal(JournalState &state, Context *context,
         PJournalEntryInsert *ins = (PJournalEntryInsert *)buffer.data();
         Txn *txn = 0;
         Db *db;
-        ups_key_t key = {0};
-        ups_record_t record = {0};
+        ups_key_t key;
+        ups_record_t record;
         if (!ins) {
           st = UPS_IO_ERROR;
           goto bail;
@@ -596,7 +596,7 @@ recover_journal(JournalState &state, Context *context,
         PJournalEntryErase *e = (PJournalEntryErase *)buffer.data();
         Txn *txn = 0;
         Db *db;
-        ups_key_t key = {0};
+        ups_key_t key;
         if (!e) {
           st = UPS_IO_ERROR;
           goto bail;

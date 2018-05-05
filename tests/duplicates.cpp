@@ -792,8 +792,8 @@ struct DuplicateFixture : BaseFixture {
 
   void eraseDuplicateTest() {
     ups_cursor_t *c1, *c2;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     int value = 1;
     rec.data = &value;
@@ -1394,7 +1394,7 @@ struct DuplicateFixture : BaseFixture {
   }
 
   void insertBeforeTest() {
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_cursor_t *c;
     const char *values[] = { "11111", "222222", "3333333", "44444444" };
 
@@ -1574,7 +1574,7 @@ struct DuplicateFixture : BaseFixture {
   void cloneTest() {
     ups_cursor_t *c1, *c2;
     int value;
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record(&value, sizeof(value));
 
     value = 1;

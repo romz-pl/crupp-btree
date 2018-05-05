@@ -749,7 +749,7 @@ LocalDb::create(Context *context, PBtreeHeader *btree_header)
 static inline ups_status_t
 fetch_record_number(Context *context, LocalDb *db)
 {
-  ups_key_t key = {0};
+  ups_key_t key;
   ScopedPtr<LocalCursor> c(new LocalCursor(db, 0));
   ups_status_t st = c->move(context, &key, 0, UPS_CURSOR_LAST);
   if (unlikely(st))
@@ -1447,8 +1447,8 @@ LocalDb::select_range(SelectStatement *stmt, LocalCursor *begin,
 {
   Page *page = 0;
   int slot;
-  ups_key_t key = {0};
-  ups_record_t record = {0};
+  ups_key_t key;
+  ups_record_t record;
   ScopedPtr<LocalCursor> tmpcursor;
  
   LocalCursor *cursor = begin;
