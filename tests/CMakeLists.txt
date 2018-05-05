@@ -4,13 +4,13 @@ add_executable( ${TEST_NAME}
     #    aes.cpp
     #api110.cpp
     #approx.cpp
-    #blob_manager.cpp
-    #btree.cpp
-    #btree_cursor.cpp
-    #btree_default.cpp
-    #btree_erase.cpp
-    #btree_insert.cpp
-    #btree_key.cpp
+    blob_manager.cpp
+    btree.cpp
+    btree_cursor.cpp
+    btree_default.cpp
+    btree_erase.cpp
+    btree_insert.cpp
+    btree_key.cpp
     #changeset.cpp
     #check.cpp
     #compression.cpp
@@ -19,15 +19,15 @@ add_executable( ${TEST_NAME}
     #cursor1.cpp
     #cursor2.cpp
     db.cpp
-    #device.cpp
+    device.cpp
     #duplicates.cpp
     env.cpp
     #journal.cpp
     main.cpp
     #misc.cpp
-    #os.cpp
-    #page.cpp
-    #page_manager.cpp
+    os.cpp
+    page.cpp
+    page_manager.cpp
     #recordnumber.cpp
     #recovery.cpp
     #remote.cpp
