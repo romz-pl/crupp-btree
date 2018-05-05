@@ -128,17 +128,22 @@ struct FileProxy {
 
 TEST_CASE("Os/openClose")
 {
+  const char filename[] = "test.db";
+
   FileProxy fp;
-  fp.require_open("Makefile.am", false)
+  fp.require_create(filename, 0664).close();
+  fp.require_open(filename, false)
     .close();
 }
 
 TEST_CASE("Os/openReadOnlyClose")
 {
   const char *p = "# XXXXXXXXX ERROR\n";
+  const char filename[] = "test.db";
 
   FileProxy fp;
-  fp.require_open("data/test", false)
+  fp.require_create(filename, 0664).close();
+  fp.require_open(filename, false)
     .require_pwrite(0, p, ::strlen(p), UPS_IO_ERROR)
     .close();
 }
