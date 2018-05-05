@@ -119,7 +119,7 @@ struct VariableLengthKeyList : BaseKeyList {
   }
 
   // Opens an existing KeyList
-  void open(uint8_t *ptr, size_t range_size_, size_t node_count) {
+  void open(uint8_t *ptr, size_t range_size_, size_t) {
     _data = ptr;
     range_size = range_size_;
     _index.open(_data, range_size);

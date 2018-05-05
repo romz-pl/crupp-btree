@@ -65,6 +65,6 @@ struct LzfCompressor {
   }
 };
 
-}; // namespace upscaledb
+} // namespace upscaledb
 
 #endif // UPS_COMPRESSOR_LZF_H

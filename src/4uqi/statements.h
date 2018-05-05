@@ -55,7 +55,7 @@ struct SelectStatement {
   }
 
   // constructor - required by the parser
-  SelectStatement(const std::string &foo)
+  SelectStatement(const std::string &)
     : dbid(0), distinct(false), limit(0), function_plg(0), predicate_plg(0),
       requires_keys(true), requires_records(true) {
   }

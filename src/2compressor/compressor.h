@@ -138,6 +138,6 @@ struct CompressorImpl : public Compressor
   T impl;
 };
 
-}; // namespace upscaledb
+} // namespace upscaledb
 
 #endif // UPS_COMPRESSOR_H

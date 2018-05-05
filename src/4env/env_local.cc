@@ -662,7 +662,7 @@ LocalEnv::do_open_db(DbConfig &dbconfig, const ups_parameter_t *param)
 }
 
 ups_status_t
-LocalEnv::rename_db(uint16_t oldname, uint16_t newname, uint32_t flags)
+LocalEnv::rename_db(uint16_t oldname, uint16_t newname, uint32_t)
 {
   Context context(this);
 
@@ -701,7 +701,7 @@ LocalEnv::rename_db(uint16_t oldname, uint16_t newname, uint32_t flags)
 }
 
 ups_status_t
-LocalEnv::erase_db(uint16_t name, uint32_t flags)
+LocalEnv::erase_db(uint16_t name, uint32_t)
 {
   /* check if this database is still open */
   if (unlikely(_database_map.find(name) != _database_map.end()))

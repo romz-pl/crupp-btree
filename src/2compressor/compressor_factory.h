@@ -46,6 +46,6 @@ struct CompressorFactory {
   static Compressor *create(int type);
 };
 
-}; // namespace upscaledb
+} // namespace upscaledb
 
 #endif // UPS_COMPRESSOR_FACTORY_H

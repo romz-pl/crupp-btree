@@ -51,7 +51,7 @@ struct InMemoryBlobManager : public BlobManager {
                   uint32_t flags, ByteArray *arena);
 
   // Retrieves the size of a blob
-  virtual uint32_t blob_size(Context *context, uint64_t blobid) {
+  virtual uint32_t blob_size(Context*, uint64_t blobid) {
     PBlobHeader *blob_header = (PBlobHeader *)blobid;
     return blob_header->size;
   }
@@ -72,8 +72,7 @@ struct InMemoryBlobManager : public BlobManager {
                   Region *regions, size_t num_regions);
 
   // Deletes an existing blob
-  virtual void erase(Context *context, uint64_t blobid, Page *page = 0,
-                  uint32_t flags = 0) {
+  virtual void erase(Context*, uint64_t blobid, Page* /*page*/ = 0, uint32_t /*flags*/ = 0) {
     Memory::release((void *)blobid);
   }
 };

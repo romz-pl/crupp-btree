@@ -696,7 +696,7 @@ DiskBlobManager::overwrite_regions(Context *context, uint64_t old_blob_id,
 
 void
 DiskBlobManager::erase(Context *context, uint64_t blob_id, Page *page,
-                uint32_t flags)
+                uint32_t /*flags*/)
 {
   // fetch the blob header
   PBlobHeader *blob_header = (PBlobHeader *)read_chunk(this, context, 0, &page,

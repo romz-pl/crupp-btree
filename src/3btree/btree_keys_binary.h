@@ -87,7 +87,7 @@ struct BinaryKeyList : BaseKeyList {
   }
 
   // Returns the actual key size including overhead
-  size_t full_key_size(const ups_key_t *key = 0) const {
+  size_t full_key_size(const ups_key_t */*key*/ = 0) const {
     return _fixed_key_size;
   }
 
@@ -110,12 +110,12 @@ struct BinaryKeyList : BaseKeyList {
   }
 
   // Iterates all keys, calls the |visitor| on each
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray*, size_t node_count, uint32_t start) {
     return std::make_pair(&_data[_fixed_key_size * start], node_count - start);
   }
 
   // Erases a whole slot by shifting all larger keys to the "left"
-  void erase(Context *context, size_t node_count, int slot) {
+  void erase(Context*, size_t node_count, int slot) {
     if (slot < (int)node_count - 1)
       ::memmove(&_data[slot * _fixed_key_size],
                       &_data[(slot + 1) * _fixed_key_size],
@@ -136,13 +136,13 @@ struct BinaryKeyList : BaseKeyList {
   }
 
   // Returns true if the |key| no longer fits into the node
-  bool requires_split(size_t node_count, const ups_key_t *key) const {
+  bool requires_split(size_t node_count, const ups_key_t*) const {
     return (node_count + 1) * _fixed_key_size >= range_size;
   }
 
   // Copies |count| key from this[sstart] to dest[dstart]
   void copy_to(int sstart, size_t node_count, BinaryKeyList &dest,
-                  size_t other_count, int dstart) {
+                  size_t, int dstart) {
     ::memcpy(&dest._data[dstart * _fixed_key_size],
                     &_data[sstart * _fixed_key_size],
                     _fixed_key_size * (node_count - sstart));
@@ -151,7 +151,7 @@ struct BinaryKeyList : BaseKeyList {
   // Change the capacity; for PAX layouts this just means copying the
   // data from one place to the other
   void change_range_size(size_t node_count, uint8_t *new_data_ptr,
-          size_t new_range_size, size_t capacity_hint) {
+          size_t new_range_size, size_t) {
     ::memmove(new_data_ptr, _data, node_count * _fixed_key_size);
     _data = new_data_ptr;
     range_size = new_range_size;
@@ -165,7 +165,7 @@ struct BinaryKeyList : BaseKeyList {
   }
 
   // Prints a slot to |out| (for debugging)
-  void print(Context *context, int slot, std::stringstream &out) const {
+  void print(Context*, int slot, std::stringstream &out) const {
     for (size_t i = 0; i < _fixed_key_size; i++)
       out << (char)_data[slot * _fixed_key_size + i];
   }

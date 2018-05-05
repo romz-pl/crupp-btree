@@ -34,7 +34,7 @@ using namespace upscaledb;
 
 uint64_t
 InMemoryBlobManager::allocate(Context *context, ups_record_t *record,
-                uint32_t flags)
+                uint32_t)
 {
   metric_total_allocated++;
 
@@ -75,7 +75,7 @@ InMemoryBlobManager::allocate(Context *context, ups_record_t *record,
 
 void
 InMemoryBlobManager::read(Context *context, uint64_t blobid,
-                ups_record_t *record, uint32_t flags,
+                ups_record_t *record, uint32_t,
                 ByteArray *arena)
 {
   metric_total_read++;

@@ -75,7 +75,7 @@ struct InMemoryDevice : public Device {
   }
 
   // truncate/resize the device 
-  virtual void truncate(uint64_t newsize) {
+  virtual void truncate(uint64_t ) {
   }
 
   // get the current file/storage size 
@@ -85,7 +85,7 @@ struct InMemoryDevice : public Device {
   }
 
   // seek position in a file 
-  virtual void seek(uint64_t offset, int whence) {
+  virtual void seek(uint64_t, int) {
     assert(!"can't seek in an in-memory-device");
     throw Exception(UPS_NOT_IMPLEMENTED);
   }
@@ -97,17 +97,17 @@ struct InMemoryDevice : public Device {
   }
 
   // reads from the device; this function does not use mmap 
-  virtual void read(uint64_t offset, void *buffer, size_t len) {
+  virtual void read(uint64_t, void*, size_t) {
     assert(!"operation is not possible for in-memory-databases");
     throw Exception(UPS_NOT_IMPLEMENTED);
   }
 
   // writes to the device 
-  virtual void write(uint64_t offset, void *buffer, size_t len) {
+  virtual void write(uint64_t, void*, size_t) {
   }
 
   // reads a page from the device 
-  virtual void read_page(Page *page, uint64_t address) {
+  virtual void read_page(Page*, uint64_t) {
     assert(!"operation is not possible for in-memory-databases");
     throw Exception(UPS_NOT_IMPLEMENTED);
   }
@@ -144,7 +144,7 @@ struct InMemoryDevice : public Device {
   }
 
   // Returns true if the specified range is in mapped memory
-  virtual bool is_mapped(uint64_t file_offset, size_t size) const {
+  virtual bool is_mapped(uint64_t, size_t) const {
     return false;
   }
 
