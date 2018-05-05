@@ -3,9 +3,9 @@
 
 * This is the refactored version of Christoph Rupp's upscaledb.
 
-* The original code was downloaded from GitHub [web page](https://github.com/cruppstahl/upscaledb)
+* The original code was downloaded from GitHub [web page](https://github.com/cruppstahl/upscaledb).
 
-* updscaledb [web page](https://upscaledb.com/)
+* The updscaledb [home page](https://upscaledb.com/).
 
 * For more information about B+ trees see:
    * [wiki pages](https://en.wikipedia.org/wiki/B+_tree) in Wikipedia

@@ -19,7 +19,7 @@ add_executable( ${TEST_NAME}
     #cursor1.cpp
     #cursor2.cpp
     db.cpp
-    #device.cpp
+    device.cpp
     #duplicates.cpp
     env.cpp
     #journal.cpp
