@@ -320,21 +320,21 @@ struct JournalFixture : BaseFixture {
     ScopedPtr<Journal> j(new Journal(lenv()));
     JournalProxy jp(j.get());
 
-    std::string oldfilename = lenv()->config.filename;
+//    std::string oldfilename = lenv()->config.filename;
     lenv()->config.filename = "/::asdf";
     jp.require_open(UPS_FILE_NOT_FOUND);
 
-    // if journal::open() fails, it will call journal::close()
-    // internally and journal::close() overwrites the header structure.
-    // therefore we have to patch the file before we start the test.
-    File f;
-    f.open("data/log-broken-magic.jrn0", 0);
-    f.pwrite(0, (void *)"x", 1);
-    f.close();
+//    // if journal::open() fails, it will call journal::close()
+//    // internally and journal::close() overwrites the header structure.
+//    // therefore we have to patch the file before we start the test.
+//    File f;
+//    f.open("data/log-broken-magic.jrn0", 0);
+//    f.pwrite(0, (void *)"x", 1);
+//    f.close();
 
-    lenv()->config.filename = "data/log-broken-magic";
-    jp.require_open(UPS_LOG_INV_FILE_HEADER);
-    lenv()->config.filename = oldfilename;
+//    lenv()->config.filename = "data/log-broken-magic";
+//    jp.require_open(UPS_LOG_INV_FILE_HEADER);
+//    lenv()->config.filename = oldfilename;
   }
 
   void appendTxnBeginTest() {

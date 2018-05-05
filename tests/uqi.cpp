@@ -859,42 +859,42 @@ TEST_CASE("Uqi/countDistinctIfTest", "")
   f.countIfTest(20);
 }
 
-TEST_CASE("Uqi/pluginTest", "")
-{
-  REQUIRE(upscaledb::PluginManager::get("foo") == 0);
-  REQUIRE(upscaledb::PluginManager::is_registered("foo") == false);
-  REQUIRE(upscaledb::PluginManager::import("noexist", "foo")
-              == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("/usr/lib/libsnappy.so", "foo")
-              == UPS_PLUGIN_NOT_FOUND);
-  // Win32: copy ../win32/msvc2013/out/unittests_XXX/unittests-plugin.dll .
-  // Then reenable the next lines
-#if 0
-  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "foo")
-    == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test1")
-    == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test2")
-    == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test3")
-    == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test4")
-    == 0);
-#else
-  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "foo")
-              == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test1")
-              == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test2")
-              == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test3")
-              == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test4")
-              == 0);
-#endif
-  REQUIRE(upscaledb::PluginManager::get("test4") != 0);
-  REQUIRE(upscaledb::PluginManager::is_registered("test4") == true);
-}
+//TEST_CASE("Uqi/pluginTest", "")
+//{
+//  REQUIRE(upscaledb::PluginManager::get("foo") == 0);
+//  REQUIRE(upscaledb::PluginManager::is_registered("foo") == false);
+//  REQUIRE(upscaledb::PluginManager::import("noexist", "foo")
+//              == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("/usr/lib/libsnappy.so", "foo")
+//              == UPS_PLUGIN_NOT_FOUND);
+//  // Win32: copy ../win32/msvc2013/out/unittests_XXX/unittests-plugin.dll .
+//  // Then reenable the next lines
+//#if 0
+//  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "foo")
+//    == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test1")
+//    == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test2")
+//    == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test3")
+//    == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test4")
+//    == 0);
+//#else
+//  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "foo")
+//              == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test1")
+//              == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test2")
+//              == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test3")
+//              == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test4")
+//              == 0);
+//#endif
+//  REQUIRE(upscaledb::PluginManager::get("test4") != 0);
+//  REQUIRE(upscaledb::PluginManager::is_registered("test4") == true);
+//}
 
 static void
 check(const char *query, bool distinct, const char *function,
@@ -909,74 +909,74 @@ check(const char *query, bool distinct, const char *function,
     REQUIRE(stmt.predicate.name == predicate);
 }
 
-TEST_CASE("Uqi/parserTest", "")
-{
-  SelectStatement stmt;
-  REQUIRE(upscaledb::Parser::parse_select("", stmt)
-                == UPS_PARSER_ERROR);
-  REQUIRE(upscaledb::Parser::parse_select("foo bar", stmt)
-                == UPS_PARSER_ERROR);
+//TEST_CASE("Uqi/parserTest", "")
+//{
+//  SelectStatement stmt;
+//  REQUIRE(upscaledb::Parser::parse_select("", stmt)
+//                == UPS_PARSER_ERROR);
+//  REQUIRE(upscaledb::Parser::parse_select("foo bar", stmt)
+//                == UPS_PARSER_ERROR);
 
-  // test hex. and octal numbers
-  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 010", stmt)
-                == 0);
-  REQUIRE(stmt.dbid == 8);
-  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 0x10", stmt)
-                == 0);
-  REQUIRE(stmt.dbid == 16);
-  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 0X10", stmt)
-                == 0);
-  REQUIRE(stmt.dbid == 16);
+//  // test hex. and octal numbers
+//  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 010", stmt)
+//                == 0);
+//  REQUIRE(stmt.dbid == 8);
+//  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 0x10", stmt)
+//                == 0);
+//  REQUIRE(stmt.dbid == 16);
+//  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 0X10", stmt)
+//                == 0);
+//  REQUIRE(stmt.dbid == 16);
 
-  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 1", stmt)
-                == 0);
+//  REQUIRE(upscaledb::Parser::parse_select("bar($key) from database 1", stmt)
+//                == 0);
 
-  // Win32: copy ../win32/msvc2013/out/unittests_debug_x64/unittests-plugin.dll .
-  // Then reenable the next lines
-#if 0
-  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test4")
-    == 0);
-  REQUIRE(upscaledb::Parser::parse_select("\"test4@unittests-plugin.dll\"($key) from database 1", stmt)
-    == 0);
-#else
-  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test4")
-                == 0);
-  REQUIRE(upscaledb::Parser::parse_select("\"test4@./plugin.so\"($key) from database 1", stmt)
-                == 0);
-#endif
-  REQUIRE(upscaledb::Parser::parse_select("test4($key) from database 1", stmt)
-    == 0);
-  REQUIRE(upscaledb::Parser::parse_select("\"test4@no.so\"($key) from database 1", stmt)
-                == UPS_PLUGIN_NOT_FOUND);
-  REQUIRE(upscaledb::Parser::parse_select("test4($key) from database 1 "
-                          "where test4($key) limit 12", stmt)
-                == UPS_PARSER_ERROR);
-  REQUIRE(upscaledb::Parser::parse_select("test4($key) from database 1 "
-                          "limit 12", stmt)
-                == UPS_PARSER_ERROR);
+//  // Win32: copy ../win32/msvc2013/out/unittests_debug_x64/unittests-plugin.dll .
+//  // Then reenable the next lines
+//#if 0
+//  REQUIRE(upscaledb::PluginManager::import("unittests-plugin.dll", "test4")
+//    == 0);
+//  REQUIRE(upscaledb::Parser::parse_select("\"test4@unittests-plugin.dll\"($key) from database 1", stmt)
+//    == 0);
+//#else
+//  REQUIRE(upscaledb::PluginManager::import("./plugin.so", "test4")
+//                == 0);
+//  REQUIRE(upscaledb::Parser::parse_select("\"test4@./plugin.so\"($key) from database 1", stmt)
+//                == 0);
+//#endif
+//  REQUIRE(upscaledb::Parser::parse_select("test4($key) from database 1", stmt)
+//    == 0);
+//  REQUIRE(upscaledb::Parser::parse_select("\"test4@no.so\"($key) from database 1", stmt)
+//                == UPS_PLUGIN_NOT_FOUND);
+//  REQUIRE(upscaledb::Parser::parse_select("test4($key) from database 1 "
+//                          "where test4($key) limit 12", stmt)
+//                == UPS_PARSER_ERROR);
+//  REQUIRE(upscaledb::Parser::parse_select("test4($key) from database 1 "
+//                          "limit 12", stmt)
+//                == UPS_PARSER_ERROR);
 
-  check("test4($key) from database 10",
-                false, "test4", 10);
-  check("DISTINCT test4($key) from database 10",
-                true, "test4", 10);
-  check("test4($key) from database 1 where test4($key)",
-                false, "test4", 1, "test4");
-  check("t($key) from database 1 where test4($key)",
-                false, "t", 1, "test4");
-  check("DISTINCT test4($key) from database 10",
-                true, "test4", 10, 0);
-  check("DISTINCT test4($key) from database 10",
-                true, "test4", 10, 0);
+//  check("test4($key) from database 10",
+//                false, "test4", 10);
+//  check("DISTINCT test4($key) from database 10",
+//                true, "test4", 10);
+//  check("test4($key) from database 1 where test4($key)",
+//                false, "test4", 1, "test4");
+//  check("t($key) from database 1 where test4($key)",
+//                false, "t", 1, "test4");
+//  check("DISTINCT test4($key) from database 10",
+//                true, "test4", 10, 0);
+//  check("DISTINCT test4($key) from database 10",
+//                true, "test4", 10, 0);
 
-  stmt = SelectStatement();
-  REQUIRE(upscaledb::Parser::parse_select("SUM($record) FROM database 1",
-                stmt) == 0);
-  REQUIRE(stmt.function.flags == UQI_STREAM_RECORD);
+//  stmt = SelectStatement();
+//  REQUIRE(upscaledb::Parser::parse_select("SUM($record) FROM database 1",
+//                stmt) == 0);
+//  REQUIRE(stmt.function.flags == UQI_STREAM_RECORD);
 
-  REQUIRE(upscaledb::Parser::parse_select("SUM($key, $record) FROM database 1",
-                stmt) == 0);
-  REQUIRE(stmt.function.flags == (UQI_STREAM_KEY | UQI_STREAM_RECORD));
-}
+//  REQUIRE(upscaledb::Parser::parse_select("SUM($key, $record) FROM database 1",
+//                stmt) == 0);
+//  REQUIRE(stmt.function.flags == (UQI_STREAM_KEY | UQI_STREAM_RECORD));
+//}
 
 TEST_CASE("Uqi/closedDatabaseTest", "")
 {

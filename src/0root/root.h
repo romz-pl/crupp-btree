@@ -36,6 +36,7 @@
 #   define HAVE_PREAD             1
 #   define HAVE_PWRITE            1
 #   define HAVE_SCHED_YIELD       1
+#   define HAVE_USLEEP            1
 #endif
 
 #include "ups/types.h"
