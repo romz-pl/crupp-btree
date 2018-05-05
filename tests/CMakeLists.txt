@@ -20,11 +20,11 @@ add_executable( ${TEST_NAME}
     cursor2.cpp
     db.cpp
     device.cpp
-    #duplicates.cpp
+    duplicates.cpp
     env.cpp
-    #journal.cpp
+    journal.cpp
     main.cpp
-    #misc.cpp
+    misc.cpp
     os.cpp
     page.cpp
     page_manager.cpp
