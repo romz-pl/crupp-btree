@@ -392,7 +392,7 @@ LocalCursor::move_first_duplicate(Context *)
 }
 
 ups_status_t
-LocalCursor::move_last_duplicate(Context *context)
+LocalCursor::move_last_duplicate(Context *)
 {
   assert(duplicate_cache.size() > 0);
 

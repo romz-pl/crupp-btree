@@ -43,13 +43,13 @@ struct CountScanVisitor : public ScanVisitor
   }
 
   // Operates on a single key
-  virtual void operator()(const void *key_data, uint16_t key_size,
-                  const void *record_data, uint32_t record_size) {
+  virtual void operator()(const void *, uint16_t ,
+                  const void *, uint32_t ) {
     count++;
   }
 
   // Operates on an array of keys
-  virtual void operator()(const void *key_array, const void *record_array,
+  virtual void operator()(const void *, const void *,
                   size_t length) {
     count += length;
   }
@@ -66,7 +66,7 @@ struct CountScanVisitor : public ScanVisitor
 
 struct CountScanVisitorFactory
 {
-  static ScanVisitor *create(const DbConfig *cfg,
+  static ScanVisitor *create(const DbConfig *,
                         SelectStatement *stmt) {
     assert(stmt->function.name == "count");
     assert(stmt->predicate.name == "");

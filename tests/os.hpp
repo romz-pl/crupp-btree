@@ -32,6 +32,7 @@ using namespace boost::filesystem;
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <strings.h>
 
 #include <ups/upscaledb.h>
 #include "1base/error.h"
@@ -83,7 +84,8 @@ struct os {
     struct _stat buf = {0};
     return ::_stat(path, &buf) >= 0;
 #else
-    struct stat buf = {0};
+    struct stat buf;
+    bzero( &buf, sizeof( buf ) );
     return ::stat(path, &buf) >= 0;
 #endif
   }

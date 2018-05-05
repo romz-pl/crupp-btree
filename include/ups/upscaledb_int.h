@@ -371,20 +371,31 @@ ups_at_exit();
  * A structure describing an Insert, Erase or Find operation
  */
 struct ups_operation_t {
-  /** The operation type; UPS_OP_INSERT, UPS_OP_ERASE or UPS_OP_FIND */
-  int type;
 
-  /** The key */
-  ups_key_t key;
+    ups_operation_t( int _type, ups_key_t _key, ups_record_t _record, uint32_t _flags, ups_status_t _result)
+        : type( _type )
+        , key( _key )
+        , record( _record )
+        , flags( _flags )
+        , result( _result )
+    {
 
-  /** The record; not required if type is UPS_OP_ERASE */
-  ups_record_t record;
+    }
 
-  /** flags for ups_db_insert, ups_db_erase, ups_db_find */
-  uint32_t flags;
+    /** The operation type; UPS_OP_INSERT, UPS_OP_ERASE or UPS_OP_FIND */
+    int type;
 
-  /** The actual result of the operation */
-  ups_status_t result;
+    /** The key */
+    ups_key_t key;
+
+    /** The record; not required if type is UPS_OP_ERASE */
+    ups_record_t record;
+
+    /** flags for ups_db_insert, ups_db_erase, ups_db_find */
+    uint32_t flags;
+
+    /** The actual result of the operation */
+    ups_status_t result;
 };
 
 #define UPS_OP_INSERT       1

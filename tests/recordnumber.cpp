@@ -185,8 +185,8 @@ struct RecordNumberFixture : BaseFixture {
 
     for (int i = 0; i < 500; i++) {
       recno = i + 1;
-      memset(&key, 0, sizeof(key));
-      memset(&rec, 0, sizeof(rec));
+      key = ups_key_t();
+      rec = ups_record_t();
       key.data = &recno;
       key.size = sizeof(recno);
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
@@ -393,7 +393,7 @@ struct RecordNumberFixture : BaseFixture {
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
     value = 0x13ull;
-    memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, UPS_OVERWRITE));
@@ -408,7 +408,7 @@ struct RecordNumberFixture : BaseFixture {
     key.data = &recno;
     key.size = sizeof(RecnoType);
 
-    memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
 
     REQUIRE(value == *(RecnoType *)rec.data);
@@ -428,12 +428,12 @@ struct RecordNumberFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_insert(cursor, &key, &rec, 0));
 
     value = 0x13ull;
-    memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_cursor_insert(cursor, &key, &rec, UPS_OVERWRITE));
 
-    memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
 
     REQUIRE(value == *(RecnoType *)rec.data);

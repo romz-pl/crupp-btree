@@ -129,8 +129,8 @@ expect_result(uqi_result_t *result, const char *key,
 }
 
 static void *
-agg_init(int flags, int key_type, uint32_t key_size, int record_type,
-                    uint32_t record_size, const char *reserved)
+agg_init(int , int , uint32_t , int ,
+                    uint32_t , const char *)
 {
   return new uint64_t(0);
 }
@@ -184,48 +184,48 @@ agg_results(void *state, uqi_result_t *result)
 }
 
 static int
-even_predicate(void *state, const void *key_data, uint32_t key_size,
-                const void *record_data, uint32_t record_size)
+even_predicate(void *, const void *key_data, uint32_t ,
+                const void *, uint32_t )
 {
   const uint32_t *i = (const uint32_t *)key_data;
   return (*i & 1) == 0;
 }
 
 static int
-key_predicate(void *state, const void *key_data, uint32_t key_size,
-                const void *record_data, uint32_t record_size)
+key_predicate(void *, const void *key_data, uint32_t ,
+                const void *, uint32_t )
 {
   const uint32_t *i = (const uint32_t *)key_data;
   return *i < 2500;
 }
 
 static int
-record_predicate(void *state, const void *key_data, uint32_t key_size,
-                const void *record_data, uint32_t record_size)
+record_predicate(void *, const void *, uint32_t ,
+                const void *record_data, uint32_t )
 {
   const uint32_t *i = (const uint32_t *)record_data;
   return *i < 5000;
 }
 
 static int
-test1_predicate(void *state, const void *key_data, uint32_t key_size,
-                const void *record_data, uint32_t record_size)
+test1_predicate(void *, const void *key_data, uint32_t ,
+                const void *, uint32_t )
 {
   const uint8_t *p = (const uint8_t *)key_data;
   return (p[0] & 1) == 0;
 }
 
 static void *
-lt10_init(int flags, int key_type, uint32_t key_size, int record_type,
-                uint32_t record_size, const char *reserved)
+lt10_init(int flags, int , uint32_t , int ,
+                uint32_t , const char *)
 {
   REQUIRE(flags == UQI_STREAM_KEY);
   return 0;
 }
 
 static int
-lt10_predicate(void *state, const void *key_data, uint32_t key_size,
-                const void *record_data, uint32_t record_size)
+lt10_predicate(void *, const void *key_data, uint32_t ,
+                const void *, uint32_t )
 {
   const float *f = (const float *)key_data;
   return *f < 10.0f;
@@ -896,18 +896,18 @@ TEST_CASE("Uqi/countDistinctIfTest", "")
 //  REQUIRE(upscaledb::PluginManager::is_registered("test4") == true);
 //}
 
-static void
-check(const char *query, bool distinct, const char *function,
-                uint16_t db, const char *predicate = 0)
-{
-  SelectStatement stmt;
-  REQUIRE(upscaledb::Parser::parse_select(query, stmt) == 0);
-  REQUIRE(stmt.distinct == distinct);
-  REQUIRE(stmt.dbid == db);
-  REQUIRE(stmt.function.name == function);
-  if (predicate)
-    REQUIRE(stmt.predicate.name == predicate);
-}
+//static void
+//check(const char *query, bool distinct, const char *function,
+//                uint16_t db, const char *predicate = 0)
+//{
+//  SelectStatement stmt;
+//  REQUIRE(upscaledb::Parser::parse_select(query, stmt) == 0);
+//  REQUIRE(stmt.distinct == distinct);
+//  REQUIRE(stmt.dbid == db);
+//  REQUIRE(stmt.function.name == function);
+//  if (predicate)
+//    REQUIRE(stmt.predicate.name == predicate);
+//}
 
 //TEST_CASE("Uqi/parserTest", "")
 //{
