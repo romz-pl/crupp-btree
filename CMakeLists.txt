@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.0)
 project (crupp-btree)
 
+find_package( Boost )
+
 #SET( ROMZ_CXX_FLAGS -Wall -Wpedantic -Wextra -O2 -std=c++11 )
 SET( ROMZ_CXX_FLAGS -Wall -Wpedantic -Wextra -pthread -g -O0 -fprofile-arcs -ftest-coverage -std=c++11 )
 
