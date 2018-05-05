@@ -26,8 +26,8 @@ add_executable( ${TEST_NAME}
     main.cpp
     #misc.cpp
     #os.cpp
-    #page.cpp
-    #page_manager.cpp
+    page.cpp
+    page_manager.cpp
     #recordnumber.cpp
     #recovery.cpp
     #remote.cpp
