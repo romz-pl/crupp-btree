@@ -5,12 +5,12 @@ add_executable( ${TEST_NAME}
     #api110.cpp
     #approx.cpp
     #blob_manager.cpp
-    #btree.cpp
-    #btree_cursor.cpp
-    #btree_default.cpp
-    #btree_erase.cpp
-    #btree_insert.cpp
-    #btree_key.cpp
+    btree.cpp
+    btree_cursor.cpp
+    btree_default.cpp
+    btree_erase.cpp
+    btree_insert.cpp
+    btree_key.cpp
     #changeset.cpp
     #check.cpp
     #compression.cpp
