@@ -681,7 +681,7 @@ struct UqiFixture : BaseFixture {
         sum += i;
     }
 
-    uqi_plugin_t even_plugin = {0};
+    uqi_plugin_t even_plugin;
     even_plugin.name = "even";
     even_plugin.type = UQI_PLUGIN_PREDICATE;
     even_plugin.pred = even_predicate;
@@ -731,7 +731,7 @@ struct UqiFixture : BaseFixture {
       }
     }
 
-    uqi_plugin_t plugin = {0};
+    uqi_plugin_t plugin;
     plugin.name = "if_lt_10";
     plugin.type = UQI_PLUGIN_PREDICATE;
     plugin.pred = lt10_predicate;
@@ -760,7 +760,7 @@ struct UqiFixture : BaseFixture {
         c++;
     }
 
-    uqi_plugin_t plugin = {0};
+    uqi_plugin_t plugin;
     plugin.name = "test1";
     plugin.type = UQI_PLUGIN_PREDICATE;
     plugin.pred = test1_predicate;
@@ -798,7 +798,7 @@ struct UqiFixture : BaseFixture {
         c++;
     }
 
-    uqi_plugin_t plugin = {0};
+    uqi_plugin_t plugin;
     plugin.name = "test1";
     plugin.type = UQI_PLUGIN_PREDICATE;
     plugin.pred = test1_predicate;
@@ -1094,13 +1094,13 @@ struct QueryFixture : BaseFixture {
     rp.require_record_data(&record_sum, sizeof(record_sum))
       .close();
 
-    uqi_plugin_t key_plugin = {0};
+    uqi_plugin_t key_plugin;
     key_plugin.name = "key_pred";
     key_plugin.type = UQI_PLUGIN_PREDICATE;
     key_plugin.pred = key_predicate;
     REQUIRE(0 == uqi_register_plugin(&key_plugin));
 
-    uqi_plugin_t record_plugin = {0};
+    uqi_plugin_t record_plugin;
     record_plugin.name = "record_pred";
     record_plugin.type = UQI_PLUGIN_PREDICATE;
     record_plugin.pred = record_predicate;
@@ -1164,7 +1164,7 @@ struct QueryFixture : BaseFixture {
     rp.require("SUM", UPS_TYPE_UINT64, sum)
       .close();
 
-    uqi_plugin_t record_plugin = {0};
+    uqi_plugin_t record_plugin;
     record_plugin.name = "record_pred";
     record_plugin.type = UQI_PLUGIN_PREDICATE;
     record_plugin.pred = record_predicate;
@@ -1195,7 +1195,7 @@ struct QueryFixture : BaseFixture {
     rp.require("AVERAGE", UPS_TYPE_REAL64, sum / 10000.0)
       .close();
 
-    uqi_plugin_t record_plugin = {0};
+    uqi_plugin_t record_plugin;
     record_plugin.name = "record_pred";
     record_plugin.type = UQI_PLUGIN_PREDICATE;
     record_plugin.pred = record_predicate;
@@ -1220,7 +1220,7 @@ struct QueryFixture : BaseFixture {
         pred += i;
     }
 
-    uqi_plugin_t plugin = {0};
+    uqi_plugin_t plugin;
     plugin.name = "agg";
     plugin.type = UQI_PLUGIN_AGGREGATE;
     plugin.init = agg_init;
@@ -1234,7 +1234,7 @@ struct QueryFixture : BaseFixture {
     rp.require("AGG", UPS_TYPE_UINT64, sum)
       .close();
 
-    uqi_plugin_t record_plugin = {0};
+    uqi_plugin_t record_plugin;
     record_plugin.name = "record_pred";
     record_plugin.type = UQI_PLUGIN_PREDICATE;
     record_plugin.pred = record_predicate;
@@ -1263,7 +1263,7 @@ struct QueryFixture : BaseFixture {
       rp.require_key(i, &i, sizeof(i));
     rp.close();
 
-    uqi_plugin_t even_plugin = {0};
+    uqi_plugin_t even_plugin;
     even_plugin.name = "even";
     even_plugin.type = UQI_PLUGIN_PREDICATE;
     even_plugin.pred = even_predicate;
@@ -1510,7 +1510,7 @@ struct QueryFixture : BaseFixture {
     rp.close();
 
     // top($record) limit 10 where even($record)
-    uqi_plugin_t even_plugin = {0};
+    uqi_plugin_t even_plugin;
     even_plugin.name = "even";
     even_plugin.type = UQI_PLUGIN_PREDICATE;
     even_plugin.pred = even_predicate;
@@ -1634,7 +1634,7 @@ struct QueryFixture : BaseFixture {
     uqi_result_close(result);
 
     // top($record) limit 10 where even($record)
-    uqi_plugin_t even_plugin = {0};
+    uqi_plugin_t even_plugin;
     even_plugin.name = "even";
     even_plugin.type = UQI_PLUGIN_PREDICATE;
     even_plugin.pred = even_predicate;
@@ -1724,7 +1724,7 @@ TEST_CASE("Uqi/queryTest2", "")
 // SUM does not work on binary keys, therefore use a custom aggregation function
 TEST_CASE("Uqi/queryTest3", "")
 {
-  uqi_plugin_t plugin = {0};
+  uqi_plugin_t plugin;
   plugin.name = "agg";
   plugin.type = UQI_PLUGIN_AGGREGATE;
   plugin.init = agg_init;
@@ -1741,7 +1741,7 @@ TEST_CASE("Uqi/queryTest3", "")
 // SUM does not work on binary keys, therefore use a custom aggregation function
 TEST_CASE("Uqi/queryTest4", "")
 {
-  uqi_plugin_t plugin = {0};
+  uqi_plugin_t plugin;
   plugin.name = "agg";
   plugin.type = UQI_PLUGIN_AGGREGATE;
   plugin.init = agg_init;

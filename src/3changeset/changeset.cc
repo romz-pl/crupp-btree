@@ -65,7 +65,7 @@ struct FlushChangesetVisitor {
 
 static void
 flush_changeset_to_file(std::vector<Page *> list, Device *device,
-                Journal *journal, uint64_t lsn, bool enable_fsync)
+                Journal *, uint64_t lsn, bool enable_fsync)
 {
   std::vector<Page *>::iterator it = list.begin();
   for (; it != list.end(); it++) {

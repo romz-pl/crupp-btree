@@ -216,7 +216,23 @@ typedef void (*uqi_plugin_result_function)(void *state, uqi_result_t *result);
  * calling convention.
  *
  */
-typedef struct {
+struct uqi_plugin_t {
+
+    uqi_plugin_t()
+        : name( nullptr )
+        , type( 0 )
+        , flags( 0 )
+        , plugin_version( 0 )
+        , init( nullptr )
+        , cleanup( nullptr )
+        , agg_single( nullptr )
+        , agg_many( nullptr )
+        , pred( nullptr )
+        , results( nullptr )
+    {
+
+    }
+
   /** The name of this plugin */
   const char *name;
 
@@ -264,7 +280,7 @@ typedef struct {
   /** Assigns the result to a @a uqi_result_t structure; must not be null */
   uqi_plugin_result_function results;
 
-} uqi_plugin_t;
+};
 
 
 /**

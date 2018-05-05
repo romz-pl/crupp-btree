@@ -180,7 +180,7 @@ read_entry(JournalState &state, Journal::Iterator *iter, PJournalEntry *entry,
 
 // Appends an entry to the journal
 static inline void
-append_entry(JournalState &state, int idx,
+append_entry(JournalState &state, int ,
             const uint8_t *ptr1 = 0, size_t ptr1_size = 0,
             const uint8_t *ptr2 = 0, size_t ptr2_size = 0,
             const uint8_t *ptr3 = 0, size_t ptr3_size = 0,
@@ -239,7 +239,7 @@ get_db(JournalState &state, uint16_t dbname)
 
 // Returns a pointer to a Txn object.
 static inline Txn *
-get_txn(JournalState &state, LocalTxnManager *txn_manager,
+get_txn(JournalState &, LocalTxnManager *txn_manager,
                 uint64_t txn_id)
 {
   Txn *txn = txn_manager->oldest_txn();
@@ -272,7 +272,7 @@ close_all_databases(JournalState &state)
 
 // Aborts all transactions which are still active.
 static inline void
-abort_uncommitted_txns(JournalState &state, LocalTxnManager *txn_manager)
+abort_uncommitted_txns(JournalState &, LocalTxnManager *txn_manager)
 {
   Txn *txn = txn_manager->oldest_txn();
 
@@ -310,7 +310,7 @@ append_changeset_page(JournalState &state, Page *page, uint32_t page_size)
 // Scans a file for the oldest changeset. Returns the lsn of this
 // changeset.
 static inline uint64_t
-scan_for_oldest_changeset(JournalState &state, File *file)
+scan_for_oldest_changeset(JournalState &, File *file)
 {
   Journal::Iterator it;
   PJournalEntry entry;
@@ -471,7 +471,7 @@ recover_changeset(JournalState &state)
 
 // Recovers the logical journal
 static inline void
-recover_journal(JournalState &state, Context *context,
+recover_journal(JournalState &state, Context *,
                 LocalTxnManager *txn_manager, uint64_t start_lsn)
 {
   ups_status_t st = 0;
