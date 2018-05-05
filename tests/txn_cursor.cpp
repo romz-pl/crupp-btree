@@ -907,7 +907,7 @@ struct TxnCursorFixture : BaseFixture {
 
     ups_cursor_t *cursor;
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
-    ups_key_t key;
+    ups_key_t key = {0, nullptr, 0, 0};
 
     REQUIRE(0 == ups_cursor_move(cursor, &key, 0, UPS_CURSOR_LAST));
     REQUIRE(3 == *(int *)key.data);
