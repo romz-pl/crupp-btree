@@ -11,9 +11,9 @@ add_executable( ${TEST_NAME}
     btree_erase.cpp
     btree_insert.cpp
     btree_key.cpp
-    #changeset.cpp
-    #check.cpp
-    #compression.cpp
+    changeset.cpp
+    check.cpp
+    compression.cpp
     #cppapi.cpp
     #crc32.cpp
     #cursor1.cpp
