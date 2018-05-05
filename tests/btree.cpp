@@ -67,7 +67,7 @@ struct BtreeFixture : BaseFixture {
 #endif
   }
 
-  void fixedTypeTest(int type, int size, int maxkeys, const char *abiname) {
+  void fixedTypeTest(int type, int size, int maxkeys, const char *) {
     std::string abi;
     ups_parameter_t ps[] = {
         { UPS_PARAM_KEY_TYPE, (uint64_t)type },

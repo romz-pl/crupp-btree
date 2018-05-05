@@ -32,8 +32,8 @@
 using namespace upscaledb;
 
 static int
-slot_key_cmp(ups_db_t *db, const uint8_t *lhs, uint32_t lsz,
-                const uint8_t *rhs, uint32_t rsz) {
+slot_key_cmp(ups_db_t *, const uint8_t *lhs, uint32_t lsz,
+                const uint8_t *rhs, uint32_t ) {
   uint32_t i;
 
   for (i = 0; i < lsz; ++i) {
