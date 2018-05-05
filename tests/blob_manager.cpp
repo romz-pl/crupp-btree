@@ -43,7 +43,7 @@ struct BlobManagerProxy {
 
   BlobManagerProxy &require_read(Context *context, uint64_t blobid,
                   std::vector<uint8_t> &buffer, ByteArray *arena) {
-    ups_record_t record = {0};
+    ups_record_t record;
     blob_manager->read(context, blobid, &record, 0, arena);
     REQUIRE(record.size == buffer.size());
     REQUIRE(0 == ::memcmp(buffer.data(), record.data, record.size));
@@ -103,7 +103,7 @@ struct BlobManagerFixture : BaseFixture {
   void overwriteMappedBlob() {
     std::vector<uint8_t> buffer(128);
     std::fill(buffer.begin(), buffer.end(), 0x12);
-    ups_key_t key = {0};
+    ups_key_t key;
 
     DbProxy dbp(db);
     dbp.require_insert(&key, buffer);

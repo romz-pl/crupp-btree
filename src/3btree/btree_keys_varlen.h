@@ -119,7 +119,7 @@ struct VariableLengthKeyList : BaseKeyList {
   }
 
   // Opens an existing KeyList
-  void open(uint8_t *ptr, size_t range_size_, size_t node_count) {
+  void open(uint8_t *ptr, size_t range_size_, size_t) {
     _data = ptr;
     range_size = range_size_;
     _index.open(_data, range_size);
@@ -144,7 +144,7 @@ struct VariableLengthKeyList : BaseKeyList {
   // Copies a key into |dest|
   void key(Context *context, int slot, ByteArray *arena, ups_key_t *dest,
                   bool deep_copy = true) {
-    ups_key_t tmp = {0};
+    ups_key_t tmp;
     uint32_t offset = _index.get_chunk_offset(slot);
     uint8_t *p = _index.get_chunk_data_by_offset(offset);
 
@@ -179,7 +179,7 @@ struct VariableLengthKeyList : BaseKeyList {
   // this KeyList implementation. For variable length keys, the caller
   // must iterate over all keys. The |scan()| interface is only implemented
   // for PAX style layouts.
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray*, size_t, uint32_t) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
@@ -209,8 +209,8 @@ struct VariableLengthKeyList : BaseKeyList {
   // node (otherwise the caller would have split the node).
   template<typename Cmp>
   PBtreeNode::InsertResult insert(Context *context, size_t node_count,
-                              const ups_key_t *key, uint32_t flags,
-                              Cmp &comparator, int slot) {
+                              const ups_key_t *key, uint32_t ,
+                              Cmp &, int slot) {
     _index.insert(node_count, slot);
 
     // now there's one additional slot
@@ -218,7 +218,7 @@ struct VariableLengthKeyList : BaseKeyList {
 
     uint32_t key_flags = 0;
     // try to compress the key
-    ups_key_t helper = {0};
+    ups_key_t helper;
     if (_compressor && compress(key, &helper)) {
       key_flags = BtreeKey::kCompressed;
       key = &helper;
@@ -320,7 +320,7 @@ struct VariableLengthKeyList : BaseKeyList {
         }
 
         // make sure that the extended blob can be loaded
-        ups_record_t record = {0};
+        ups_record_t record;
         _blob_manager->read(context, blobid, &record, 0, &arena);
 
         // compare it to the cached key (if there is one)
@@ -386,7 +386,7 @@ struct VariableLengthKeyList : BaseKeyList {
 
   // Prints a slot to |out| (for debugging)
   void print(Context *context, int slot, std::stringstream &out) {
-    ups_key_t tmp = {0};
+    ups_key_t tmp;
     if (ISSET(get_key_flags(slot), BtreeKey::kExtendedKey)) {
       get_extended_key(context, get_extended_blob_id(slot), &tmp);
     }
@@ -468,7 +468,7 @@ struct VariableLengthKeyList : BaseKeyList {
     }
 
     ByteArray arena;
-    ups_record_t record = {0};
+    ups_record_t record;
     _blob_manager->read(context, blob_id, &record, UPS_FORCE_DEEP_COPY,
                     &arena);
     (*_extkey_cache)[blob_id] = arena;
@@ -482,7 +482,7 @@ struct VariableLengthKeyList : BaseKeyList {
     if (unlikely(!_extkey_cache))
       _extkey_cache.reset(new ExtKeyCache());
 
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.data = key->data;
     rec.size = key->size;
 

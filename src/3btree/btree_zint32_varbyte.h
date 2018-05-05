@@ -233,7 +233,7 @@ struct VarbyteCodecImpl : BlockCodecBase<VarbyteIndex> {
 
   template<typename GrowHandler>
   static void del(VarbyteIndex *index, uint32_t *block_data, int slot,
-                  GrowHandler *unused) {
+                  GrowHandler *) {
     assert(index->key_count() > 1);
 
     uint8_t *data = (uint8_t *)block_data;
@@ -323,7 +323,7 @@ struct VarbyteCodecImpl : BlockCodecBase<VarbyteIndex> {
   }
 
   static uint32_t estimate_required_size(VarbyteIndex *index,
-                        uint8_t *block_data, uint32_t key) {
+                        uint8_t*, uint32_t key) {
     return index->used_size() + calculate_delta_size(key - index->value());
   }
 

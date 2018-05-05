@@ -92,11 +92,9 @@ class error {
 class key {
   public:
     /** Constructor */
-    key(void *data = 0, uint16_t size = 0, uint32_t flags = 0) {
-      ::memset(&_key, 0, sizeof(_key));
-      _key.data = data;
-      _key.size = size;
-      _key.flags = flags;
+    key(void *data = 0, uint16_t size = 0, uint32_t flags = 0)
+      : _key( size, data, flags, 0 )
+    {
     }
 
     /** Copy constructor. */
@@ -165,11 +163,9 @@ class key {
 class record {
   public:
     /** Constructor */
-    record(void *data = 0, uint32_t size = 0, uint32_t flags = 0) {
-      memset(&_record, 0, sizeof(_record));
-      _record.data = data;
-      _record.size = size;
-      _record.flags = flags;
+    record(void *data = 0, uint32_t size = 0, uint32_t flags = 0)
+        : _record( size, data, flags )
+    {
     }
 
     /** Copy constructor. */

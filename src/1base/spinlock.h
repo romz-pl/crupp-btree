@@ -61,7 +61,7 @@ class Spinlock {
 
     // Need user-defined copy constructor because boost::atomic<> is not
     // copyable. Initializes an *unlocked* Spinlock.
-    Spinlock(const Spinlock &other)
+    Spinlock(const Spinlock &/*other*/)
       : m_state(kUnlocked) {
     }
 

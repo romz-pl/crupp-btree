@@ -188,7 +188,7 @@ PluginManager::aggregate(const char *name,
                             uqi_plugin_aggregate_many_function agg_many,
                             uqi_plugin_result_function results)
 {
-  uqi_plugin_t plugin = {0};
+  uqi_plugin_t plugin;
   plugin.name = name;
   plugin.type = UQI_PLUGIN_AGGREGATE;
   plugin.init = init;
@@ -204,7 +204,7 @@ PluginManager::predicate(const char *name,
                             uqi_plugin_predicate_function pred,
                             uqi_plugin_result_function results)
 {
-  uqi_plugin_t plugin = {0};
+  uqi_plugin_t plugin;
   plugin.name = name;
   plugin.type = UQI_PLUGIN_PREDICATE;
   plugin.init = init;

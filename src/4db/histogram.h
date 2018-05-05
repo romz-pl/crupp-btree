@@ -50,8 +50,6 @@ struct LocalDb;
 struct Histogram {
   Histogram(LocalDb *db_)
     : db(db_) {
-    ::memset(&lower, 0, sizeof(lower));
-    ::memset(&upper, 0, sizeof(upper));
   }
 
   // compares key to the lower key, returns true if it's lower

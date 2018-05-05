@@ -42,7 +42,7 @@ struct SumScanVisitor : public NumericalScanVisitor {
     kRequiresBothStreams = 0,
   };
 
-  SumScanVisitor(const DbConfig *cfg, SelectStatement *stmt)
+  SumScanVisitor(const DbConfig *, SelectStatement *stmt)
     : NumericalScanVisitor(stmt), sum(0) {
   }
 

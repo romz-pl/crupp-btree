@@ -79,8 +79,8 @@ struct DupeCursorFixture : BaseFixture {
 
   ups_status_t move(const char *key, const char *rec, uint32_t flags,
                   ups_cursor_t *c = 0) {
-    ups_key_t k = {0};
-    ups_record_t r = {0};
+    ups_key_t k;
+    ups_record_t r;
 
     if (!c)
       c = cursor;
@@ -111,7 +111,7 @@ struct DupeCursorFixture : BaseFixture {
   ups_status_t find(const char *key, const char *rec) {
     ups_key_t k = ups_make_key((void *)key,
                     (uint16_t)(::strlen(key) + 1));
-    ups_record_t r = {0};
+    ups_record_t r;
     ups_status_t st = ups_db_find(db, m_txn, &k, &r, 0);
     if (st)
       return st;
@@ -363,8 +363,8 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k7", "r7.4", UPS_DUPLICATE));
     REQUIRE(0 == insertBtree("k8", "r8.1"));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     key.size = 3;
 
     key.data = (void *)"k1";
@@ -426,8 +426,8 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k7", "r7.4", UPS_DUPLICATE));
     REQUIRE(0 == insertBtree("k8", "r8.1"));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     key.size = 3;
 
     key.data = (void *)"k1";
@@ -625,8 +625,8 @@ struct DupeCursorFixture : BaseFixture {
     ups_cursor_t *c;
     REQUIRE(0 == ups_cursor_clone(cursor, &c));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     REQUIRE(0 == ups_cursor_move(c, &key, &rec, 0));
     REQUIRE(0 == ::strcmp((char *)rec.data, "r2.2"));
     REQUIRE(0 == ::strcmp((char *)key.data, "k1"));
@@ -639,8 +639,8 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r3.2", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r3.3", UPS_DUPLICATE));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     REQUIRE(0 == ups_cursor_move(cursor, &key, &rec, 0));
     REQUIRE(0 == ::strcmp((char *)rec.data, "r3.3"));
     REQUIRE(0 == ::strcmp((char *)key.data, "k1"));
@@ -659,7 +659,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.5", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.7", UPS_DUPLICATE));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 3;
     key.data = (void *)"k1";
 
@@ -670,7 +670,7 @@ struct DupeCursorFixture : BaseFixture {
           ups_cursor_move(c[1], &key, 0, UPS_CURSOR_FIRST));
 
     /* now insert a key at the beginning */
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 5;
     rec.data = (void *)"r1.2";
     REQUIRE(0 == ups_cursor_insert(c[0], &key, &rec,
@@ -701,7 +701,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.5", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.7", UPS_DUPLICATE));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 3;
     key.data = (void *)"k1";
 
@@ -712,7 +712,7 @@ struct DupeCursorFixture : BaseFixture {
           ups_cursor_move(c[1], &key, 0, UPS_CURSOR_FIRST));
 
     /* now insert a key at the beginning */
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 5;
     rec.data = (void *)"r1.2";
     REQUIRE(0 == ups_cursor_insert(c[0], &key, &rec,
@@ -819,7 +819,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.5", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.7", UPS_DUPLICATE));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 3;
     key.data = (void *)"k1";
 
@@ -841,7 +841,7 @@ struct DupeCursorFixture : BaseFixture {
           ups_cursor_move(c[3], &key, 0, UPS_CURSOR_LAST));
 
     /* now insert keys in-between */
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 5;
     ups_cursor_t *clone;
     rec.data = (void *)"r1.0";
@@ -919,7 +919,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.2", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.3", UPS_DUPLICATE));
 
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 5;
 
     rec.data = (void *)"r2.1";
@@ -950,7 +950,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertBtree("k1", "r1.2", UPS_DUPLICATE));
     REQUIRE(0 == insertBtree("k1", "r1.3", UPS_DUPLICATE));
 
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 5;
 
     rec.data = (void *)"r2.1";
@@ -1083,7 +1083,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k2", "r2.1", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 == ups_cursor_find(cursor, &key, 0, 0));
@@ -1103,7 +1103,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.3", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1235,7 +1235,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertBtree("k2", "r2.1", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1257,7 +1257,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertBtree("k1", "r1.3", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1519,7 +1519,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k2", "r2.1", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1541,7 +1541,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k2", "r2.1", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1563,7 +1563,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k2", "r2.1", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1585,7 +1585,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.3", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1607,7 +1607,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.3", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1629,7 +1629,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.3", UPS_DUPLICATE));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -1657,7 +1657,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.5", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.7", UPS_DUPLICATE));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 3;
     key.data = (void *)"k1";
 
@@ -1697,7 +1697,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.5", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.7", UPS_DUPLICATE));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 3;
     key.data = (void *)"k1";
 
@@ -1737,7 +1737,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.5", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.7", UPS_DUPLICATE));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 3;
     key.data = (void *)"k1";
 
@@ -1846,7 +1846,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.2", UPS_DUPLICATE));
     REQUIRE(0 == insertTxn  ("k1", "r1.3", UPS_DUPLICATE));
 
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 5;
     rec.data = (void *)"r1.4";
     REQUIRE(0 == ups_cursor_overwrite(cursor, &rec, 0));
@@ -1916,7 +1916,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == insertTxn  ("k1", "r1.4", UPS_DUPLICATE));
     REQUIRE(4u == count("k1"));
 
-    ups_record_t rec = {0};
+    ups_record_t rec;
     rec.size = 5;
 
     rec.data = (void *)"r2.1";
@@ -1957,7 +1957,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(3u == count("k1"));
 
     for (int i = 0; i < 3; i++) {
-      ups_key_t key = {0};
+      ups_key_t key;
       key.size = 3;
       key.data = (void *)"k1";
       REQUIRE(0 ==
@@ -2147,8 +2147,8 @@ struct DupeCursorFixture : BaseFixture {
     ups_txn_t *txn2;
     REQUIRE(0 == ups_txn_begin(&txn2, env, 0, 0, 0));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(UPS_TXN_CONFLICT ==
@@ -2164,7 +2164,7 @@ struct DupeCursorFixture : BaseFixture {
     ups_txn_t *txn2;
     REQUIRE(0 == ups_txn_begin(&txn2, env, 0, 0, 0));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(UPS_TXN_CONFLICT ==
@@ -2180,8 +2180,8 @@ struct DupeCursorFixture : BaseFixture {
     ups_txn_t *txn2;
     REQUIRE(0 == ups_txn_begin(&txn2, env, 0, 0, 0));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(UPS_TXN_CONFLICT ==
@@ -2199,8 +2199,8 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == ups_txn_begin(&txn2, env, 0, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c, db, txn2, 0));
 
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(UPS_TXN_CONFLICT ==
@@ -2219,7 +2219,7 @@ struct DupeCursorFixture : BaseFixture {
     REQUIRE(0 == ups_txn_begin(&txn2, env, 0, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c, db, txn2, 0));
 
-    ups_key_t key = {0};
+    ups_key_t key;
     key.size = 6;
     key.data = (void *)"11111";
     REQUIRE(UPS_TXN_CONFLICT ==
@@ -2846,18 +2846,18 @@ TEST_CASE("Cursor/issue41", "")
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     REQUIRE(0 == ups_cursor_create(&cw, db, txn, 0));
     if (i > 1) {
-      ups_key_t k = {0};
-      ups_record_t r = {0};
+      ups_key_t k;
+      ups_record_t r;
       REQUIRE(0 == ups_cursor_create(&cr, db, 0, 0));
       REQUIRE(0 == ups_cursor_move(cr, &k, &r, UPS_CURSOR_LAST));
       REQUIRE(*(uint64_t *)k.data == i - 1);
       REQUIRE(*(uint64_t *)r.data == i - 1);
       REQUIRE(0 == ups_cursor_close(cr));
     }
-    ups_key_t key = {0};
+    ups_key_t key;
     key.data = &i;
     key.size = sizeof(i);
-    ups_record_t record = {0};
+    ups_record_t record;
     record.data = &i;
     record.size = sizeof(i);
     REQUIRE(0 == ups_cursor_insert(cw, &key, &record, 0));
@@ -2868,8 +2868,8 @@ TEST_CASE("Cursor/issue41", "")
   REQUIRE(0 == ups_cursor_create(&cr, db, 0, 0));
 
   // 6,6
-  ups_key_t k = {0};
-  ups_record_t r = {0};
+  ups_key_t k;
+  ups_record_t r;
   REQUIRE(0 == ups_cursor_move(cr, &k, &r, UPS_CURSOR_LAST));
   REQUIRE(*(uint64_t *)k.data == 6);
   REQUIRE(*(uint64_t *)r.data == 6);

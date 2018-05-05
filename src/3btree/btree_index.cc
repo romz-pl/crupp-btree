@@ -94,7 +94,7 @@ BtreeIndex::open(PBtreeHeader *btree_header, DbConfig *dbconfig)
 }
 
 void
-BtreeIndex::persist_configuration(Context *context, const DbConfig *dbconfig)
+BtreeIndex::persist_configuration(Context *, const DbConfig *dbconfig)
 {
   if (unlikely(ISSET(dbconfig->flags, UPS_READ_ONLY)))
     return;

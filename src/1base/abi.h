@@ -40,10 +40,10 @@
 
 namespace upscaledb {
 
+#ifdef HAVE_GCC_ABI_DEMANGLE
 template<class T> inline std::string
 get_classname(const T& t)
 {
-#ifdef HAVE_GCC_ABI_DEMANGLE
   int status;
   const std::type_info &ti = typeid(t);
   char *name = abi::__cxa_demangle(ti.name(), 0, 0, &status);
@@ -56,10 +56,16 @@ get_classname(const T& t)
   std::string s = name;
   ::free(name);
   return s;
-#else
-  return "";
-#endif
 }
+#else
+
+template<class T> inline std::string
+get_classname(const T&)
+{
+  return std::string();
+}
+
+#endif
 
 } // namespace upscaledb
 

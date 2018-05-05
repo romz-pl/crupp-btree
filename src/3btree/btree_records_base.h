@@ -48,19 +48,19 @@ struct BaseRecordList : BaseList {
   }
 
   // Fills the btree_metrics structure
-  void fill_metrics(btree_metrics_t *metrics, size_t node_count) {
+  void fill_metrics(btree_metrics_t *metrics, size_t) {
     BtreeStatistics::update_min_max_avg(&metrics->recordlist_ranges,
                         range_size);
   }
 
   // Returns the record id. Only required for internal nodes
-  uint64_t record_id(int slot, int duplicate_index = 0) const {
+  uint64_t record_id(int , int /*duplicate_index*/ = 0) const {
     assert(!"shouldn't be here");
     return 0;
   }
 
   // Sets the record id. Not required for fixed length leaf nodes
-  void set_record_id(int slot, uint64_t ptr) {
+  void set_record_id(int , uint64_t ) {
     assert(!"shouldn't be here");
   }
 };

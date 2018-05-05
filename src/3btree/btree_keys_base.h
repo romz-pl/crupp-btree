@@ -60,24 +60,22 @@ struct BaseKeyList : BaseList {
   }
 
   // Erases the extended part of a key; nothing to do here
-  void erase_extended_key(Context *context, int slot) const {
+  void erase_extended_key(Context*, int) const {
   }
 
   template<typename Cmp>
-  int find_lower_bound(Context *context, size_t node_count,
-                  const ups_key_t *hkey, Cmp &comparator, int *pcmp) {
+  int find_lower_bound(Context*, size_t, const ups_key_t*, Cmp&, int*) {
     throw Exception(UPS_NOT_IMPLEMENTED);
   }
 
   // Finds a key
   template<typename Cmp>
-  int find(Context *context, size_t node_count, const ups_key_t *hkey,
-                  Cmp &comparator) {
+  int find(Context*, size_t, const ups_key_t*, Cmp&) {
     throw Exception(UPS_NOT_IMPLEMENTED);
   }
 
   // Fills the btree_metrics structure
-  void fill_metrics(btree_metrics_t *metrics, size_t node_count) {
+  void fill_metrics(btree_metrics_t* metrics, size_t) {
     BtreeStatistics::update_min_max_avg(&metrics->keylist_ranges, range_size);
   }
 };

@@ -30,7 +30,7 @@
 namespace upscaledb {
 
 bool
-Histogram::test_if_lower(Txn *txn, ups_key_t *key)
+Histogram::test_if_lower(Txn *, ups_key_t *key)
 {
   // if key was not initialized: always return false
   if (unlikely(lower.size == 0))
@@ -64,7 +64,7 @@ Histogram::test_and_update_if_lower(Txn *txn, ups_key_t *key)
 }
 
 bool
-Histogram::test_if_greater(Txn *txn, ups_key_t *key)
+Histogram::test_if_greater(Txn *, ups_key_t *key)
 {
   // if key was not initialized: always return false
   if (unlikely(upper.size == 0))
@@ -100,12 +100,15 @@ Histogram::test_and_update_if_greater(Txn *txn, ups_key_t *key)
 void
 Histogram::reset_if_equal(ups_key_t *key)
 {
-  if (unlikely(lower.size > 0
-                && db->btree_index->compare_keys(&lower, key) == 0))
-    ::memset(&lower, 0, sizeof(lower));
-  if (unlikely(upper.size > 0
-                && db->btree_index->compare_keys(&upper, key) == 0))
-    ::memset(&upper, 0, sizeof(upper));
+    if (unlikely(lower.size > 0 && db->btree_index->compare_keys(&lower, key) == 0))
+    {
+        lower = ups_key_t();
+    }
+
+    if (unlikely(upper.size > 0 && db->btree_index->compare_keys(&upper, key) == 0))
+    {
+        upper = ups_key_t();
+    }
 }
 
 } // namespace upscaledb

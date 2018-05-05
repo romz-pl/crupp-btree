@@ -63,7 +63,7 @@ struct PodRecordList : BaseRecordList {
   }
 
   // Opens an existing RecordList
-  void open(uint8_t *ptr, size_t range_size_, size_t node_count) {
+  void open(uint8_t *ptr, size_t range_size_, size_t ) {
     range_data = (T *)ptr;
     range_size = range_size_;
   }
@@ -109,8 +109,7 @@ struct PodRecordList : BaseRecordList {
   }
 
   // Updates the record of a key
-  void set_record(Context *, int slot, int, ups_record_t *record,
-                  uint32_t flags, uint32_t * = 0) {
+  void set_record(Context *, int slot, int, ups_record_t *record, uint32_t , uint32_t * = 0) {
     assert(record->size == sizeof(T));
     range_data[slot] = *(T *)record->data;
   }
@@ -137,8 +136,7 @@ struct PodRecordList : BaseRecordList {
   }
 
   // Copies |count| records from this[sstart] to dest[dstart]
-  void copy_to(int sstart, size_t node_count, PodRecordList<T> &dest,
-                  size_t other_count, int dstart) {
+  void copy_to(int sstart, size_t node_count, PodRecordList<T> &dest, size_t , int dstart) {
     ::memcpy(&dest.range_data[dstart], &range_data[sstart],
                     sizeof(T) * (node_count - sstart));
   }
@@ -153,7 +151,7 @@ struct PodRecordList : BaseRecordList {
   // Change the capacity; for PAX layouts this just means copying the
   // data from one place to the other
   void change_range_size(size_t node_count, uint8_t *new_data_ptr,
-                  size_t new_range_size, size_t capacity_hint) {
+                  size_t new_range_size, size_t) {
     ::memmove(new_data_ptr, range_data, node_count * sizeof(T));
     range_size = new_range_size;
     range_data = (T *)new_data_ptr;
@@ -172,7 +170,7 @@ struct PodRecordList : BaseRecordList {
   }
 
   // Prints a slot to |out| (for debugging)
-  void print(Context *context, int slot, std::stringstream &out) const {
+  void print(Context *, int slot, std::stringstream &out) const {
     out << range_data[slot];
   }
 

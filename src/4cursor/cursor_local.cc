@@ -82,7 +82,7 @@ append_btree_duplicates(LocalCursor *cursor, Context *context)
 
 // Appends the duplicates of the TxnCursor to the duplicate cache.
 static inline void
-append_txn_duplicates(LocalCursor *cursor, Context *context)
+append_txn_duplicates(LocalCursor *cursor, Context *)
 {
   TxnOperation *op = cursor->txn_cursor.get_coupled_op();
   TxnNode *node = op ? op->node : 0;
@@ -212,7 +212,7 @@ static inline ups_status_t
 check_if_btree_key_is_erased_or_overwritten(LocalCursor *cursor,
                 Context *context)
 {
-  ups_key_t key = {0};
+  ups_key_t key;
 
   ups_status_t st = cursor->btree_cursor.move(context, &key,
                         &cursor->db->key_arena(cursor->txn), 0, 0, 0);
@@ -359,7 +359,7 @@ LocalCursor::duplicate_cache_count(Context *context, bool clear_cache)
 }
 
 ups_status_t
-LocalCursor::move_next_duplicate(Context *context)
+LocalCursor::move_next_duplicate(Context *)
 {
   if (duplicate_cache_index > 0
           && duplicate_cache_index < duplicate_cache.size()) {
@@ -371,7 +371,7 @@ LocalCursor::move_next_duplicate(Context *context)
 }
 
 ups_status_t
-LocalCursor::move_previous_duplicate(Context *context)
+LocalCursor::move_previous_duplicate(Context *)
 {
   if (duplicate_cache_index > 1) {
     duplicate_cache_index--;
@@ -382,7 +382,7 @@ LocalCursor::move_previous_duplicate(Context *context)
 }
 
 ups_status_t
-LocalCursor::move_first_duplicate(Context *context)
+LocalCursor::move_first_duplicate(Context *)
 {
   assert(duplicate_cache.size() > 0);
 
@@ -392,7 +392,7 @@ LocalCursor::move_first_duplicate(Context *context)
 }
 
 ups_status_t
-LocalCursor::move_last_duplicate(Context *context)
+LocalCursor::move_last_duplicate(Context *)
 {
   assert(duplicate_cache.size() > 0);
 
@@ -1124,7 +1124,7 @@ LocalCursor::get_duplicate_position()
 }
 
 uint32_t
-LocalCursor::get_duplicate_count(uint32_t flags)
+LocalCursor::get_duplicate_count(uint32_t )
 {
   Context context(lenv(this), (LocalTxn *)txn, ldb(this));
 

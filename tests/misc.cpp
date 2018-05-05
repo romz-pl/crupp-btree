@@ -48,7 +48,7 @@ struct MiscFixture : BaseFixture {
     PageProxy pp(lenv());
     pp.require_alloc(ldb(), 0, Page::kInitializeWithZeroes);
 
-    ups_key_t key = {0};
+    ups_key_t key;
     BtreeNodeProxyProxy npp(ldb()->btree_index.get(), pp.page);
     npp.require_insert(context.get(), &key, PBtreeNode::kInsertPrepend)
        .require_key(context.get(), 0, &key);

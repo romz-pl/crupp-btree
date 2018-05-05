@@ -42,7 +42,7 @@ struct AverageScanVisitor : public NumericalScanVisitor
     kRequiresBothStreams = 0,
   };
 
-  AverageScanVisitor(const DbConfig *cfg, SelectStatement *stmt)
+  AverageScanVisitor(const DbConfig *, SelectStatement *stmt)
     : NumericalScanVisitor(stmt), sum(0), count(0) {
   }
 

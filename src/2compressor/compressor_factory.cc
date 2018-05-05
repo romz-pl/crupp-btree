@@ -94,4 +94,4 @@ CompressorFactory::create(int type)
   throw Exception(UPS_INV_PARAMETER);
 }
 
-}; // namespace upscaledb
+} // namespace upscaledb

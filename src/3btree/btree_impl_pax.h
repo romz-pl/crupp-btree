@@ -96,7 +96,7 @@ struct PaxNodeImpl : public BaseNodeImpl<KeyList, RecordList> {
   }
 
   // Returns true if |key| cannot be inserted because a split is required
-  bool requires_split(Context *context, const ups_key_t *key) const {
+  bool requires_split(Context *, const ups_key_t *) const {
     return P::node->length() >= P::estimated_capacity;
   }
 

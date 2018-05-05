@@ -64,7 +64,7 @@ struct BaseNodeImpl {
     }
 
     // Checks this node's integrity
-    virtual void check_integrity(Context *context) const {
+    virtual void check_integrity(Context *) const {
     }
 
     // Returns a copy of a key and stores it in |dest|
@@ -155,8 +155,8 @@ struct BaseNodeImpl {
       }
 
       // still here? then we have to use iterators
-      ups_key_t key = {0};
-      ups_record_t record = {0};
+      ups_key_t key;
+      ups_record_t record;
       ByteArray record_arena;
       size_t node_length = node->length();
 
@@ -303,7 +303,7 @@ struct BaseNodeImpl {
                                 keys.key_size(rhs));
       }
       else {
-        ups_key_t tmp = {0};
+        ups_key_t tmp;
         keys.key(context, rhs, &private_arena, &tmp, false);
         return cmp(lhs->data, lhs->size, tmp.data, tmp.size);
       }
@@ -332,7 +332,7 @@ struct BaseNodeImpl {
 
     // Splits a node and moves parts of the current node into |other|, starting
     // at the |pivot| slot
-    void split(Context *context, BaseNodeImpl<KeyList, RecordList> *other,
+    void split(Context *, BaseNodeImpl<KeyList, RecordList> *other,
                     int pivot) {
       size_t node_length = node->length();
       size_t other_node_count = other->node->length();
@@ -365,7 +365,7 @@ struct BaseNodeImpl {
     }
 
     // Merges this node with the |other| node
-    void merge_from(Context *context,
+    void merge_from(Context *,
                     BaseNodeImpl<KeyList, RecordList> *other) {
       size_t node_length = node->length();
       size_t other_node_count = other->node->length();
@@ -381,7 +381,7 @@ struct BaseNodeImpl {
 
     // Reorganize this node; re-arranges capacities of KeyList and RecordList
     // in order to free space and avoid splits
-    bool reorganize(Context *context, const ups_key_t *key) const {
+    bool reorganize(Context *, const ups_key_t *) const {
       return false;
     }
 
@@ -407,12 +407,12 @@ struct BaseNodeImpl {
     }
 
     // Returns the record id
-    uint64_t record_id(Context *context, int slot) const {
+    uint64_t record_id(Context *, int slot) const {
       return records.record_id(slot);
     }
 
     // Sets the record id
-    void set_record_id(Context *context, int slot, uint64_t ptr) {
+    void set_record_id(Context *, int slot, uint64_t ptr) {
       records.set_record_id(slot, ptr);
     }
 

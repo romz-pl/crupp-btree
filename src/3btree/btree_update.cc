@@ -265,7 +265,7 @@ BtreeUpdateAction::split_page(Page *old_page, Page *parent,
 
   Page *to_return = 0;
   ByteArray pivot_key_arena;
-  ups_key_t pivot_key = {0};
+  ups_key_t pivot_key;
 
   /* if the key is appended then don't split the page; simply allocate
    * a new page and insert the new key. */

@@ -156,7 +156,7 @@ struct TxnFixture : BaseFixture {
   void txnInsertConflict1Test() {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     // begin(T1); begin(T2); insert(T1, a); insert(T2, a) -> conflict 
     REQUIRE(0 == ups_txn_begin(&txn1, env, 0, 0, 0));
@@ -170,7 +170,7 @@ struct TxnFixture : BaseFixture {
   void txnInsertConflict2Test() {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     // begin(T1); begin(T2); insert(T1, a); insert(T2, a) -> duplicate 
     REQUIRE(0 == ups_txn_begin(&txn1, env, 0, 0, 0));
@@ -184,7 +184,7 @@ struct TxnFixture : BaseFixture {
   void txnInsertConflict3Test() {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     // begin(T1); begin(T2); insert(T1, a); commit(T1);
     // insert(T2, a, OW) -> ok 
@@ -199,7 +199,7 @@ struct TxnFixture : BaseFixture {
   void txnInsertConflict4Test() {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     close();
     require_create(UPS_ENABLE_TRANSACTIONS, 0, UPS_ENABLE_DUPLICATES, 0);
@@ -217,7 +217,7 @@ struct TxnFixture : BaseFixture {
   void txnInsertConflict5Test() {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     // begin(T1); begin(T2); insert(T1, a); abort(T1);
     // insert(T2, a) 
@@ -233,7 +233,7 @@ struct TxnFixture : BaseFixture {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
     ups_record_t rec = ups_make_record((void *)"world", 5);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     // begin(T1); begin(T2); insert(T1, a); commit(T1); find(T2, a) -> ok 
     REQUIRE(0 == ups_txn_begin(&txn1, env, 0, 0, 0));
@@ -251,7 +251,7 @@ struct TxnFixture : BaseFixture {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
     ups_record_t rec = ups_make_record((void *)"world", 5);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     // begin(T1); begin(T2); insert(T1, a); insert(T2, a) -> conflict 
     REQUIRE(0 == ups_txn_begin(&txn1, env, 0, 0, 0));
@@ -266,7 +266,7 @@ struct TxnFixture : BaseFixture {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
     ups_record_t rec = ups_make_record((void *)"world", 5);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     // begin(T1); begin(T2); insert(T1, a); commit(T1);
     // commit(T2); find(temp, a) -> ok 
@@ -284,7 +284,7 @@ struct TxnFixture : BaseFixture {
   void txnInsertFind4Test() {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     // begin(T1); begin(T2); insert(T1, a); abort(T1);
     // find(T2, a) -> fail 
@@ -301,7 +301,7 @@ struct TxnFixture : BaseFixture {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
     ups_key_t key2 = ups_make_key((void *)"world", 5);
-    ups_record_t rec = {0};
+    ups_record_t rec;
 
     // begin(T1); begin(T2); insert(T1, a); commit(T1);
     // find(T2, c) -> fail 
@@ -317,7 +317,7 @@ struct TxnFixture : BaseFixture {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
     ups_record_t rec = ups_make_record((void *)"world", 5);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     // begin(T1); begin(T2); insert(T1, a); commit(T1); erase(T2, a);
     // find(T2, a) -> fail 
@@ -335,7 +335,7 @@ struct TxnFixture : BaseFixture {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
     ups_record_t rec = ups_make_record((void *)"world", 5);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     // begin(T1); begin(T2); insert(T1, a); commit(T1); commit(T2);
     // erase(T3, a) -> ok; find(T2, a) -> fail 
@@ -368,7 +368,7 @@ struct TxnFixture : BaseFixture {
     ups_txn_t *txn1, *txn2;
     ups_key_t key = ups_make_key((void *)"hello", 5);
     ups_record_t rec = ups_make_record((void *)"world", 5);
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     // begin(T1); begin(T2); insert(T1, a); erase(T1, a); -> ok;
     // commit(T2); 
@@ -386,7 +386,7 @@ struct TxnFixture : BaseFixture {
     const int item_count = 50;
     for (int i = 0; i < item_count; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
     }
 
@@ -410,7 +410,7 @@ struct TxnFixture : BaseFixture {
     for (int i = 23; i < item_count / 2; i++) {
         std::cout << "searching for " << i << std::endl;
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t record = {0};
+      ups_record_t record;
 
       ups_status_t st = ups_db_find(db, 0, &key, &record, UPS_FIND_GEQ_MATCH);
       if (st == UPS_SUCCESS) {// && *reinterpret_cast<int*>(key.data) == i) {
@@ -587,8 +587,8 @@ struct HighLevelTxnFixture : BaseFixture {
     require_create(UPS_ENABLE_TRANSACTIONS);
 
     ups_txn_t *txn;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
     REQUIRE(0 == ups_db_insert(db, txn, &key, &rec, 0));
@@ -614,8 +614,8 @@ struct HighLevelTxnFixture : BaseFixture {
 
   void autoAbortDatabaseTest() {
     ups_txn_t *txn;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     require_create(UPS_ENABLE_TRANSACTIONS);
     REQUIRE(0 == ups_txn_begin(&txn, ups_db_get_env(db), 0, 0, 0));
@@ -628,8 +628,8 @@ struct HighLevelTxnFixture : BaseFixture {
 
   void autoCommitDatabaseTest() {
     ups_txn_t *txn;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     require_create(UPS_ENABLE_TRANSACTIONS);
     REQUIRE(0 == ups_txn_begin(&txn, ups_db_get_env(db), 0, 0, 0));
@@ -643,8 +643,8 @@ struct HighLevelTxnFixture : BaseFixture {
 
   void autoAbortEnvironmentTest() {
     ups_txn_t *txn;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     require_create(UPS_ENABLE_TRANSACTIONS);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
@@ -658,8 +658,8 @@ struct HighLevelTxnFixture : BaseFixture {
 
   void autoCommitEnvironmentTest() {
     ups_txn_t *txn;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     require_create(UPS_ENABLE_TRANSACTIONS);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
@@ -674,9 +674,9 @@ struct HighLevelTxnFixture : BaseFixture {
   void insertFindCommitTest() {
     ups_txn_t *txn;
     uint8_t buffer[64] = {0};
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record(buffer, sizeof(buffer));
-    ups_record_t rec2 = {0};
+    ups_record_t rec2;
 
     require_create(UPS_ENABLE_TRANSACTIONS);
     REQUIRE(0 == ups_txn_begin(&txn, env, 0, 0, 0));
@@ -690,7 +690,7 @@ struct HighLevelTxnFixture : BaseFixture {
   void insertFindEraseTest() {
     ups_txn_t *txn;
     uint8_t buffer[64] = {0};
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record(buffer, sizeof(buffer));
 
     require_create(UPS_ENABLE_TRANSACTIONS);
@@ -717,7 +717,7 @@ struct HighLevelTxnFixture : BaseFixture {
                   const char *recorddata) {
     ups_key_t key = ups_make_key((void *)keydata,
                     (uint16_t)(::strlen(keydata) + 1));
-    ups_record_t rec = {0};
+    ups_record_t rec;
     ups_status_t st = ups_db_find(db, txn, &key, &rec, 0);
     if (st)
       return st;
@@ -856,7 +856,7 @@ struct HighLevelTxnFixture : BaseFixture {
     // and check that the values exist
     for (int i = 0; i < loop; i++) {
       ups_key_t key = ups_make_key(&i, sizeof(i));
-      ups_record_t rec = {0};
+      ups_record_t rec;
       REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
       REQUIRE(rec.size == sizeof(i));
       REQUIRE(*(int *)rec.data == i);

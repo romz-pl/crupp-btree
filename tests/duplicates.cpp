@@ -248,8 +248,8 @@ struct DuplicateFixture : BaseFixture {
     char data[16];
 
     for (int i = 0; i < 5; i++) {
-      ::memset(&key, 0, sizeof(key));
-      ::memset(&rec, 0, sizeof(rec));
+      key = ups_key_t();
+      rec = ups_record_t();
       rec.data = data;
       rec.size = sizeof(data);
       ::memset(&data, i+0x15, sizeof(data));
@@ -260,8 +260,8 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
     for (int i = 0; i < 5; i++) {
-      ::memset(&key, 0, sizeof(key));
-      ::memset(&rec, 0, sizeof(rec));
+        key = ups_key_t();
+        rec = ups_record_t();
       ::memset(&data, i + 0x15, sizeof(data));
       REQUIRE(0 ==
           ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT));
@@ -269,8 +269,8 @@ struct DuplicateFixture : BaseFixture {
       REQUIRE(0 == ::memcmp(data, rec.data, sizeof(data)));
     }
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(UPS_KEY_NOT_FOUND ==
         ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_NEXT));
 
@@ -284,8 +284,8 @@ struct DuplicateFixture : BaseFixture {
     char data[16];
 
     for (int i = 0; i < 5; i++) {
-      ::memset(&key, 0, sizeof(key));
-      ::memset(&rec, 0, sizeof(rec));
+        key = ups_key_t();
+        rec = ups_record_t();
       rec.data = data;
       rec.size = sizeof(data);
       ::memset(&data, i + 0x15, sizeof(data));
@@ -296,8 +296,8 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&cursor, db, 0, 0));
 
     for (int i = 4; i >= 0; i--) {
-      ::memset(&key, 0, sizeof(key));
-      ::memset(&rec, 0, sizeof(rec));
+        key = ups_key_t();
+        rec = ups_record_t();
       ::memset(&data, i + 0x15, sizeof(data));
       REQUIRE(0 ==
           ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_PREVIOUS));
@@ -305,8 +305,8 @@ struct DuplicateFixture : BaseFixture {
       REQUIRE(0 == ::memcmp(data, rec.data, sizeof(data)));
     }
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(UPS_KEY_NOT_FOUND ==
         ups_cursor_move(cursor, &key, &rec, UPS_CURSOR_PREVIOUS));
 
@@ -317,8 +317,8 @@ struct DuplicateFixture : BaseFixture {
     ups_key_t key;
     ups_record_t rec;
     char data[16];
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
 
     ::memset(&data, 0x13, sizeof(data));
     rec.data = data;
@@ -335,7 +335,7 @@ struct DuplicateFixture : BaseFixture {
     rec.size = sizeof(data);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, UPS_DUPLICATE));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     ::memset(&data, 0x13, sizeof(data));
     REQUIRE(0 == ups_db_find(db, 0, &key, &rec, 0));
     REQUIRE((uint32_t)sizeof(data) == rec.size);
@@ -591,7 +591,7 @@ struct DuplicateFixture : BaseFixture {
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 2;
     rec.data = &value;
     rec.size = sizeof(value);
@@ -600,14 +600,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&c1, db, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c2, db, 0, 0));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c1, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(1 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c2, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
@@ -617,14 +617,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(((LocalCursor *)c1)->is_nil(LocalCursor::kBtree));
     REQUIRE(!((LocalCursor *)c2)->is_nil(LocalCursor::kBtree));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, 0));
     REQUIRE(2 == *(int *)rec.data);
@@ -638,21 +638,21 @@ struct DuplicateFixture : BaseFixture {
     ups_key_t key;
     ups_record_t rec;
     int value = 0;
-    ::memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 1;
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 2;
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, UPS_DUPLICATE));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value=3;
     rec.data=&value;
     rec.size=sizeof(value);
@@ -661,20 +661,20 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&c1, db, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c2, db, 0, 0));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c1, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(1 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c1, &key, &rec, UPS_CURSOR_NEXT));
     REQUIRE(2 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c2, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(3 == *(int *)rec.data);
@@ -683,26 +683,26 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(((LocalCursor *)c1)->is_nil(LocalCursor::kBtree));
     REQUIRE(!((LocalCursor *)c2)->is_nil(LocalCursor::kBtree));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(1 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, UPS_CURSOR_NEXT));
     REQUIRE(3 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(3 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, UPS_CURSOR_PREVIOUS));
     REQUIRE(1 == *(int *)rec.data);
@@ -792,8 +792,8 @@ struct DuplicateFixture : BaseFixture {
 
   void eraseDuplicateTest() {
     ups_cursor_t *c1, *c2;
-    ups_key_t key = {0};
-    ups_record_t rec = {0};
+    ups_key_t key;
+    ups_record_t rec;
 
     int value = 1;
     rec.data = &value;
@@ -810,14 +810,14 @@ struct DuplicateFixture : BaseFixture {
 
     REQUIRE(0 == ups_cursor_find(c1, &key, 0, 0));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 == ups_cursor_move(c1, &key, &rec, 0));
     REQUIRE(1 == *(int *)rec.data);
 
     REQUIRE(0 == ups_cursor_find(c2, &key, 0, 0));
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 == ups_cursor_move(c2, &key, &rec, 0));
     REQUIRE(1 == *(int *)rec.data);
 
@@ -825,13 +825,13 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(((LocalCursor *)c1)->is_nil(LocalCursor::kBtree));
     REQUIRE(((LocalCursor *)c2)->is_nil(LocalCursor::kBtree));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 == ups_cursor_move(c1, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(2 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 == ups_cursor_move(c2, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(2 == *(int *)rec.data);
 
@@ -844,15 +844,15 @@ struct DuplicateFixture : BaseFixture {
     ups_key_t key;
     ups_record_t rec;
     int value = 0;
-    ::memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 1;
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 2;
     rec.data = &value;
     rec.size = sizeof(value);
@@ -862,15 +862,15 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&c2, db, 0, 0));
 
     REQUIRE(0 == ups_cursor_find(c1, &key, 0, 0));
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, 0));
     REQUIRE(1 == *(int *)rec.data);
 
     REQUIRE(0 == ups_cursor_find(c2, &key, 0, 0));
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, 0));
     REQUIRE(1 == *(int *)rec.data);
@@ -881,14 +881,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(((LocalCursor *)c1)->is_nil(LocalCursor::kBtree));
     REQUIRE(((LocalCursor *)c2)->is_nil(LocalCursor::kBtree));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(2 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(2 == *(int *)rec.data);
@@ -902,14 +902,14 @@ struct DuplicateFixture : BaseFixture {
     ups_key_t key;
     ups_record_t rec;
     int value = 1;
-    ::memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 2;
     rec.data = &value;
     rec.size = sizeof(value);
@@ -918,14 +918,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&c1, db, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c2, db, 0, 0));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c1, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c2, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
@@ -934,14 +934,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(((LocalCursor *)c1)->is_nil(LocalCursor::kBtree));
     REQUIRE(((LocalCursor *)c2)->is_nil(LocalCursor::kBtree));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(1 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(1 == *(int *)rec.data);
@@ -955,14 +955,14 @@ struct DuplicateFixture : BaseFixture {
     ups_key_t key;
     ups_record_t rec;
     int value = 1;
-    ::memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 2;
     rec.data = &value;
     rec.size = sizeof(value);
@@ -971,14 +971,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&c1, db, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c2, db, 0, 0));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c1, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c2, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
@@ -989,14 +989,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(((LocalCursor *)c1)->is_nil(LocalCursor::kBtree));
     REQUIRE(((LocalCursor *)c2)->is_nil(LocalCursor::kBtree));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(1 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(1 == *(int *)rec.data);
@@ -1010,14 +1010,14 @@ struct DuplicateFixture : BaseFixture {
     ups_key_t key;
     ups_record_t rec;
     int value = 1;
-    ::memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = &value;
     rec.size = sizeof(value);
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, 0));
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     value = 2;
     rec.data = &value;
     rec.size = sizeof(value);
@@ -1026,14 +1026,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(0 == ups_cursor_create(&c1, db, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c2, db, 0, 0));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c1, &key, &rec, UPS_CURSOR_FIRST));
     REQUIRE(1 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
             ups_cursor_move(c2, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
@@ -1042,14 +1042,14 @@ struct DuplicateFixture : BaseFixture {
     REQUIRE(((LocalCursor *)c1)->is_nil(LocalCursor::kBtree));
     REQUIRE(!((LocalCursor *)c2)->is_nil(LocalCursor::kBtree));
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c1, &key, &rec, UPS_CURSOR_LAST));
     REQUIRE(2 == *(int *)rec.data);
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     REQUIRE(0 ==
         ups_cursor_move(c2, &key, &rec, 0));
     REQUIRE(2 == *(int *)rec.data);
@@ -1100,7 +1100,7 @@ struct DuplicateFixture : BaseFixture {
     ups_cursor_t *c;
     ups_key_t key;
     ups_record_t rec;
-    ::memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 
@@ -1114,7 +1114,7 @@ struct DuplicateFixture : BaseFixture {
     checkData(c, UPS_CURSOR_NEXT,   0, "2222222222");
     checkData(c, UPS_CURSOR_NEXT,   0, "33");
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = (void *)"3333333333333333333333333333333333333333333333333333";
     rec.size = (uint32_t)strlen((char *)rec.data)+1;
     REQUIRE(0 == ups_cursor_overwrite(c, &rec, 0));
@@ -1124,7 +1124,7 @@ struct DuplicateFixture : BaseFixture {
         "3333333333333333333333333333333333333333333333333333");
     checkData(c, UPS_CURSOR_NEXT,   0, "4444444444");
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = (void *)"44";
     rec.size = (uint32_t)strlen((char *)rec.data) + 1;
     REQUIRE(0 == ups_cursor_overwrite(c, &rec, 0));
@@ -1141,7 +1141,7 @@ struct DuplicateFixture : BaseFixture {
     ups_cursor_t *c1, *c2, *c3;
     ups_key_t key;
     ups_record_t rec;
-    ::memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
     REQUIRE(0 == ups_cursor_create(&c1, db, 0, 0));
     REQUIRE(0 == ups_cursor_create(&c2, db, 0, 0));
@@ -1161,7 +1161,7 @@ struct DuplicateFixture : BaseFixture {
     checkData(c3, UPS_CURSOR_NEXT,   0, "2222222222");
     checkData(c3, UPS_CURSOR_NEXT,   0, "33");
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = (void *)"3333333333333333333333333333333333333333333333333333";
     rec.size = (uint32_t)strlen((char *)rec.data) + 1;
     REQUIRE(0 == ups_cursor_overwrite(c1, &rec, 0));
@@ -1177,7 +1177,7 @@ struct DuplicateFixture : BaseFixture {
     checkData(c1, UPS_CURSOR_NEXT,   0, "4444444444");
     checkData(c3, UPS_CURSOR_NEXT,   0, "4444444444");
 
-    ::memset(&rec, 0, sizeof(rec));
+    rec = ups_record_t();
     rec.data = (void *)"44";
     rec.size = (uint32_t)strlen((char *)rec.data) + 1;
     REQUIRE(0 == ups_cursor_overwrite(c1, &rec, 0));
@@ -1227,15 +1227,15 @@ struct DuplicateFixture : BaseFixture {
     checkData(c1, UPS_CURSOR_NEXT,  0, "2222222222");
     checkData(c2, UPS_CURSOR_FIRST, 0, "111");
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     rec.data = (void *)"1111111111111111111111111111111111111111";
     rec.size = (uint32_t)strlen((char *)rec.data)+1;
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, UPS_OVERWRITE));
     checkData(c2, 0, 0, "1111111111111111111111111111111111111111");
 
-    ::memset(&key, 0, sizeof(key));
-    ::memset(&rec, 0, sizeof(rec));
+    key = ups_key_t();
+    rec = ups_record_t();
     rec.data = (void *)"00";
     rec.size = (uint32_t)strlen((char *)rec.data)+1;
     REQUIRE(0 == ups_db_insert(db, 0, &key, &rec, UPS_OVERWRITE));
@@ -1260,27 +1260,27 @@ struct DuplicateFixture : BaseFixture {
     insertData(0, "4444444444");
     insertData(0, "5555555555");
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
     REQUIRE(0 == ups_cursor_find(c, &key, 0, 0));
     REQUIRE(0 == ups_cursor_erase(c, 0));
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
     REQUIRE(0 == ups_cursor_find(c, &key, 0, 0));
     REQUIRE(0 == ups_cursor_erase(c, 0));
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
     REQUIRE(0 == ups_cursor_find(c, &key, 0, 0));
     REQUIRE(0 == ups_cursor_erase(c, 0));
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
     REQUIRE(0 == ups_cursor_find(c, &key, 0, 0));
     REQUIRE(0 == ups_cursor_erase(c, 0));
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
     REQUIRE(0 == ups_cursor_find(c, &key, 0, 0));
     REQUIRE(0 == ups_cursor_erase(c, 0));
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
     REQUIRE(UPS_KEY_NOT_FOUND ==
             ups_cursor_find(c, &key, 0, 0));
 
@@ -1293,18 +1293,18 @@ struct DuplicateFixture : BaseFixture {
     ups_cursor_t *c;
     const char *values[] = { "11111", "222222", "3333333", "44444444" };
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 
     for (int i = 0; i < 4; i++) {
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       rec.data = (void *)values[i];
       rec.size = (uint32_t)strlen((char *)rec.data)+1;
       REQUIRE(0 ==
             ups_cursor_insert(c, &key, &rec,
                 UPS_DUPLICATE_INSERT_LAST));
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       REQUIRE(0 ==
             ups_cursor_move(c, 0, &rec, 0));
       REQUIRE(strlen(values[i]) == strlen((char *)rec.data));
@@ -1327,18 +1327,18 @@ struct DuplicateFixture : BaseFixture {
     ups_cursor_t *c;
     const char *values[] = { "11111", "222222", "3333333", "44444444" };
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 
     for (int i = 0; i < 4; i++) {
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       rec.data = (void *)values[i];
       rec.size = (uint32_t)strlen((char *)rec.data) + 1;
       REQUIRE(0 ==
             ups_cursor_insert(c, &key, &rec,
                 UPS_DUPLICATE_INSERT_FIRST));
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       REQUIRE(0 ==
             ups_cursor_move(c, 0, &rec, 0));
       REQUIRE(strlen((char *)rec.data) == strlen(values[i]));
@@ -1362,18 +1362,18 @@ struct DuplicateFixture : BaseFixture {
     ups_cursor_t *c;
     const char *values[] = { "11111", "222222", "3333333", "44444444" };
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 
     for (int i = 0; i < 4; i++) {
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       rec.data = (void *)values[i];
       rec.size = (uint32_t)strlen((char *)rec.data) + 1;
       REQUIRE(0 ==
             ups_cursor_insert(c, &key, &rec,
                 UPS_DUPLICATE_INSERT_AFTER));
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       REQUIRE(0 ==
             ups_cursor_move(c, 0, &rec, 0));
       REQUIRE(strlen((char *)rec.data) == strlen(values[i]));
@@ -1394,7 +1394,7 @@ struct DuplicateFixture : BaseFixture {
   }
 
   void insertBeforeTest() {
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_cursor_t *c;
     const char *values[] = { "11111", "222222", "3333333", "44444444" };
 
@@ -1405,7 +1405,7 @@ struct DuplicateFixture : BaseFixture {
                             (uint32_t)::strlen(values[i]) + 1);
       REQUIRE(0 == ups_cursor_insert(c, &key, &rec,
                               UPS_DUPLICATE_INSERT_BEFORE));
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       REQUIRE(0 == ups_cursor_move(c, 0, &rec, 0));
       REQUIRE(::strlen((char *)rec.data) == ::strlen(values[i]));
       REQUIRE(0 == ::strcmp(values[i], (char *)rec.data));
@@ -1434,13 +1434,13 @@ struct DuplicateFixture : BaseFixture {
     const char *values[] = { 0, "55555", "8888888", "999999999" };
     const char *newvalues[4];
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
 
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 
     for (int s = 0; s < 5; s++) {
       for (int i = s, j = 0; i < s + 4; i++, j++) {
-        memset(&rec, 0, sizeof(rec));
+        rec = ups_record_t();
         rec.size = sizes[i % 4];
         if (sizes[i % 4]) {
           rec.data = (void *)values[i % 4];
@@ -1548,11 +1548,11 @@ struct DuplicateFixture : BaseFixture {
     teardown();
     require_create(m_flags, params, UPS_ENABLE_DUPLICATE_KEYS, nullptr);
 
-    memset(&key, 0, sizeof(key));
+    key = ups_key_t();
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 
     for (int i = 0; i < 1000; i++) {
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
       rec.size = sizeof(i);
       rec.data = &i;
 
@@ -1560,7 +1560,7 @@ struct DuplicateFixture : BaseFixture {
     }
 
     for (int i = 0; i < 1000; i++) {
-      memset(&rec, 0, sizeof(rec));
+      rec = ups_record_t();
 
       REQUIRE(0 == ups_cursor_move(c, &key, &rec, UPS_CURSOR_NEXT));
       REQUIRE((uint32_t)4 == rec.size);
@@ -1574,7 +1574,7 @@ struct DuplicateFixture : BaseFixture {
   void cloneTest() {
     ups_cursor_t *c1, *c2;
     int value;
-    ups_key_t key = {0};
+    ups_key_t key;
     ups_record_t rec = ups_make_record(&value, sizeof(value));
 
     value = 1;

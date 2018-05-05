@@ -550,7 +550,7 @@ PageManager::flush_all_pages()
 }
 
 void
-PageManager::purge_cache(Context *context)
+PageManager::purge_cache(Context *)
 {
   ScopedSpinlock lock(state->mutex);
 

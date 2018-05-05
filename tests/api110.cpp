@@ -169,8 +169,8 @@ struct APIv110Fixture : BaseFixture {
   }
 
   void issue7Test() {
-    ups_record_t rec1 = {0};
-    ups_record_t rec2 = {0};
+    ups_record_t rec1;
+    ups_record_t rec2;
     ups_txn_t *txn;
 
     ups_key_t key1 = ups_make_key((void *)"FooBar", 7);

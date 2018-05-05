@@ -58,8 +58,8 @@ struct BtreeKeyFixture : BaseFixture {
   void insertEmpty(uint32_t flags) {
     BtreeNodeProxyProxy bnpp(btree_index(), page);
 
-    ups_key_t key = {0};
-    ups_record_t record = {0};
+    ups_key_t key;
+    ups_record_t record;
 
     PBtreeNode::InsertResult result(0, 0);
     if (!flags)
@@ -84,7 +84,7 @@ struct BtreeKeyFixture : BaseFixture {
     BtreeNodeProxyProxy bnpp(btree_index(), page);
     ByteArray arena;
 
-    ups_key_t key = {0};
+    ups_key_t key;
 
     PBtreeNode::InsertResult result(0, 0);
     if (!flags)
@@ -95,7 +95,7 @@ struct BtreeKeyFixture : BaseFixture {
     bnpp.node->set_record(context.get(), result.slot, &record, 0, flags, 0);
 
     if (NOTSET(flags, UPS_DUPLICATE)) {
-      ups_record_t record2 = {0};
+      ups_record_t record2;
       bnpp.node->record(context.get(), result.slot, &arena, &record2, 0);
       REQUIRE(record.size == record2.size);
       REQUIRE(0 == ::memcmp(record.data, record2.data, record.size));
@@ -120,7 +120,7 @@ struct BtreeKeyFixture : BaseFixture {
     BtreeNodeProxyProxy bnpp(btree_index(), page);
     ByteArray arena;
 
-    ups_key_t key = {0};
+    ups_key_t key;
     PBtreeNode::InsertResult result(0, 0);
     if (!flags)
       result = bnpp.node->insert(context.get(), &key, 0);
@@ -132,7 +132,7 @@ struct BtreeKeyFixture : BaseFixture {
       REQUIRE(bnpp.node->record_count(context.get(), result.slot) > 1);
 
     if (NOTSET(flags, UPS_DUPLICATE)) {
-      ups_record_t record2 = {0};
+      ups_record_t record2;
       bnpp.node->record(context.get(), result.slot, &arena, &record2, 0);
       REQUIRE(record.size == record2.size);
       REQUIRE(0 == ::memcmp(record.data, record2.data, record.size));
@@ -154,7 +154,7 @@ struct BtreeKeyFixture : BaseFixture {
   void insertNormal(const char *data, uint32_t size, uint32_t flags) {
     BtreeNodeProxyProxy bnpp(btree_index(), page);
     ByteArray arena;
-    ups_key_t key = {0};
+    ups_key_t key;
 
     PBtreeNode::InsertResult result(0, 0);
     if (!flags)
@@ -167,7 +167,7 @@ struct BtreeKeyFixture : BaseFixture {
       REQUIRE(bnpp.node->record_count(context.get(), result.slot) > 1);
 
     if (NOTSET(flags, UPS_DUPLICATE)) {
-      ups_record_t record2 = {0};
+      ups_record_t record2;
       bnpp.node->record(context.get(), result.slot, &arena, &record2, 0);
       REQUIRE(record.size == record2.size);
       REQUIRE(0 == ::memcmp(record.data, record2.data, record.size));
@@ -260,7 +260,7 @@ struct BtreeKeyFixture : BaseFixture {
     int slot = 0;
     REQUIRE(bnpp.node->record_count(context.get(), slot) >= 1);
 
-    ups_record_t record = {0};
+    ups_record_t record;
 
     ByteArray arena;
     bnpp.node->record(context.get(), slot, &arena, &record, 0, position);

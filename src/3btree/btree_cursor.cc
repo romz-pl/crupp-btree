@@ -74,7 +74,7 @@ couple(BtreeCursor *cursor, Context *context)
 
 // move cursor to the very first key
 static inline ups_status_t
-move_first(BtreeCursor *cursor, Context *context, uint32_t flags)
+move_first(BtreeCursor *cursor, Context *context, uint32_t )
 {
   BtreeCursorState &st_ = cursor->st_;
   LocalDb *db = (LocalDb *)st_.parent->db;
@@ -289,7 +289,7 @@ BtreeCursor::BtreeCursor(LocalCursor *parent)
   st_.duplicate_index = 0;
   st_.coupled_page = 0;
   st_.coupled_index = 0;
-  ::memset(&st_.uncoupled_key, 0, sizeof(st_.uncoupled_key));
+  // ::memset(&st_.uncoupled_key, 0, sizeof(st_.uncoupled_key));
   st_.btree = ((LocalDb *)parent->db)->btree_index.get();
 }
 
@@ -302,7 +302,8 @@ BtreeCursor::clone(BtreeCursor *other)
   }
   // otherwise, if the src cursor is uncoupled: copy the key
   else if (other->st_.state == kStateUncoupled) {
-    ::memset(&st_.uncoupled_key, 0, sizeof(st_.uncoupled_key));
+    //::memset(&st_.uncoupled_key, 0, sizeof(st_.uncoupled_key));
+      st_.uncoupled_key = ups_key_t();
 
     st_.uncoupled_arena.copy(other->st_.uncoupled_arena.data(),
                    other->st_.uncoupled_arena.size());
@@ -322,10 +323,14 @@ BtreeCursor::set_to_nil()
 {
   // uncoupled cursor: free the cached pointer
   if (st_.state == kStateUncoupled)
-    ::memset(&st_.uncoupled_key, 0, sizeof(st_.uncoupled_key));
+  {
+    st_.uncoupled_key = ups_key_t();
+  }
   // coupled cursor: remove from page
   else if (st_.state == BtreeCursor::kStateCoupled)
+  {
     remove_cursor_from_page(this, st_.coupled_page);
+  }
 
   st_.state = BtreeCursor::kStateNil;
   st_.duplicate_index = 0;
@@ -519,7 +524,7 @@ BtreeCursor::move_to_next_page(Context *context)
 }
 
 int
-BtreeCursor::record_count(Context *context, uint32_t flags)
+BtreeCursor::record_count(Context *context, uint32_t)
 {
   // uncoupled cursor: couple it
   couple_or_throw(this, context);

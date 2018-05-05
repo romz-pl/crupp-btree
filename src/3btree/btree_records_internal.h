@@ -69,7 +69,7 @@ struct InternalRecordList : BaseRecordList {
   }
 
   // Opens an existing RecordList
-  void open(uint8_t *ptr, size_t range_size_, size_t node_count) {
+  void open(uint8_t *ptr, size_t range_size_, size_t ) {
     range_size = range_size_;
     range_data = ArrayView<uint64_t>((uint64_t *)ptr, range_size / 8);
   }
@@ -117,7 +117,7 @@ struct InternalRecordList : BaseRecordList {
 
   // Updates the record of a key
   void set_record(Context *, int slot, int, ups_record_t *record,
-                  uint32_t flags, uint32_t * = 0) {
+                  uint32_t , uint32_t * = 0) {
     assert(record->size == sizeof(uint64_t));
     range_data[slot] = *(uint64_t *)record->data;
   }
@@ -128,14 +128,14 @@ struct InternalRecordList : BaseRecordList {
   }
 
   // Erases a whole slot by shifting all larger records to the "left"
-  void erase(Context *context, size_t node_count, int slot) {
+  void erase(Context *, size_t node_count, int slot) {
     if (likely(slot < (int)node_count - 1))
       ::memmove(&range_data[slot], &range_data[slot + 1],
                     sizeof(uint64_t) * (node_count - slot - 1));
   }
 
   // Creates space for one additional record
-  void insert(Context *context, size_t node_count, int slot) {
+  void insert(Context *, size_t node_count, int slot) {
     if (slot < (int)node_count)
       ::memmove(&range_data[slot + 1], &range_data[slot],
                      sizeof(uint64_t) * (node_count - slot));
@@ -144,7 +144,7 @@ struct InternalRecordList : BaseRecordList {
 
   // Copies |count| records from this[sstart] to dest[dstart]
   void copy_to(int sstart, size_t node_count, InternalRecordList &dest,
-                  size_t other_count, int dstart) {
+                  size_t , int dstart) {
     ::memcpy(&dest.range_data[dstart], &range_data[sstart],
                     sizeof(uint64_t) * (node_count - sstart));
   }
@@ -169,7 +169,7 @@ struct InternalRecordList : BaseRecordList {
   // Change the capacity; for PAX layouts this just means copying the
   // data from one place to the other
   void change_range_size(size_t node_count, uint8_t *new_data_ptr,
-              size_t new_range_size, size_t capacity_hint) {
+              size_t new_range_size, size_t ) {
     if ((uint64_t *)new_data_ptr != range_data.data) {
       ::memmove(new_data_ptr, range_data.data, node_count * sizeof(uint64_t));
       range_data = ArrayView<uint64_t>((uint64_t *)new_data_ptr,
@@ -179,7 +179,7 @@ struct InternalRecordList : BaseRecordList {
   }
 
   // Iterates all records, calls the |visitor| on each
-  ScanResult scan(ByteArray *arena, size_t node_count, uint32_t start) {
+  ScanResult scan(ByteArray *, size_t , uint32_t ) {
     assert(!"shouldn't be here");
     throw Exception(UPS_INTERNAL_ERROR);
   }
@@ -193,7 +193,7 @@ struct InternalRecordList : BaseRecordList {
   }
 
   // Prints a slot to |out| (for debugging)
-  void print(Context *context, int slot, std::stringstream &out) const {
+  void print(Context *, int slot, std::stringstream &out) const {
     out << "(" << record_id(slot) << ")";
   }
 

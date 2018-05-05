@@ -191,7 +191,7 @@ fall_through:
 
       // Split the page in the middle. This will invalidate the |node| pointer
       // and the |slot| of the key, therefore restart the whole operation
-      BtreeStatistics::InsertHints hints = {0};
+      BtreeStatistics::InsertHints hints;
       split_page(page, parent, key, hints);
       return erase();
     }

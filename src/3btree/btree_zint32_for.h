@@ -227,7 +227,7 @@ struct ForCodecImpl : BlockCodecBase<ForIndex> {
   }
 
   // Returns a decompressed value
-  static uint32_t select(ForIndex *index, uint32_t *block_data,
+  static uint32_t select(ForIndex*, uint32_t *block_data,
                         int position_in_block) {
     return Zint32::for_select((const uint8_t *)block_data, position_in_block);
   }

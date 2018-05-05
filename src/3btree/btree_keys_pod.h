@@ -183,7 +183,7 @@ struct PodKeyList : BaseKeyList {
   // Inserts a key
   template<typename Cmp>
   PBtreeNode::InsertResult insert(Context *, size_t node_count,
-                  const ups_key_t *key, uint32_t flags, Cmp &, int slot) {
+                  const ups_key_t *key, uint32_t , Cmp &, int slot) {
     if (node_count > (size_t)slot)
       ::memmove(&_data[slot + 1], &_data[slot],
                       sizeof(T) * (node_count - slot));
@@ -194,19 +194,19 @@ struct PodKeyList : BaseKeyList {
 
   // Copies |count| key from this[sstart] to dest[dstart]
   void copy_to(int sstart, size_t node_count, PodKeyList<T> &dest,
-                  size_t other_count, int dstart) {
+                  size_t , int dstart) {
     ::memcpy(&dest._data[dstart], &_data[sstart],
                     sizeof(T) * (node_count - sstart));
   }
 
   // Returns true if the |key| no longer fits into the node
-  bool requires_split(size_t node_count, const ups_key_t *key) const {
+  bool requires_split(size_t node_count, const ups_key_t *) const {
     return (node_count + 1) * sizeof(T) >= range_size;
   }
 
   // Change the range size; just copy the data from one place to the other
   void change_range_size(size_t node_count, uint8_t *new_data_ptr,
-          size_t new_range_size, size_t capacity_hint) {
+          size_t new_range_size, size_t ) {
     ::memmove(new_data_ptr, _data, node_count * sizeof(T));
     _data = (T *)new_data_ptr;
     range_size = new_range_size;
@@ -220,7 +220,7 @@ struct PodKeyList : BaseKeyList {
   }
 
   // Prints a slot to |out| (for debugging)
-  void print(Context *context, int slot, std::stringstream &out) const {
+  void print(Context *, int slot, std::stringstream &out) const {
     out << _data[slot];
   }
 

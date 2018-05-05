@@ -40,11 +40,11 @@ struct BaseList {
 
   // Checks the integrity of this node. Throws an exception if there is a
   // violation.
-  void check_integrity(Context *context, size_t node_count) const {
+  void check_integrity(Context*, size_t) const {
   }
 
   // Rearranges the list
-  void vacuumize(size_t node_count, bool force) const {
+  void vacuumize(size_t, bool) const {
   }
 
   // The Database
