@@ -4,7 +4,7 @@ add_executable( ${TEST_NAME}
     #    aes.cpp
     #api110.cpp
     #approx.cpp
-    #blob_manager.cpp
+    blob_manager.cpp
     btree.cpp
     btree_cursor.cpp
     btree_default.cpp
