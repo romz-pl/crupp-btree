@@ -19,7 +19,8 @@ make -j4 || exit 1
 #
 # Run test
 #
-ctest --verbose
+#ctest --verbose
 # ctest
+./tests/btree_test
 
 

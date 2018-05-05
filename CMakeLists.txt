@@ -38,5 +38,7 @@ add_subdirectory(src/4txn)
 add_subdirectory(src/4uqi)
 
 
-#add_subdirectory(tests)
+add_subdirectory(src/5upscaledb)
+
+add_subdirectory(tests)
 
