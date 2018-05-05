@@ -18,10 +18,10 @@ add_executable( ${TEST_NAME}
     #crc32.cpp
     #cursor1.cpp
     #cursor2.cpp
-    #db.cpp
+    db.cpp
     #device.cpp
     #duplicates.cpp
-    #env.cpp
+    env.cpp
     #journal.cpp
     main.cpp
     #misc.cpp
@@ -52,28 +52,28 @@ target_link_libraries( ${TEST_NAME}
     gtest 
     gtest_main 
     pthread
-ups-5upscaledb
-ups-4db
-ups-4env
-ups-4txn
-ups-4cursor
-ups-4uqi
-ups-3page_manager
-ups-3journal
-ups-3changeset
-ups-3btree
-ups-3blob_manager
-ups-2page
-ups-2compressor
-ups-1os
-ups-1mem
-ups-1globals
-ups-1errorinducer
-ups-1base
-MurmurHash3
-for
-lzf
-vbyte
+    ups-5upscaledb
+    ups-4db
+    ups-4env
+    ups-4txn
+    ups-4cursor
+    ups-4uqi
+    ups-3page_manager
+    ups-3journal
+    ups-3changeset
+    ups-3btree
+    ups-3blob_manager
+    ups-2page
+    ups-2compressor
+    ups-1os
+    ups-1mem
+    ups-1globals
+    ups-1errorinducer
+    ups-1base
+    MurmurHash3
+    for
+    lzf
+    vbyte
     -lboost_system
     -lboost_thread
     -lboost_filesystem
