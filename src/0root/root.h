@@ -32,7 +32,7 @@
 #   include "../config.h"
 #else
 #   define HAVE_MMAP              1
-#   define HAVE_UNMMAP            1
+#   define HAVE_MUNMAP            1
 #   define HAVE_PREAD             1
 #   define HAVE_PWRITE            1
 #endif
