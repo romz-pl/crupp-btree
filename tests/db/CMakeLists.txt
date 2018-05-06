@@ -4,6 +4,7 @@ add_executable( ${TEST_NAME}
     db1.cpp
     db2.cpp
     db3.cpp
+    db4.cpp
     main.cpp
     random_string.cpp
 )
