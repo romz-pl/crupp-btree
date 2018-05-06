@@ -3,9 +3,7 @@
 
 #include "0root/root.h"
 
-#if HAVE_MMAP
-#  include <sys/mman.h>
-#endif
+#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -164,16 +162,14 @@ void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
   if (!readonly)
     prot |= PROT_WRITE;
 
-#if HAVE_MMAP
+
   *buffer = (uint8_t *)::mmap(0, size, prot, MAP_PRIVATE, m_fd, position);
   if (*buffer == (void *)-1) {
     *buffer = 0;
     ups_log(("mmap failed with status %d (%s)", errno, strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  throw Exception(UPS_NOT_IMPLEMENTED);
-#endif
+
 
 #if HAVE_MADVISE
   if (m_posix_advice == UPS_POSIX_FADVICE_RANDOM) {
@@ -193,15 +189,12 @@ void File::munmap(void *buffer, size_t size)
 {
   os_log(("File::munmap: size=%lld", size));
 
-#if HAVE_MUNMAP
   int r = ::munmap(buffer, size);
   if (r) {
     ups_log(("munmap failed with status %d (%s)", errno, strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  throw Exception(UPS_NOT_IMPLEMENTED);
-#endif
+
 }
 
 //
