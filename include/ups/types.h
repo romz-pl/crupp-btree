@@ -62,23 +62,6 @@ extern "C" {
 #  error "Unknown arch - neither UPS_OS_POSIX nor UPS_OS_WIN32 defined"
 #endif
 
-/*
- * improve memory debugging on WIN32 by using crtdbg.h (only MSVC
- * compiler and debug builds!)
- *
- * make sure crtdbg.h is loaded before malloc.h!
- */
-#if defined(_MSC_VER) && defined(UPS_OS_WIN32)
-#  if (defined(WIN32) || defined(__WIN32)) && !defined(UNDER_CE)
-#    if defined(DEBUG) || defined(_DEBUG)
-#      ifndef _CRTDBG_MAP_ALLOC
-#        define _CRTDBG_MAP_ALLOC 1
-#      endif
-#    endif
-#  include <crtdbg.h>
-#  include <malloc.h>
-#  endif
-#endif
 
 /*
  * Create the EXPORT macro for Microsoft Visual C++
