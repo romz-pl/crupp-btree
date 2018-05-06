@@ -49,9 +49,6 @@ target_include_directories( ${TEST_NAME} PRIVATE
 
 target_link_libraries( ${TEST_NAME} 
     -fprofile-arcs 
-    gtest 
-    gtest_main 
-    pthread
     ups-5upscaledb
     ups-4db
     ups-4env
