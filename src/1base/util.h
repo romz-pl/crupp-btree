@@ -50,11 +50,9 @@ util_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 //
 // uses sprintf on platforms which do not define snprintf
 //
-#ifndef UPS_OS_POSIX
-#  define util_snprintf _snprintf
-#else
-#  define util_snprintf snprintf
-#endif
+
+#define util_snprintf snprintf
+
 
 } // namespace upscaledb
 

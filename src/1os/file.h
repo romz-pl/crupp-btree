@@ -45,17 +45,10 @@ class File
 {
   public:
     enum {
-#ifdef UPS_OS_POSIX
       kSeekSet = SEEK_SET,
       kSeekEnd = SEEK_END,
       kSeekCur = SEEK_CUR,
       kMaxPath = PATH_MAX
-#else
-      kSeekSet = FILE_BEGIN,
-      kSeekEnd = FILE_END,
-      kSeekCur = FILE_CURRENT,
-      kMaxPath = MAX_PATH
-#endif
     };
 
     // Constructor: creates an empty File handle

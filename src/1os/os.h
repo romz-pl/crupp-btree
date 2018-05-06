@@ -38,14 +38,12 @@
 
 namespace upscaledb {
 
-/*
- * typedefs for posix
- */
-#ifdef UPS_OS_POSIX
+
 typedef int                ups_fd_t;
 typedef int	               ups_socket_t;
-#  define UPS_INVALID_FD  (-1)
-#endif
+#undef UPS_INVALID_FD
+#define UPS_INVALID_FD  (-1)
+
 
 /*
  * typedefs for Windows 32- and 64-bit

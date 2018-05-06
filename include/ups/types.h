@@ -32,15 +32,8 @@ extern "C" {
 #endif
 
 
-#define UPS_OS_POSIX 1
-
-
 #include <stdint.h>
 
-/*
- * Undefine macros to avoid macro redefinitions
- */
-#undef UPS_INVALID_FD
 
 
 /**
