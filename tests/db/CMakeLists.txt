@@ -1,42 +1,17 @@
-set( TEST_NAME btree_test )
+set( TEST_NAME db_test )
 
 add_executable( ${TEST_NAME}
-    #aes.cpp
-    api110.cpp
-    approx.cpp
-    blob_manager.cpp
-    btree.cpp
-    btree_cursor.cpp
-    btree_default.cpp
-    btree_erase.cpp
-    btree_insert.cpp
-    btree_key.cpp
-    changeset.cpp
-    check.cpp
-    compression.cpp
-    cppapi.cpp
-    crc32.cpp
-    cursor1.cpp
-    cursor2.cpp
-    db.cpp
-    device.cpp
-    duplicates.cpp
-    env.cpp
-    journal.cpp
+    db1.cpp
+    db2.cpp
+    db3.cpp
+    db4.cpp
+    db5.cpp
+    db6.cpp
+    env1.cpp
+    env2.cpp
+    env3.cpp
     main.cpp
-    misc.cpp
-    os.cpp
-    page.cpp
-    page_manager.cpp
-    recordnumber.cpp
-    #recovery.cpp
-    remote.cpp
-    simd.cpp
-    txn.cpp
-    txn_cursor.cpp
-    upscaledb.cpp
-    uqi.cpp
-    #zint32.cpp
+    random_string.cpp
 )
 
 target_compile_options( ${TEST_NAME} PRIVATE ${ROMZ_CXX_FLAGS} )
@@ -49,6 +24,9 @@ target_include_directories( ${TEST_NAME} PRIVATE
 
 target_link_libraries( ${TEST_NAME} 
     -fprofile-arcs 
+    gtest 
+    gtest_main 
+    pthread
     ups-5upscaledb
     ups-4db
     ups-4env
