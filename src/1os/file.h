@@ -131,6 +131,14 @@ class File
     // Closes the file descriptor
     void close();
 
+public:
+    static void os_read(ups_fd_t fd, uint8_t *buffer, size_t len);
+    static void os_write(ups_fd_t fd, const void *buffer, size_t len);
+
+private:
+    static void enable_largefile(int fd);
+    static void lock_exclusive(int fd, bool lock);
+
   private:
     // The file handle
     ups_fd_t m_fd;
