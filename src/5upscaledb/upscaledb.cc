@@ -152,7 +152,7 @@ ups_txn_begin(ups_txn_t **htxn, ups_env_t *henv, const char *name,
   }
 }
 
-UPS_EXPORT const char *
+const char *
 ups_txn_get_name(ups_txn_t *htxn)
 {
   Txn *txn = (Txn *)htxn;
@@ -764,7 +764,7 @@ ups_env_get_database_names(ups_env_t *henv, uint16_t *names, uint32_t *length)
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_get_parameters(ups_env_t *henv, ups_parameter_t *param)
 {
   Env *env = (Env *)henv;
@@ -833,7 +833,7 @@ ups_env_close(ups_env_t *henv, uint32_t flags)
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_get_parameters(ups_db_t *hdb, ups_parameter_t *param)
 {
   Db *db = (Db *)hdb;
@@ -857,14 +857,14 @@ ups_db_get_parameters(ups_db_t *hdb, ups_parameter_t *param)
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_register_compare(const char *name, ups_compare_func_t func)
 {
   CallbackManager::add(name, func);
   return 0;
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_set_compare_func(ups_db_t *hdb, ups_compare_func_t foo)
 {
   Db *db = (Db *)hdb;
@@ -897,7 +897,7 @@ ups_db_set_compare_func(ups_db_t *hdb, ups_compare_func_t foo)
   return 0;
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_find(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key,
                 ups_record_t *record, uint32_t flags)
 {
@@ -938,7 +938,7 @@ ups_db_find(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key,
   }
 }
 
-UPS_EXPORT int UPS_CALLCONV
+int UPS_CALLCONV
 ups_key_get_approximate_match_type(ups_key_t *key)
 {
   if (key && (ups_key_get_intflags(key) & BtreeKey::kApproximate))
@@ -946,7 +946,7 @@ ups_key_get_approximate_match_type(ups_key_t *key)
   return 0;
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_insert(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key,
                 ups_record_t *record, uint32_t flags)
 {
@@ -1012,7 +1012,7 @@ ups_db_insert(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key,
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_erase(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key, uint32_t flags)
 {
   Db *db = (Db *)hdb;
@@ -1050,7 +1050,7 @@ ups_db_erase(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key, uint32_t flags)
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_check_integrity(ups_db_t *hdb, uint32_t flags)
 {
   Db *db = (Db *)hdb;
@@ -1073,7 +1073,7 @@ ups_db_check_integrity(ups_db_t *hdb, uint32_t flags)
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_close(ups_db_t *hdb, uint32_t flags)
 {
   Db *db = (Db *)hdb;
@@ -1125,7 +1125,7 @@ ups_db_close(ups_db_t *hdb, uint32_t flags)
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_create(ups_cursor_t **hcursor, ups_db_t *hdb, ups_txn_t *htxn,
                 uint32_t flags)
 {
@@ -1264,7 +1264,7 @@ ups_cursor_move(ups_cursor_t *hcursor, ups_key_t *key,
   }
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_find(ups_cursor_t *hcursor, ups_key_t *key, ups_record_t *record,
                 uint32_t flags)
 {
@@ -1553,7 +1553,7 @@ ups_db_get_name(ups_db_t *hdb)
   return db->config.db_name;
 }
 
-UPS_EXPORT uint32_t UPS_CALLCONV
+uint32_t UPS_CALLCONV
 ups_db_get_flags(ups_db_t *hdb)
 {
   Db *db = (Db *)hdb;
@@ -1638,13 +1638,13 @@ ups_is_debug()
 #endif
 }
 
-UPS_EXPORT uint32_t UPS_CALLCONV
+uint32_t UPS_CALLCONV
 ups_calc_compare_name_hash(const char *zname)
 {
   return CallbackManager::hash(zname);
 }
 
-UPS_EXPORT uint32_t UPS_CALLCONV
+uint32_t UPS_CALLCONV
 ups_db_get_compare_name_hash(ups_db_t *hdb)
 {
   Db *db = (Db *)hdb;
@@ -1656,13 +1656,13 @@ ups_db_get_compare_name_hash(ups_db_t *hdb)
   return ldb->btree_index->compare_hash();
 }
 
-UPS_EXPORT void UPS_CALLCONV
+void UPS_CALLCONV
 ups_set_committed_flush_threshold(int threshold)
 {
   Globals::ms_flush_threshold = threshold;
 }
 
-UPS_EXPORT ups_db_t *UPS_CALLCONV
+ups_db_t *UPS_CALLCONV
 ups_env_get_open_database(ups_env_t *henv, uint16_t name)
 {
   Env *env = (Env *)henv;
@@ -1672,7 +1672,7 @@ ups_env_get_open_database(ups_env_t *henv, uint16_t name)
   return 0;
 }
 
-UPS_EXPORT void UPS_CALLCONV
+void UPS_CALLCONV
 ups_at_exit()
 {
 #ifdef UPS_ENABLE_REMOTE
@@ -1681,7 +1681,7 @@ ups_at_exit()
 #endif
 }
 
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_bulk_operations(ups_db_t *hdb, ups_txn_t *txn,
                     ups_operation_t *operations, size_t operations_length,
                     uint32_t flags)

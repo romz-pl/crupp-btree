@@ -62,18 +62,6 @@ extern "C" {
 #  error "Unknown arch - neither UPS_OS_POSIX nor UPS_OS_WIN32 defined"
 #endif
 
-
-/*
- * Create the EXPORT macro for Microsoft Visual C++
- */
-#ifndef UPS_EXPORT
-#  ifdef _MSC_VER
-#    define UPS_EXPORT __declspec(dllexport)
-#  else
-#    define UPS_EXPORT extern
-#  endif
-#endif
-
 /*
  * The default calling convention is cdecl
  */

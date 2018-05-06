@@ -524,7 +524,7 @@ typedef void UPS_CALLCONV (*ups_error_handler_fun)(int level, const char *messag
  * @param f A pointer to the error handler function, or NULL to restore
  *      the default handler
  */
-UPS_EXPORT void UPS_CALLCONV
+void UPS_CALLCONV
 ups_set_error_handler(ups_error_handler_fun f);
 
 /**
@@ -534,7 +534,7 @@ ups_set_error_handler(ups_error_handler_fun f);
  *
  * @return A pointer to a descriptive error string
  */
-UPS_EXPORT const char * UPS_CALLCONV
+const char * UPS_CALLCONV
 ups_strerror(ups_status_t status);
 
 /**
@@ -544,7 +544,7 @@ ups_strerror(ups_status_t status);
  * @param minor If not NULL, will return the minor version number
  * @param revision If not NULL, will return the revision version number
  */
-UPS_EXPORT void UPS_CALLCONV
+void UPS_CALLCONV
 ups_get_version(uint32_t *major, uint32_t *minor,
             uint32_t *revision);
 
@@ -688,7 +688,7 @@ ups_get_version(uint32_t *major, uint32_t *minor,
  * @sa ups_env_close
  * @sa ups_env_open
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_create(ups_env_t **env, const char *filename,
             uint32_t flags, uint32_t mode, const ups_parameter_t *param);
 
@@ -794,7 +794,7 @@ ups_env_create(ups_env_t **env, const char *filename,
  * @return @ref UPS_ENVIRONMENT_ALREADY_OPEN if @a env is already in use
  * @return @ref UPS_NETWORK_ERROR if a remote server is not reachable
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_open(ups_env_t **env, const char *filename,
             uint32_t flags, const ups_parameter_t *param);
 
@@ -830,7 +830,7 @@ ups_env_open(ups_env_t **env, const char *filename,
  * @return @ref UPS_INV_PARAMETER if the @a env pointer is NULL or
  *        @a param is NULL
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_get_parameters(ups_env_t *env, ups_parameter_t *param);
 
 /**
@@ -1006,7 +1006,7 @@ ups_env_get_parameters(ups_env_t *env, ups_parameter_t *param);
  * @return @ref UPS_LIMITS_REACHED if the maximum number of Databases per
  *        Environment was already created
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_create_db(ups_env_t *env, ups_db_t **db,
             uint16_t name, uint32_t flags, const ups_parameter_t *params);
 
@@ -1059,7 +1059,7 @@ ups_env_create_db(ups_env_t *env, ups_db_t **db,
  * @return @ref UPS_NOT_READY if the database requires a custom callback
  *        function, but this function was not yet registered
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_open_db(ups_env_t *env, ups_db_t **db,
             uint16_t name, uint32_t flags, const ups_parameter_t *params);
 
@@ -1087,7 +1087,7 @@ ups_env_open_db(ups_env_t *env, ups_db_t **db,
  * @return @ref UPS_NOT_READY if the Environment @a env was not initialized
  *        correctly (i.e. not yet opened or created)
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_rename_db(ups_env_t *env, uint16_t oldname,
             uint16_t newname, uint32_t flags);
 
@@ -1109,7 +1109,7 @@ ups_env_rename_db(ups_env_t *env, uint16_t oldname,
  * @return @ref UPS_DATABASE_ALREADY_OPEN if a Database with this name is
  *        still open
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_erase_db(ups_env_t *env, uint16_t name, uint32_t flags);
 
 /* internal flag - only flush committed transactions, not the btree pages */
@@ -1130,7 +1130,7 @@ ups_env_erase_db(ups_env_t *env, uint16_t name, uint32_t flags);
  * @return @ref UPS_SUCCESS upon success
  * @return @ref UPS_INV_PARAMETER if @a db is NULL
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_flush(ups_env_t *env, uint32_t flags);
 
 /* internal use only - don't lock mutex */
@@ -1158,7 +1158,7 @@ ups_env_flush(ups_env_t *env, uint32_t flags);
  * @return @ref UPS_LIMITS_REACHED if @a names is not large enough to hold
  *      all Database names
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_get_database_names(ups_env_t *env, uint16_t *names,
             uint32_t *length);
 
@@ -1199,7 +1199,7 @@ ups_env_get_database_names(ups_env_t *env, uint16_t *names,
  * @return @ref UPS_SUCCESS upon success
  * @return @ref UPS_INV_PARAMETER if @a env is NULL
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_env_close(ups_env_t *env, uint32_t flags);
 
 /**
@@ -1249,7 +1249,7 @@ typedef struct ups_txn_t ups_txn_t;
  * @return @ref UPS_SUCCESS upon success
  * @return @ref UPS_OUT_OF_MEMORY if memory allocation failed
  */
-UPS_EXPORT ups_status_t
+ups_status_t
 ups_txn_begin(ups_txn_t **txn, ups_env_t *env, const char *name,
             void *reserved, uint32_t flags);
 
@@ -1264,7 +1264,7 @@ ups_txn_begin(ups_txn_t **txn, ups_env_t *env, const char *name,
  *
  * @returns NULL if the name was not assigned or if @a txn is invalid
  */
-UPS_EXPORT const char *
+const char *
 ups_txn_get_name(ups_txn_t *txn);
 
 /**
@@ -1285,7 +1285,7 @@ ups_txn_get_name(ups_txn_t *txn);
  * @return @ref UPS_CURSOR_STILL_OPEN if there are Cursors attached to this
  *      Txn
  */
-UPS_EXPORT ups_status_t
+ups_status_t
 ups_txn_commit(ups_txn_t *txn, uint32_t flags);
 
 /**
@@ -1306,7 +1306,7 @@ ups_txn_commit(ups_txn_t *txn, uint32_t flags);
  * @return @ref UPS_CURSOR_STILL_OPEN if there are Cursors attached to this
  *      Txn
  */
-UPS_EXPORT ups_status_t
+ups_status_t
 ups_txn_abort(ups_txn_t *txn, uint32_t flags);
 
 /**
@@ -1437,11 +1437,11 @@ typedef int UPS_CALLCONV (*ups_compare_func_t)(ups_db_t *db,
  *
  * @return @ref UPS_SUCCESS
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_register_compare(const char *name, ups_compare_func_t func);
 
 /* deprecated */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_set_compare_func(ups_db_t *db, ups_compare_func_t foo);
 
 /**
@@ -1536,7 +1536,7 @@ ups_db_set_compare_func(ups_db_t *db, ups_compare_func_t foo);
  * @sa ups_record_t
  * @sa ups_key_t
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_find(ups_db_t *db, ups_txn_t *txn, ups_key_t *key,
             ups_record_t *record, uint32_t flags);
 
@@ -1600,7 +1600,7 @@ ups_db_find(ups_db_t *db, ups_txn_t *txn, ups_key_t *key,
  * @return @ref UPS_INV_RECORD_SIZE if the record size is different from
  *        the one specified with @a UPS_PARAM_RECORD_SIZE
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_insert(ups_db_t *db, ups_txn_t *txn, ups_key_t *key,
             ups_record_t *record, uint32_t flags);
 
@@ -1667,7 +1667,7 @@ ups_db_insert(ups_db_t *db, ups_txn_t *txn, ups_key_t *key,
  * @return @ref UPS_TXN_CONFLICT if the same key was inserted in another
  *        Txn which was not yet committed or aborted
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_erase(ups_db_t *db, ups_txn_t *txn, ups_key_t *key, uint32_t flags);
 
 /* internal flag for ups_db_erase() - do not use */
@@ -1694,7 +1694,7 @@ ups_db_erase(ups_db_t *db, ups_txn_t *txn, ups_key_t *key, uint32_t flags);
  * @return @ref UPS_INV_PARAMETER if @a db or @a keycount is NULL or when
  *     @a flags contains an invalid flag set
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_count(ups_db_t *db, ups_txn_t *txn, uint32_t flags, uint64_t *count);
 
 /**
@@ -1733,7 +1733,7 @@ ups_db_count(ups_db_t *db, ups_txn_t *txn, uint32_t flags, uint64_t *count);
  * @return @ref UPS_INV_PARAMETER if the @a db pointer is NULL or
  *        @a param is NULL
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_get_parameters(ups_db_t *db, ups_parameter_t *param);
 
 /** Parameter name for @ref ups_env_open, @ref ups_env_create;
@@ -1902,7 +1902,7 @@ ups_db_get_parameters(ups_db_t *db, ups_parameter_t *param);
  *
  * @return The Environment handle
  */
-UPS_EXPORT ups_env_t *UPS_CALLCONV
+ups_env_t *UPS_CALLCONV
 ups_db_get_env(ups_db_t *db);
 
 /**
@@ -1931,7 +1931,7 @@ ups_db_get_env(ups_db_t *db);
  * @return @ref UPS_TXN_STILL_OPEN if this Database is modified by a
  *    currently active Txn
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_db_close(ups_db_t *db, uint32_t flags);
 
 /** Flag for @ref ups_db_close, @ref ups_env_close */
@@ -1983,7 +1983,7 @@ ups_db_close(ups_db_t *db, uint32_t flags);
  * @return @ref UPS_INV_PARAMETER if @a db or @a cursor is NULL
  * @return @ref UPS_OUT_OF_MEMORY if the new structure could not be allocated
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_create(ups_cursor_t **cursor, ups_db_t *db, ups_txn_t *txn,
             uint32_t flags);
 
@@ -2005,7 +2005,7 @@ ups_cursor_create(ups_cursor_t **cursor, ups_db_t *db, ups_txn_t *txn,
  * @return @ref UPS_INV_PARAMETER if @a src or @a dest is NULL
  * @return @ref UPS_OUT_OF_MEMORY if the new structure could not be allocated
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_clone(ups_cursor_t *src, ups_cursor_t **dest);
 
 /**
@@ -2092,7 +2092,7 @@ ups_cursor_clone(ups_cursor_t *src, ups_cursor_t **dest);
  * @sa ups_record_t
  * @sa ups_key_t
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_move(ups_cursor_t *cursor, ups_key_t *key,
             ups_record_t *record, uint32_t flags);
 
@@ -2129,7 +2129,7 @@ ups_cursor_move(ups_cursor_t *cursor, ups_key_t *key,
  * @return @ref UPS_TXN_CONFLICT if the same key was inserted in another
  *        Txn which was not yet committed or aborted
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_overwrite(ups_cursor_t *cursor, ups_record_t *record,
             uint32_t flags);
 
@@ -2229,7 +2229,7 @@ ups_cursor_overwrite(ups_cursor_t *cursor, ups_record_t *record,
  * @sa UPS_RECORD_USER_ALLOC
  * @sa ups_record_t
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_find(ups_cursor_t *cursor, ups_key_t *key,
             ups_record_t *record, uint32_t flags);
 
@@ -2383,7 +2383,7 @@ ups_cursor_find(ups_cursor_t *cursor, ups_key_t *key,
  * @return @ref UPS_TXN_CONFLICT if the same key was inserted in another
  *        Txn which was not yet committed or aborted
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_insert(ups_cursor_t *cursor, ups_key_t *key,
             ups_record_t *record, uint32_t flags);
 
@@ -2408,7 +2408,7 @@ ups_cursor_insert(ups_cursor_t *cursor, ups_key_t *key,
  * @return @ref UPS_TXN_CONFLICT if the same key was inserted in another
  *        Txn which was not yet committed or aborted
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_erase(ups_cursor_t *cursor, uint32_t flags);
 
 /**
@@ -2428,7 +2428,7 @@ ups_cursor_erase(ups_cursor_t *cursor, uint32_t flags);
  * @return @ref UPS_TXN_CONFLICT if the same key was inserted in another
  *        Txn which was not yet committed or aborted
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_get_duplicate_count(ups_cursor_t *cursor,
             uint32_t *count, uint32_t flags);
 
@@ -2445,7 +2445,7 @@ ups_cursor_get_duplicate_count(ups_cursor_t *cursor,
  * @return @ref UPS_CURSOR_IS_NIL if the Cursor does not point to an item
  * @return @ref UPS_INV_PARAMETER if @a cursor or @a position is NULL
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_get_duplicate_position(ups_cursor_t *cursor,
             uint32_t *position);
 
@@ -2461,7 +2461,7 @@ ups_cursor_get_duplicate_position(ups_cursor_t *cursor,
  * @return @ref UPS_CURSOR_IS_NIL if the Cursor does not point to an item
  * @return @ref UPS_INV_PARAMETER if @a cursor or @a size is NULL
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_get_record_size(ups_cursor_t *cursor, uint32_t *size);
 
 /**
@@ -2478,7 +2478,7 @@ ups_cursor_get_record_size(ups_cursor_t *cursor, uint32_t *size);
  *
  * @sa ups_db_close
  */
-UPS_EXPORT ups_status_t UPS_CALLCONV
+ups_status_t UPS_CALLCONV
 ups_cursor_close(ups_cursor_t *cursor);
 
 /**
