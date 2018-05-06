@@ -3,7 +3,9 @@ set( TEST_NAME db_test )
 add_executable( ${TEST_NAME}
     db1.cpp
     db2.cpp
+    db3.cpp
     main.cpp
+    random_string.cpp
 )
 
 target_compile_options( ${TEST_NAME} PRIVATE ${ROMZ_CXX_FLAGS} )
