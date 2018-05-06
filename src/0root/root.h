@@ -37,11 +37,6 @@
 
 #include "ups/types.h"
 
-// the default cache size is 2 MB
-#define UPS_DEFAULT_CACHE_SIZE    (2 * 1024 * 1024)
-
-// the default page size is 16 kb
-#define UPS_DEFAULT_PAGE_SIZE     (16 * 1024)
 
 
 // use tcmalloc?

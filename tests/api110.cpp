@@ -103,7 +103,7 @@ struct APIv110Fixture : BaseFixture {
     require_create(UPS_DISABLE_MMAP, set_params);
     close();
     require_open(UPS_READ_ONLY);
-    require_parameter(UPS_PARAM_CACHE_SIZE, UPS_DEFAULT_CACHE_SIZE);
+    require_parameter(UPS_PARAM_CACHE_SIZE, EnvConfig::UPS_DEFAULT_CACHE_SIZE);
     require_parameter(UPS_PARAM_PAGE_SIZE, 1024 * 64);
     require_parameter(UPS_PARAM_FLAGS, UPS_READ_ONLY);
     require_parameter(UPS_PARAM_FILEMODE, 0644);

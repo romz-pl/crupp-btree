@@ -1793,8 +1793,7 @@ ups_db_get_parameters(ups_db_t *db, ups_parameter_t *param);
 /** Parameter name for @ref ups_env_create_db; sets the record type */
 #define UPS_PARAM_RECORD_TYPE           0x00000112
 
-/** Value for @ref UPS_PARAM_POSIX_FADVISE */
-#define UPS_POSIX_FADVICE_NORMAL                 0
+
 
 /** Value for @ref UPS_PARAM_POSIX_FADVISE */
 #define UPS_POSIX_FADVICE_RANDOM                 1

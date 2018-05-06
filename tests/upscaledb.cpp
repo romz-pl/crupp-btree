@@ -1641,7 +1641,7 @@ struct UpscaledbFixture : BaseFixture {
     // open, make sure the property was not persisted
     REQUIRE(0 == ups_env_open(&env, "test.db", 0, 0));
     REQUIRE(0 == ups_env_get_parameters(env, &pout[0]));
-    REQUIRE(UPS_POSIX_FADVICE_NORMAL == pout[0].value);
+    REQUIRE(EnvConfig::UPS_POSIX_FADVICE_NORMAL == pout[0].value);
     REQUIRE(0 == ups_env_close(env, UPS_AUTO_CLEANUP));
 
     // open with flag

@@ -462,25 +462,25 @@ TEST_CASE("PageManager/cacheNegativeGets", "")
 
 TEST_CASE("PageManager/cacheFullTest", "")
 {
-  PageManagerFixture f(false, 16 * UPS_DEFAULT_PAGE_SIZE);
+  PageManagerFixture f(false, 16 * EnvConfig::UPS_DEFAULT_PAGE_SIZE);
   f.cacheFullTest();
 }
 
 TEST_CASE("PageManager/storeStateTest", "")
 {
-  PageManagerFixture f(false, 16 * UPS_DEFAULT_PAGE_SIZE);
+  PageManagerFixture f(false, 16 * EnvConfig::UPS_DEFAULT_PAGE_SIZE);
   f.storeStateTest();
 }
 
 TEST_CASE("PageManager/reclaimTest", "")
 {
-  PageManagerFixture f(false, 16 * UPS_DEFAULT_PAGE_SIZE);
+  PageManagerFixture f(false, 16 * EnvConfig::UPS_DEFAULT_PAGE_SIZE);
   f.reclaimTest();
 }
 
 TEST_CASE("PageManager/issue60Test", "")
 {
-  PageManagerFixture f(false, 16 * UPS_DEFAULT_PAGE_SIZE);
+  PageManagerFixture f(false, 16 * EnvConfig::UPS_DEFAULT_PAGE_SIZE);
   f.issue60Test();
 }
 
