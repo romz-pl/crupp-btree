@@ -1510,7 +1510,7 @@ ups_set_context_data(ups_db_t *hdb, void *data)
 }
 
 void * 
-ups_get_context_data(ups_db_t *hdb, ups_bool_t dont_lock)
+ups_get_context_data(ups_db_t *hdb, bool dont_lock)
 {
   Db *db = (Db *)hdb;
   if (unlikely(!db))
@@ -1628,13 +1628,12 @@ ups_env_get_metrics(ups_env_t *henv, ups_env_metrics_t *metrics)
   }
 }
 
-ups_bool_t 
-ups_is_debug()
+bool ups_is_debug()
 {
 #ifndef NDEBUG
-  return UPS_TRUE;
+  return true;
 #else
-  return UPS_FALSE;
+  return false;
 #endif
 }
 

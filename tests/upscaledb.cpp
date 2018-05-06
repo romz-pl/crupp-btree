@@ -31,7 +31,7 @@
 
 namespace upscaledb {
 
-static int UPS_CALLCONV
+static int 
 my_compare_func(ups_db_t *, const uint8_t *lhs, uint32_t lhs_length,
                 const uint8_t *rhs, uint32_t rhs_length) {
   (void)lhs;
@@ -41,7 +41,7 @@ my_compare_func(ups_db_t *, const uint8_t *lhs, uint32_t lhs_length,
   return 0;
 }
 
-static int UPS_CALLCONV
+static int 
 custom_compare_func(ups_db_t *, const uint8_t *lhs, uint32_t lhs_length,
                 const uint8_t *rhs, uint32_t rhs_length) {
   REQUIRE(lhs_length == rhs_length);
@@ -262,7 +262,7 @@ struct UpscaledbFixture : BaseFixture {
   }
 
 
-  static int UPS_CALLCONV my_compare_func_u32(ups_db_t *,
+  static int my_compare_func_u32(ups_db_t *,
                   const uint8_t *lhs, uint32_t lhs_length,
                   const uint8_t *rhs, uint32_t rhs_length)
   {

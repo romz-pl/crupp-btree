@@ -24,10 +24,8 @@
 
 #include "0root/root.h"
 
-#ifndef UPS_OS_WIN32
-#   include <stdint.h>
-#   include <sys/cdefs.h>
-#endif
+#include <stdint.h>
+#include <sys/cdefs.h>
 #include <assert.h>
 
 #ifdef RB_COMPACT

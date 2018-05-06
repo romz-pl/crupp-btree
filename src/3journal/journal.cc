@@ -74,17 +74,8 @@ log_file_path(JournalState &state, int i)
   }
   else {
     path = state.env->config.log_filename;
-#ifdef UPS_OS_WIN32
-    path += "\\";
-    char fname[_MAX_FNAME];
-    char ext[_MAX_EXT];
-    _splitpath(state.env->config.filename.c_str(), 0, 0, fname, ext);
-    path += fname;
-    path += ext;
-#else
     path += "/";
     path += ::basename((char *)state.env->config.filename.c_str());
-#endif
   }
   if (i == 0)
     path += ".jrn0";
