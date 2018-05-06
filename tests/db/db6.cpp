@@ -93,8 +93,10 @@ TEST( db, cpp_interface )
 
 TEST( db, transaction )
 {
+    ups_status_t st;
     ups_env_t* env;
-    ups_env_create( &env, "test.db", UPS_ENABLE_TRANSACTIONS, 0664, 0 );
+    st = ups_env_create( &env, "test.db", UPS_ENABLE_TRANSACTIONS, 0664, 0 );
+    ASSERT_TRUE( st == UPS_SUCCESS );
 
     ups_parameter_t params[] =
     {
@@ -103,10 +105,12 @@ TEST( db, transaction )
     };
 
     ups_txn_t* txn;
-    ups_txn_begin( &txn, env, 0, 0, 0 );
+    st = ups_txn_begin( &txn, env, 0, 0, 0 );
+    ASSERT_TRUE( st == UPS_SUCCESS );
 
     ups_db_t* db;
-    ups_env_create_db( env, &db, 1, 0, params );
+    st = ups_env_create_db( env, &db, 1, 0, params );
+    ASSERT_TRUE( st == UPS_SUCCESS );
 
     std::uint32_t rec_no = 4321;
     for( std::uint32_t i = 0; i < rec_no; i++)
@@ -114,12 +118,17 @@ TEST( db, transaction )
         ups_key_t key = ups_make_key( &i, sizeof( i ) );
         ups_record_t record;
 
-        ups_db_insert( db, txn, &key, &record, 0 );
+        st = ups_db_insert( db, txn, &key, &record, 0 );
+        ASSERT_TRUE( st == UPS_SUCCESS );
     }
 
-    ups_txn_commit( txn, 0 );
+    st = ups_txn_commit( txn, 0 );
+    ASSERT_TRUE( st == UPS_SUCCESS );
 
     uint64_t size;
     ups_db_count( db, 0, 0, &size );
     ASSERT_TRUE( size == rec_no );
+
+    st = ups_env_close(env, UPS_AUTO_CLEANUP);
+    ASSERT_TRUE( st == UPS_SUCCESS );
 }
