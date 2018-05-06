@@ -740,13 +740,6 @@ PageManager::close(Context *context)
   // modified freelist pages
   bool try_reclaim = NOTSET(state->config.flags, UPS_DISABLE_RECLAIM_INTERNAL);
 
-#ifdef WIN32
-  // Win32: it's not possible to truncate the file while there's an active
-  // mapping, therefore only reclaim if memory mapped I/O is disabled
-  if (NOTSET(state->config.flags, UPS_DISABLE_MMAP))
-    try_reclaim = false;
-#endif
-
   if (try_reclaim)
     reclaim_space(context);
 

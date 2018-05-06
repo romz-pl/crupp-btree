@@ -27,10 +27,8 @@
 #include "0root/root.h"
 
 #include <stdio.h>
-#ifndef WIN32
-#  include <sched.h>
-#  include <unistd.h>
-#endif
+#include <sched.h>
+#include <unistd.h>
 #include <boost/atomic.hpp>
 
 // Always verify that a file of level N does not include headers > N!
@@ -112,21 +110,17 @@ class Spinlock {
 
     static void spin(int loop) {
       if (loop < kSpinThreshold) {
-#ifdef WIN32
-        ::Sleep(0);
-#elif HAVE_SCHED_YIELD
+#ifdef HAVE_SCHED_YIELD
         ::sched_yield();
 #else
-        assert(!"Please implement me");
+        static_assert(0, "Please implement me");
 #endif 
       }
       else {
-#ifdef WIN32
-        ::Sleep(0);
-#elif HAVE_USLEEP
+#ifdef HAVE_USLEEP
         ::usleep(25);
 #else
-        assert(!"Please implement me");
+        static_assert(0, "Please implement me");
 #endif 
       }
     }

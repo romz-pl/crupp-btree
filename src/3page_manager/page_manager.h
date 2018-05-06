@@ -28,7 +28,6 @@
 #ifndef UPS_PAGE_MANAGER_H
 #define UPS_PAGE_MANAGER_H
 
-// include this first, otherwise WIN32 compilation (boost/asio.hpp) fails
 #include "2worker/worker.h"
 
 #include "0root/root.h"

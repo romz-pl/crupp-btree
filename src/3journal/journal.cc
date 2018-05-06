@@ -19,9 +19,7 @@
 #include "0root/root.h"
 
 #include <string.h>
-#ifndef WIN32
-#  include <libgen.h>
-#endif
+#include <libgen.h>
 
 #include "1base/error.h"
 #include "1errorinducer/errorinducer.h"

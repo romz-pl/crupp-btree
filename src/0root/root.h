@@ -47,14 +47,6 @@
 // the default page size is 16 kb
 #define UPS_DEFAULT_PAGE_SIZE     (16 * 1024)
 
-// boost/asio has nasty build dependencies and requires Windows.h,
-// therefore it is included here
-#ifdef WIN32
-#  define WIN32_LEAN_AND_MEAN
-#  include <Windows.h>
-#  include <boost/asio.hpp>
-#  include <boost/thread/thread.hpp>
-#endif
 
 // use tcmalloc?
 #if HAVE_GOOGLE_TCMALLOC_H == 1
@@ -75,10 +67,6 @@
 #   define unlikely(x) (x)
 #endif
 
-// MSVC: disable warning about use of 'this' in base member initializer list
-#ifdef WIN32
-#  pragma warning(disable:4355)
-#endif
 
 // some compilers define min and max as macros; this leads to errors
 // when using std::min and std::max

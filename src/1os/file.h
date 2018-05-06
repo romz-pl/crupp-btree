@@ -140,11 +140,6 @@ class File
 
     // Parameter for posix_fadvise()
     int m_posix_advice;
-
-#ifdef WIN32
-	// A mutex; required for Win32
-	Mutex m_mutex;
-#endif
 };
 
 } // namespace upscaledb

@@ -45,21 +45,6 @@ typedef int	               ups_socket_t;
 #define UPS_INVALID_FD  (-1)
 
 
-/*
- * typedefs for Windows 32- and 64-bit
- */
-#ifdef WIN32
-#  ifdef CYGWIN
-typedef int                ups_fd_t;
-typedef int	               ups_socket_t;
-#  else
-typedef HANDLE             ups_fd_t;
-typedef UINT_PTR           SOCKET; // from WinSock2.h
-typedef SOCKET             ups_socket_t;
-#  endif
-#  define UPS_INVALID_FD   (0)
-#endif
-
 // Returns true if the CPU supports AVX
 extern bool
 os_has_avx();
