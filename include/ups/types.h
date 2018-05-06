@@ -109,16 +109,6 @@ extern "C" {
 #  include <stdint.h>
 #endif
 
-/* Deprecated typedefs; used prior to 2.1.10. Please do not use them! */
-typedef int64_t     ups_s64_t;
-typedef uint64_t    ups_u64_t;
-typedef int32_t     ups_s32_t;
-typedef uint32_t    ups_u32_t;
-typedef int16_t     ups_s16_t;
-typedef uint16_t    ups_u16_t;
-typedef int8_t      ups_s8_t;
-typedef uint8_t     ups_u8_t;
-
 /*
  * Undefine macros to avoid macro redefinitions
  */
