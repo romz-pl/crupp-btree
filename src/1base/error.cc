@@ -24,7 +24,6 @@
 #include <stdlib.h>
 
 // Always verify that a file of level N does not include headers > N!
-#include "1base/util.h"
 #include "1globals/globals.h"
 
 #ifndef UPS_ROOT_H
