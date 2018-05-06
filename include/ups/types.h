@@ -34,29 +34,31 @@ extern "C" {
 /*
  * Check the operating system and word size
  */
-#ifdef WIN32
-#  undef  UPS_OS_WIN32
-#  define UPS_OS_WIN32 1
-#  ifdef WIN64
-#    undef  UPS_64BIT
-#    define UPS_64BIT 1
-#  elif WIN32
-#    undef  UPS_32BIT
-#    define UPS_32BIT 1
-#  else
-#    error "Neither WIN32 nor WIN64 defined!"
-#  endif
-#else /* posix? */
-#  undef  UPS_OS_POSIX
+//#ifdef WIN32
+//#  undef  UPS_OS_WIN32
+//#  define UPS_OS_WIN32 1
+//#  ifdef WIN64
+//#    undef  UPS_64BIT
+//#    define UPS_64BIT 1
+//#  elif WIN32
+//#    undef  UPS_32BIT
+//#    define UPS_32BIT 1
+//#  else
+//#    error "Neither WIN32 nor WIN64 defined!"
+//#  endif
+//#else /* posix? */
+//#  undef  UPS_OS_POSIX
+//#  define UPS_OS_POSIX 1
+//#  if defined(__LP64__) || defined(__LP64) || __WORDSIZE == 64
+//#    undef  UPS_64BIT
+//#    define UPS_64BIT 1
+//#  else
+//#    undef  UPS_32BIT
+//#    define UPS_32BIT 1
+//#  endif
+//#endif
+
 #  define UPS_OS_POSIX 1
-#  if defined(__LP64__) || defined(__LP64) || __WORDSIZE == 64
-#    undef  UPS_64BIT
-#    define UPS_64BIT 1
-#  else
-#    undef  UPS_32BIT
-#    define UPS_32BIT 1
-#  endif
-#endif
 
 #if defined(UPS_OS_POSIX) && defined(UPS_OS_WIN32)
 #  error "Unknown arch - neither UPS_OS_POSIX nor UPS_OS_WIN32 defined"
