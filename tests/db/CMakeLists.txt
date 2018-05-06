@@ -2,6 +2,7 @@ set( TEST_NAME db_test )
 
 add_executable( ${TEST_NAME}
     db1.cpp
+    db2.cpp
     main.cpp
 )
 
