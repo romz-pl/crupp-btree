@@ -132,7 +132,7 @@ ups_set_context_data(ups_db_t *db, void *data);
  * @return The pointer to the context data
  */
 void *
-ups_get_context_data(ups_db_t *db, ups_bool_t dont_lock);
+ups_get_context_data(ups_db_t *db, bool dont_lock);
 
 /**
  * Retrieves the Database handle of a Cursor
@@ -305,7 +305,7 @@ typedef struct ups_env_metrics_t {
   btree_metrics_t btree_internal_metrics;
 
   // set to true if AVX is enabled
-  ups_bool_t is_avx_enabled;
+  bool is_avx_enabled;
 
 } ups_env_metrics_t;
 
@@ -319,7 +319,7 @@ ups_env_get_metrics(ups_env_t *env, ups_env_metrics_t *metrics);
  * Returns @ref UPS_TRUE if this upscaledb library was compiled with debug
  * diagnostics, checks and asserts
  */
-ups_bool_t
+bool
 ups_is_debug();
 
 /**

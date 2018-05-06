@@ -63,30 +63,13 @@ extern "C" {
 #endif
 
 
-/*
- * Common typedefs. Since stdint.h is not available on older versions of
- * Microsoft Visual Studio, they get declared here.
- * http://msinttypes.googlecode.com/svn/trunk/stdint.h
- */
-#if _MSC_VER
-#  include <ups/msstdint.h>
-#else
-#  include <stdint.h>
-#endif
+#include <stdint.h>
 
 /*
  * Undefine macros to avoid macro redefinitions
  */
 #undef UPS_INVALID_FD
-#undef UPS_FALSE
-#undef UPS_TRUE
 
-/**
- * a boolean type
- */
-typedef int                ups_bool_t;
-#define UPS_FALSE          0
-#define UPS_TRUE           (!UPS_FALSE)
 
 /**
  * typedef for error- and status-code
