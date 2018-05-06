@@ -76,11 +76,11 @@
 #include <vector>
 #include <cstdio>
 #include <string>
+#include <memory>
 
 #include "ups/upscaledb_int.h" // for metrics
 
 #include "1base/dynamic_array.h"
-#include "1base/scoped_ptr.h"
 #include "1os/file.h"
 #include "1errorinducer/errorinducer.h"
 #include "2page/page_collection.h"

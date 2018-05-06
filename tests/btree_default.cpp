@@ -602,7 +602,7 @@ TEST_CASE("BtreeDefault/fixedRecordsWithDuplicatesTest", "")
 
 
 struct DuplicateTableFixture : BaseFixture {
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   DuplicateTableFixture(uint32_t env_flags) {
     require_create(env_flags,nullptr, UPS_ENABLE_DUPLICATES, nullptr);
@@ -1496,7 +1496,7 @@ TEST_CASE("BtreeDefault/DuplicateTable/insertOverwriteSizesTest", "")
 }
 
 struct UpfrontIndexFixture : BaseFixture {
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   UpfrontIndexFixture(size_t page_size) {
     ups_parameter_t params[] = {

@@ -34,9 +34,9 @@
 #include "0root/root.h"
 
 #include <map>
+#include <memory>
 
 // Always verify that a file of level N does not include headers > N!
-#include "1base/scoped_ptr.h"
 #include "3page_manager/page_manager_state.h"
 
 #ifndef UPS_ROOT_H
@@ -154,7 +154,7 @@ struct PageManager
   uint64_t test_store_state();
 
   // The state
-  ScopedPtr<PageManagerState> state;
+  std::unique_ptr<PageManagerState> state;
 };
 
 } // namespace upscaledb

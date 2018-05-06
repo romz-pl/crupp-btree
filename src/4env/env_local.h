@@ -19,12 +19,13 @@
 #ifndef UPS_ENV_LOCAL_H
 #define UPS_ENV_LOCAL_H
 
+#include <memory>
+
 #include "ups/upscaledb.h"
 
 #include "0root/root.h"
 
 // Always verify that a file of level N does not include headers > N!
-#include "1base/scoped_ptr.h"
 #include "2lsn_manager/lsn_manager.h"
 #include "2device/device.h"
 #include "3journal/journal.h"
@@ -101,19 +102,19 @@ struct LocalEnv : public Env
   virtual ups_status_t do_close(uint32_t flags);
 
   // The Environment's header page/configuration
-  ScopedPtr<EnvHeader> header;
+  std::unique_ptr<EnvHeader> header;
 
   // The device instance (either a file or an in-memory-db)
-  ScopedPtr<Device> device;
+  std::unique_ptr<Device> device;
 
   // The BlobManager instance
-  ScopedPtr<BlobManager> blob_manager;
+  std::unique_ptr<BlobManager> blob_manager;
 
   // The PageManager instance
-  ScopedPtr<PageManager> page_manager;
+  std::unique_ptr<PageManager> page_manager;
 
   // The logical journal
-  ScopedPtr<Journal> journal;
+  std::unique_ptr<Journal> journal;
 
   // The lsn manager
   LsnManager lsn_manager;

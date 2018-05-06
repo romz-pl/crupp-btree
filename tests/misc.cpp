@@ -28,7 +28,7 @@ namespace upscaledb {
 
 struct MiscFixture : BaseFixture {
 
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   MiscFixture() {
     ups_parameter_t p[] = {

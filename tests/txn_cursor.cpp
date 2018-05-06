@@ -31,7 +31,7 @@ namespace upscaledb {
 
 struct TxnCursorFixture : BaseFixture {
   ups_cursor_t *cursor;
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   TxnCursorFixture() {
     require_create(UPS_ENABLE_TRANSACTIONS, nullptr,

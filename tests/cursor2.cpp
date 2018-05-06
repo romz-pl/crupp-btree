@@ -31,7 +31,7 @@ using namespace upscaledb;
 struct DupeCursorFixture : BaseFixture {
   ups_cursor_t *cursor;
   ups_txn_t *m_txn;
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   DupeCursorFixture() {
     require_create(UPS_ENABLE_TRANSACTIONS, nullptr,

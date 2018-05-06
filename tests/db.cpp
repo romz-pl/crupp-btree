@@ -28,7 +28,7 @@ namespace upscaledb {
 
 struct DbFixture : BaseFixture {
   bool m_inmemory;
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   DbFixture(bool inmemory = false)
     : m_inmemory(inmemory) {

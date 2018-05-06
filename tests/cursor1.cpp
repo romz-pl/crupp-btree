@@ -33,7 +33,7 @@ cursor_is_nil(LocalCursor *c, int what)
 struct BaseCursorFixture : BaseFixture {
   ups_cursor_t *m_cursor;
   ups_txn_t *m_txn;
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   BaseCursorFixture()
     : m_cursor(0), m_txn(0) {

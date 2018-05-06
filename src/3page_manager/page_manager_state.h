@@ -125,7 +125,7 @@ struct PageManagerState {
   std::vector<Page *> garbage;
 
   // The worker thread which flushes dirty pages
-  ScopedPtr<WorkerPool> worker;
+  std::unique_ptr<WorkerPool> worker;
 };
 
 } // namespace upscaledb

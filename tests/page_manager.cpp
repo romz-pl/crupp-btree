@@ -44,7 +44,7 @@ struct PageManagerProxy {
 };
 
 struct PageManagerFixture : BaseFixture {
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   PageManagerFixture(bool inmemorydb = false, uint32_t cachesize = 0) {
     uint32_t flags = 0;

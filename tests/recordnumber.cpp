@@ -30,7 +30,7 @@ namespace upscaledb {
 template<typename RecnoType>
 struct RecordNumberFixture : BaseFixture {
   uint32_t m_flags;
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   RecordNumberFixture(uint32_t flags = 0)
       : m_flags(flags) {

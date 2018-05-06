@@ -304,7 +304,7 @@ struct JournalFixture : BaseFixture {
   }
 
   void negativeCreateTest() {
-    ScopedPtr<Journal> j(new Journal(lenv()));
+    std::unique_ptr<Journal> j(new Journal(lenv()));
     JournalProxy jp(j.get());
 
     std::string oldfilename = lenv()->config.filename;
@@ -317,7 +317,7 @@ struct JournalFixture : BaseFixture {
   }
 
   void negativeOpenTest() {
-    ScopedPtr<Journal> j(new Journal(lenv()));
+    std::unique_ptr<Journal> j(new Journal(lenv()));
     JournalProxy jp(j.get());
 
 //    std::string oldfilename = lenv()->config.filename;
