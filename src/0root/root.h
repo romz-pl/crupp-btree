@@ -47,7 +47,6 @@
 #endif
 
 #include <stddef.h>
-#define OFFSETOF(type, member) offsetof(type, member)
 
 // helper macros to improve CPU branch prediction
 #if defined __GNUC__
