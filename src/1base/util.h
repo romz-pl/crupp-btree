@@ -37,21 +37,21 @@
 
 namespace upscaledb {
 
-//
-// vsnprintf replacement/wrapper
-//
-// uses vsprintf on platforms which do not define vsnprintf
-//
-extern int
-util_vsnprintf(char *str, size_t size, const char *format, va_list ap);
+////
+//// vsnprintf replacement/wrapper
+////
+//// uses vsprintf on platforms which do not define vsnprintf
+////
+//extern int
+//util_vsnprintf(char *str, size_t size, const char *format, va_list ap);
 
-//
-// snprintf replacement/wrapper
-//
-// uses sprintf on platforms which do not define snprintf
-//
+////
+//// snprintf replacement/wrapper
+////
+//// uses sprintf on platforms which do not define snprintf
+////
 
-#define util_snprintf snprintf
+//#define util_snprintf snprintf
 
 
 } // namespace upscaledb

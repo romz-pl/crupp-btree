@@ -40,7 +40,7 @@ dbg_snprintf(char *str, size_t size, const char *format, ...)
 
   va_list ap;
   va_start(ap, format);
-  s = util_vsnprintf(str, size, format, ap);
+  s = vsnprintf(str, size, format, ap);
   va_end(ap);
 
   return s;
@@ -83,7 +83,7 @@ dbg_log(const char *format, ...)
   if (Globals::ms_error_function)
     s = dbg_snprintf(buffer, sizeof(buffer), "%s: ",
                     Globals::ms_error_function);
-  util_vsnprintf(buffer + s, sizeof(buffer) - s, format, ap);
+  vsnprintf(buffer + s, sizeof(buffer) - s, format, ap);
 #endif
   va_end(ap);
 
