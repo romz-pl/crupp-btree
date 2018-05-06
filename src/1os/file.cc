@@ -1,3 +1,6 @@
+#define _GNU_SOURCE        1 // for O_LARGEFILE
+#define _FILE_OFFSET_BITS 64
+
 #include "0root/root.h"
 
 #if HAVE_MMAP

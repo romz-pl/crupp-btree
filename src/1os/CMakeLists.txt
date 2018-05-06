@@ -4,8 +4,6 @@ set( LIB_NAME ups-1os )
 add_library( ${LIB_NAME} STATIC
     file.cc
     os.cc
-    os_posix.cc
-#    os_win32.cc
     socket.cc
 )
 
