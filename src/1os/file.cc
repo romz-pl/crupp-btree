@@ -310,10 +310,7 @@ void File::truncate(uint64_t newsize)
 //
 void File::create(const char *filename, uint32_t mode)
 {
-  int osflags = O_CREAT | O_RDWR | O_TRUNC;
-#if HAVE_O_NOATIME
-  osflags |= O_NOATIME;
-#endif
+  const int osflags = O_CREAT | O_RDWR | O_TRUNC | O_NOATIME ;
 
   ups_fd_t fd = ::open(filename, osflags, mode ? mode : 0644);
   if (fd < 0) {
@@ -355,15 +352,13 @@ void File::flush()
 //
 void File::open(const char *filename, bool read_only)
 {
-  int osflags = 0;
+  int osflags = O_NOATIME;
 
   if (read_only)
     osflags |= O_RDONLY;
   else
     osflags |= O_RDWR;
-#if HAVE_O_NOATIME
-  osflags |= O_NOATIME;
-#endif
+
 
   ups_fd_t fd = ::open(filename, osflags);
   if (fd < 0) {
