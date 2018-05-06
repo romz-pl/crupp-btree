@@ -204,7 +204,6 @@ void File::pread(uint64_t addr, void *buffer, size_t len)
 {
   os_log(("File::pread: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
-#if HAVE_PREAD
   int r;
   size_t total = 0;
 
@@ -225,10 +224,6 @@ void File::pread(uint64_t addr, void *buffer, size_t len)
     ups_log(("File::pread() failed with short read (%s)", strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  File::seek(addr, kSeekSet);
-  os_read(m_fd, (uint8_t *)buffer, len);
-#endif
 }
 
 //
@@ -238,7 +233,6 @@ void File::pwrite(uint64_t addr, const void *buffer, size_t len)
 {
   os_log(("File::pwrite: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
-#if HAVE_PWRITE
   ssize_t s;
   size_t total = 0;
 
@@ -257,10 +251,6 @@ void File::pwrite(uint64_t addr, const void *buffer, size_t len)
     ups_log(("pwrite() failed with short read (%s)", strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  seek(addr, kSeekSet);
-  write(buffer, len);
-#endif
 }
 
 //
