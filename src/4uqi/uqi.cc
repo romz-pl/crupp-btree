@@ -35,25 +35,25 @@ using namespace upscaledb;
 
 class Cursor;
 
-uint32_t UPS_CALLCONV
+uint32_t 
 uqi_result_get_row_count(uqi_result_t *result)
 {
   return ((Result *)result)->row_count;
 }
 
-uint32_t UPS_CALLCONV
+uint32_t 
 uqi_result_get_key_type(uqi_result_t *result)
 {
   return ((Result *)result)->key_type;
 }
 
-uint32_t UPS_CALLCONV
+uint32_t 
 uqi_result_get_record_type(uqi_result_t *result)
 {
   return ((Result *)result)->record_type;
 }
 
-void UPS_CALLCONV
+void 
 uqi_result_get_key(uqi_result_t *result, uint32_t row, ups_key_t *key)
 {
   Result *r = (Result *)result;
@@ -66,7 +66,7 @@ uqi_result_get_key(uqi_result_t *result, uint32_t row, ups_key_t *key)
   }
 }
 
-void UPS_CALLCONV
+void 
 uqi_result_get_record(uqi_result_t *result, uint32_t row, ups_record_t *record)
 {
   Result *r = (Result *)result;
@@ -79,7 +79,7 @@ uqi_result_get_record(uqi_result_t *result, uint32_t row, ups_record_t *record)
   }
 }
 
-void *UPS_CALLCONV
+void *
 uqi_result_get_key_data(uqi_result_t *result, uint32_t *psize)
 {
   Result *r = (Result *)result;
@@ -88,7 +88,7 @@ uqi_result_get_key_data(uqi_result_t *result, uint32_t *psize)
   return r->key_data.data();
 }
 
-void *UPS_CALLCONV
+void *
 uqi_result_get_record_data(uqi_result_t *result, uint32_t *psize)
 {
   Result *r = (Result *)result;
@@ -97,13 +97,13 @@ uqi_result_get_record_data(uqi_result_t *result, uint32_t *psize)
   return r->record_data.data();
 }
 
-void UPS_CALLCONV
+void 
 uqi_result_close(uqi_result_t *result)
 {
   delete ((Result *)result);
 }
 
-ups_status_t UPS_CALLCONV
+ups_status_t 
 uqi_register_plugin(uqi_plugin_t *descriptor)
 {
   if (!descriptor) {
@@ -114,13 +114,13 @@ uqi_register_plugin(uqi_plugin_t *descriptor)
   return PluginManager::add(descriptor);
 }
 
-ups_status_t UPS_CALLCONV
+ups_status_t 
 uqi_select(ups_env_t *env, const char *query, uqi_result_t **result)
 {
   return uqi_select_range(env, query, 0, 0, result);
 }
 
-ups_status_t UPS_CALLCONV
+ups_status_t 
 uqi_select_range(ups_env_t *henv, const char *query, ups_cursor_t *begin,
                     const ups_cursor_t *end, uqi_result_t **result)
 {
@@ -151,14 +151,14 @@ uqi_select_range(ups_env_t *henv, const char *query, ups_cursor_t *begin,
   }
 }
 
-void UPS_CALLCONV
+void 
 uqi_result_initialize(uqi_result_t *result, int key_type, int record_type)
 {
   Result *r = (Result *)result;
   r->initialize(key_type, record_type);
 }
 
-void UPS_CALLCONV
+void 
 uqi_result_add_row(uqi_result_t *result,
                     const void *key_data, uint32_t key_size,
                     const void *record_data, uint32_t record_size)
@@ -167,7 +167,7 @@ uqi_result_add_row(uqi_result_t *result,
   r->add_row(key_data, key_size, record_data, record_size);
 }
 
-void UPS_CALLCONV
+void 
 uqi_result_move(uqi_result_t *destination, uqi_result_t *source)
 {
   Result *d = (Result *)destination;

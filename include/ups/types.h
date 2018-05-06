@@ -62,12 +62,6 @@ extern "C" {
 #  error "Unknown arch - neither UPS_OS_POSIX nor UPS_OS_WIN32 defined"
 #endif
 
-/*
- * The default calling convention is cdecl
- */
-#ifndef UPS_CALLCONV
-#  define UPS_CALLCONV
-#endif
 
 /*
  * Common typedefs. Since stdint.h is not available on older versions of

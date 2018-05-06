@@ -43,31 +43,31 @@ typedef struct uqi_result_t uqi_result_t;
 /**
  * Returns the number of rows stored in a query result
  */
-uint32_t UPS_CALLCONV
+uint32_t
 uqi_result_get_row_count(uqi_result_t *result);
 
 /**
  * Returns the key type
  */
-uint32_t UPS_CALLCONV
+uint32_t
 uqi_result_get_key_type(uqi_result_t *result);
 
 /**
  * Returns the record type
  */
-uint32_t UPS_CALLCONV
+uint32_t
 uqi_result_get_record_type(uqi_result_t *result);
 
 /**
  * Returns a key for the specified row
  */
-void UPS_CALLCONV
+void
 uqi_result_get_key(uqi_result_t *result, uint32_t row, ups_key_t *key);
 
 /**
  * Returns a record for the specified row
  */
-void UPS_CALLCONV
+void
 uqi_result_get_record(uqi_result_t *result, uint32_t row, ups_record_t *record);
 
 /**
@@ -76,7 +76,7 @@ uqi_result_get_record(uqi_result_t *result, uint32_t row, ups_record_t *record);
  * If the keys have a fixed-length type (i.e. UPS_TYPE_UINT32) then this
  * corresponds to an array of this type (here: uint32_t).
  */
-void *UPS_CALLCONV
+void *
 uqi_result_get_key_data(uqi_result_t *result, uint32_t *size);
 
 /**
@@ -85,7 +85,7 @@ uqi_result_get_key_data(uqi_result_t *result, uint32_t *size);
  * If the record have a fixed-length type (i.e. UPS_TYPE_UINT32) then this
  * corresponds to an array of this type (here: uint32_t).
  */
-void *UPS_CALLCONV
+void *
 uqi_result_get_record_data(uqi_result_t *result, uint32_t *size);
 
 /**
@@ -95,7 +95,7 @@ uqi_result_get_record_data(uqi_result_t *result, uint32_t *size);
  *
  * @parameter result Pointer to the uqi_result_t object.
  */
-void UPS_CALLCONV
+void
 uqi_result_close(uqi_result_t *result);
 
 /**
@@ -105,7 +105,7 @@ uqi_result_close(uqi_result_t *result);
  * @parameter key_type The key type (i.e. UPS_TYPE_BINARY)
  * @parameter record_type The record type (i.e. UPS_TYPE_UINT64)
  */
-void UPS_CALLCONV
+void
 uqi_result_initialize(uqi_result_t *result, int key_type, int record_type);
 
 /**
@@ -120,7 +120,7 @@ uqi_result_initialize(uqi_result_t *result, int key_type, int record_type);
  * @parameter record_data The data of the new record
  * @parameter record_size The size of the new record (in bytes)
  */
-void UPS_CALLCONV
+void
 uqi_result_add_row(uqi_result_t *result,
                     const void *key_data, uint32_t key_size,
                     const void *record_data, uint32_t record_size);
@@ -128,7 +128,7 @@ uqi_result_add_row(uqi_result_t *result,
 /**
  * Efficiently moves a result set's data to another one.
  */
-void UPS_CALLCONV
+void
 uqi_result_move(uqi_result_t *destination, uqi_result_t *source);
 
 
@@ -295,7 +295,7 @@ struct uqi_plugin_t {
  *      exists
  * @return @ref UPS_INV_PARAMETER if any of the pointers is null
  */
-ups_status_t UPS_CALLCONV
+ups_status_t
 uqi_register_plugin(uqi_plugin_t *descriptor);
 
 /**
@@ -312,7 +312,7 @@ uqi_register_plugin(uqi_plugin_t *descriptor);
  * @sa uqi_result_close
  * @sa uqi_select_range
  */
-ups_status_t UPS_CALLCONV
+ups_status_t
 uqi_select(ups_env_t *env, const char *query, uqi_result_t **result);
 
 /**
@@ -368,7 +368,7 @@ uqi_select(ups_env_t *env, const char *query, uqi_result_t **result);
  *
  * @sa uqi_result_close
  */
-ups_status_t UPS_CALLCONV
+ups_status_t
 uqi_select_range(ups_env_t *env, const char *query, ups_cursor_t *begin,
                             const ups_cursor_t *end, uqi_result_t **result);
 

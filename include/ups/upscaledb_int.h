@@ -77,7 +77,7 @@ extern "C" {
  *    <li>zero (0) otherwise (key was an EQ (EXACT) match)
  *    </ul>
  */
-int UPS_CALLCONV
+int
 ups_key_get_approximate_match_type(ups_key_t *key);
 
 /**
@@ -98,7 +98,7 @@ ups_key_get_approximate_match_type(ups_key_t *key);
  * @return @ref UPS_SUCCESS upon success
  * @return @ref UPS_INTEGRITY_VIOLATED if the Database is broken
  */
-ups_status_t UPS_CALLCONV
+ups_status_t
 ups_db_check_integrity(ups_db_t *db, uint32_t flags);
 
 /** Flag for ups_db_check_integrity */
@@ -115,7 +115,7 @@ ups_db_check_integrity(ups_db_t *db, uint32_t flags);
  * @param db A valid Database handle
  * @param data The pointer to the context data
  */
-void UPS_CALLCONV
+void
 ups_set_context_data(ups_db_t *db, void *data);
 
 /**
@@ -131,7 +131,7 @@ ups_set_context_data(ups_db_t *db, void *data);
  *
  * @return The pointer to the context data
  */
-void * UPS_CALLCONV
+void *
 ups_get_context_data(ups_db_t *db, ups_bool_t dont_lock);
 
 /**
@@ -141,7 +141,7 @@ ups_get_context_data(ups_db_t *db, ups_bool_t dont_lock);
  *
  * @return @a The Database handle of @a cursor
  */
-ups_db_t * UPS_CALLCONV
+ups_db_t *
 ups_cursor_get_database(ups_cursor_t *cursor);
 
 typedef struct min_max_avg_u32_t {
@@ -312,50 +312,50 @@ typedef struct ups_env_metrics_t {
 /**
  * Retrieves the current metrics from an Environment
  */
-ups_status_t UPS_CALLCONV
+ups_status_t
 ups_env_get_metrics(ups_env_t *env, ups_env_metrics_t *metrics);
 
 /**
  * Returns @ref UPS_TRUE if this upscaledb library was compiled with debug
  * diagnostics, checks and asserts
  */
-ups_bool_t UPS_CALLCONV
+ups_bool_t
 ups_is_debug();
 
 /**
  * Returns the hash of a compare function name. The name is case-insensitive.
  */
-uint32_t UPS_CALLCONV
+uint32_t
 ups_calc_compare_name_hash(const char *zname);
 
 /**
  * Returns the hash of a compare function name of a database.
  */
-uint32_t UPS_CALLCONV
+uint32_t
 ups_db_get_compare_name_hash(ups_db_t *db);
 
 /**
  * Returns the "name" of the database.
  */
-uint16_t UPS_CALLCONV
+uint16_t
 ups_db_get_name(ups_db_t *hdb);
 
 /**
  * Returns the flags of the database.
  */
-uint32_t UPS_CALLCONV
+uint32_t
 ups_db_get_flags(ups_db_t *hdb);
 
 /**
  * Returns an open database handle, or 0 if it was not yet opened
  */
-ups_db_t *UPS_CALLCONV
+ups_db_t *
 ups_env_get_open_database(ups_env_t *env, uint16_t name);
 
 /**
  * Sets the threshold for flushing batched (committed) Transactions to disk.
  */
-void UPS_CALLCONV
+void
 ups_set_committed_flush_threshold(int threshold);
 
 /**
@@ -364,7 +364,7 @@ ups_set_committed_flush_threshold(int threshold);
  * Typically, you do not have to call this function because it is automatically
  * registered as an exit-handler (with at_exit()).
  */
-void UPS_CALLCONV
+void
 ups_at_exit();
 
 /**
@@ -412,7 +412,7 @@ struct ups_operation_t {
  * The @ref txn parameter is passed to @ref ups_db_insert, @ref ups_db_erase
  * and @ref ups_db_find.
  */
-ups_status_t UPS_CALLCONV
+ups_status_t
 ups_db_bulk_operations(ups_db_t *db, ups_txn_t *txn,
                     struct ups_operation_t *operations,
                     size_t operations_length, uint32_t flags);

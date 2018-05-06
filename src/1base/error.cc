@@ -46,7 +46,7 @@ dbg_snprintf(char *str, size_t size, const char *format, ...)
   return s;
 }
 
-void UPS_CALLCONV
+void 
 default_errhandler(int level, const char *message)
 {
 #ifdef NDEBUG
