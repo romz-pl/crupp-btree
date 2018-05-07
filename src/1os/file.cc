@@ -317,13 +317,14 @@ void File::pwrite( uint64_t addr, const void *buffer, size_t len )
 void File::write( const void *buffer, size_t len )
 {
     os_log(("File::write: fd=%d, size=%lld", m_fd, len));
+
     os_write( m_fd, buffer, len );
 }
 
 //
 // Seek position in a file
 //
-void File::seek(uint64_t offset, int whence) const
+void File::seek( uint64_t offset, int whence ) const
 {
     os_log(("File::seek: fd=%d, offset=%lld, whence=%d", m_fd, offset, whence));
 
@@ -355,8 +356,12 @@ uint64_t File::tell() const
 //
 uint64_t File::file_size() const
 {
-    seek( 0, SEEK_END );
-    const uint64_t size = tell();
+    struct stat st;
+    if( ::fstat( m_fd, &st ) == -1 )
+    {
+        throw Exception( UPS_IO_ERROR );
+    }
+    const uint64_t size = st.st_size;
 
     os_log(("File::file_size: fd=%d, size=%lld", m_fd, size));
 
@@ -445,22 +450,22 @@ void File::open(const char *filename, bool read_only)
 //
 void File::close()
 {
-    if( m_fd != UPS_INVALID_FD )
+    if( m_fd == UPS_INVALID_FD )
+        return;
+
+    // on posix, we most likely don't want to close descriptors 0 and 1
+    assert( m_fd != 0 && m_fd != 1 );
+
+    // unlock the file - this is default behaviour since 1.1.0
+    lock_exclusive( m_fd, false );
+
+    // now close the descriptor
+    if( ::close( m_fd ) == -1 )
     {
-        // on posix, we most likely don't want to close descriptors 0 and 1
-        assert( m_fd != 0 && m_fd != 1 );
-
-        // unlock the file - this is default behaviour since 1.1.0
-        lock_exclusive( m_fd, false );
-
-        // now close the descriptor
-        if( ::close( m_fd ) == -1 )
-        {
-            throw Exception( UPS_IO_ERROR );
-        }
-
-        m_fd = UPS_INVALID_FD;
+        throw Exception( UPS_IO_ERROR );
     }
+
+    m_fd = UPS_INVALID_FD;
 }
 
 
