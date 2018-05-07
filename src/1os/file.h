@@ -25,12 +25,7 @@
 #define UPS_FILE_H
 
 #include "0root/root.h"
-#include "1base/mutex.h"
 
-#include <stdio.h>
-#include <limits.h>
-
-#include "ups/types.h"
 
 // Always verify that a file of level N does not include headers > N!
 #include "1os/os.h"
@@ -43,94 +38,43 @@ namespace upscaledb {
 
 class File
 {
-  public:
+public:
+    File();
+    File( File&& other );
+    File& operator=( File &&other );
+    ~File();
 
-    // Constructor: creates an empty File handle
-    File()
-      : m_fd(UPS_INVALID_FD), m_posix_advice(0) {
-    }
-
-    // Copy constructor: moves ownership of the file handle
-    File(File &&other)
-      : m_fd(other.m_fd),
-        m_posix_advice(other.m_posix_advice) {
-      other.m_fd = UPS_INVALID_FD;
-    }
-
-    // Destructor: closes the file
-    ~File() {
-      close();
-    }
-
-    // Assignment operator: moves ownership of the file handle
-    File &operator=(File &&other) {
-      m_fd = other.m_fd;
-      other.m_fd = UPS_INVALID_FD;
-      return *this;
-    }
-
-    // Creates a new file
-    void create(const char *filename, uint32_t mode);
-
-    // Opens an existing file
-    void open(const char *filename, bool read_only);
-
-    // Returns true if the file is open
-    bool is_open() const {
-      return m_fd != UPS_INVALID_FD;
-    }
-
-    // Flushes a file
-    void flush();
-
-    // Sets the parameter for posix_fadvise()
-    void set_posix_advice(int parameter);
-
-    // Maps a file in memory
-    //
-    // mmap is called with MAP_PRIVATE - the allocated buffer
-    // is just a copy of the file; writing to the buffer will not alter
-    // the file itself.
-    void mmap(uint64_t position, size_t size, bool readonly,
-                    uint8_t **buffer);
-
-    // Unmaps a buffer
-    void munmap(void *buffer, size_t size);
-
-    // Positional read from a file
-    void pread(uint64_t addr, void *buffer, size_t len);
-
-    // Positional write to a file
-    void pwrite(uint64_t addr, const void *buffer, size_t len);
-
-    // Write data to a file; uses the current file position
-    void write(const void *buffer, size_t len);
-
-    // Get the page allocation granularity of the operating system
-    static size_t granularity();
-
-    // Seek position in a file
-    void seek(uint64_t offset, int whence) const;
-
-    // Tell the position in a file
-    uint64_t tell() const;
-
-    // Returns the size of the file
-    uint64_t file_size() const;
-
-    // Truncate/resize the file
-    void truncate(uint64_t newsize);
-
-    // Closes the file descriptor
+    void create( const char *filename, uint32_t mode );
+    void open( const char *filename, bool read_only );
     void close();
 
-public:
-    static void os_read(ups_fd_t fd, uint8_t *buffer, size_t len);
-    static void os_write(ups_fd_t fd, const void *buffer, size_t len);
+    bool is_open() const;
+
+    void flush();
+
+    void set_posix_advice( int parameter );
+
+    void mmap( uint64_t position, size_t size, bool readonly, uint8_t **buffer );
+    void munmap( void *buffer, size_t size );
+
+    void pread( uint64_t addr, void *buffer, size_t len );
+    void pwrite( uint64_t addr, const void *buffer, size_t len );
+    void write( const void *buffer, size_t len );
+
+
+    void seek( uint64_t offset, int whence ) const;
+    uint64_t tell() const;
+    uint64_t file_size() const;
+    void truncate( uint64_t newsize );
+
+
+    static size_t granularity();
+    static void os_read( ups_fd_t fd, uint8_t *buffer, size_t len );
+    static void os_write( ups_fd_t fd, const void *buffer, size_t len );
 
 private:
-    static void enable_largefile(int fd);
-    static void lock_exclusive(int fd, bool lock);
+    static void enable_largefile( int fd );
+    static void lock_exclusive( int fd, bool lock );
 
   private:
     // The file handle

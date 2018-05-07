@@ -8,6 +8,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
 
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"

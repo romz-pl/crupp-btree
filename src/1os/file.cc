@@ -8,6 +8,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/file.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include "file.h"
 #include "1errorinducer/errorinducer.h"
@@ -23,6 +25,52 @@ namespace upscaledb {
 #else
 #  define os_log(x)
 #endif
+
+//
+// Constructor: creates an empty File handle
+//
+File::File()
+    : m_fd( UPS_INVALID_FD )
+    , m_posix_advice( 0 )
+{
+}
+
+//
+// Move constructor: moves ownership of the file handle
+//
+File::File( File&& other )
+    : m_fd( other.m_fd )
+    , m_posix_advice( other.m_posix_advice )
+{
+    other.m_fd = UPS_INVALID_FD;
+}
+
+//
+// Move assignment operator: moves ownership of the file handle
+//
+File& File::operator=( File&& other )
+{
+    m_fd = other.m_fd;
+    other.m_fd = UPS_INVALID_FD;
+    return *this;
+}
+
+
+//
+// Destructor: closes the file
+//
+File::~File()
+{
+    close();
+}
+
+//
+// Returns true if the file is open
+//
+bool File::is_open() const
+{
+    return m_fd != UPS_INVALID_FD;
+}
 
 //
 //
@@ -122,7 +170,7 @@ void File::os_write(ups_fd_t fd, const void *buffer, size_t len)
 
 
 //
-//
+// Get the page allocation granularity of the operating system
 //
 size_t File::granularity()
 {
@@ -130,7 +178,7 @@ size_t File::granularity()
 }
 
 //
-//
+// Sets the parameter for posix_fadvise()
 //
 void File::set_posix_advice(int advice)
 {
@@ -150,7 +198,11 @@ void File::set_posix_advice(int advice)
 }
 
 //
+// Maps a file in memory
 //
+// mmap is called with MAP_PRIVATE - the allocated buffer
+// is just a copy of the file; writing to the buffer will not alter
+// the file itself.
 //
 void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
 {
@@ -183,7 +235,7 @@ void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
 }
 
 //
-//
+// Unmaps a buffer
 //
 void File::munmap(void *buffer, size_t size)
 {
@@ -198,7 +250,7 @@ void File::munmap(void *buffer, size_t size)
 }
 
 //
-//
+// Positional read from a file
 //
 void File::pread(uint64_t addr, void *buffer, size_t len)
 {
@@ -227,7 +279,7 @@ void File::pread(uint64_t addr, void *buffer, size_t len)
 }
 
 //
-//
+// Positional write to a file
 //
 void File::pwrite(uint64_t addr, const void *buffer, size_t len)
 {
@@ -254,7 +306,7 @@ void File::pwrite(uint64_t addr, const void *buffer, size_t len)
 }
 
 //
-//
+// Write data to a file; uses the current file position
 //
 void File::write(const void *buffer, size_t len)
 {
@@ -263,7 +315,7 @@ void File::write(const void *buffer, size_t len)
 }
 
 //
-//
+// Seek position in a file
 //
 void File::seek(uint64_t offset, int whence) const
 {
@@ -273,7 +325,7 @@ void File::seek(uint64_t offset, int whence) const
 }
 
 //
-//
+// Tell the position in a file
 //
 uint64_t File::tell() const
 {
@@ -285,7 +337,7 @@ uint64_t File::tell() const
 }
 
 //
-//
+// Returns the size of the file
 //
 uint64_t File::file_size() const
 {
@@ -296,7 +348,7 @@ uint64_t File::file_size() const
 }
 
 //
-//
+// Truncate/resize the file
 //
 void File::truncate(uint64_t newsize)
 {
@@ -306,7 +358,7 @@ void File::truncate(uint64_t newsize)
 }
 
 //
-//
+// Creates a new file
 //
 void File::create(const char *filename, uint32_t mode)
 {
@@ -329,7 +381,7 @@ void File::create(const char *filename, uint32_t mode)
 }
 
 //
-//
+// Flushes a file
 //
 void File::flush()
 {
@@ -348,7 +400,7 @@ void File::flush()
 }
 
 //
-//
+// Opens an existing file
 //
 void File::open(const char *filename, bool read_only)
 {
@@ -377,7 +429,7 @@ void File::open(const char *filename, bool read_only)
 }
 
 //
-//
+// Closes the file descriptor
 //
 void File::close()
 {
