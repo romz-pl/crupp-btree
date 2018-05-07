@@ -1,5 +1,5 @@
 #include "device_inmem.h"
-#include <assert.h>
+#include <cassert>
 #include "1base/error.h"
 #include "1mem/mem.h"
 #include "2page/page.h"
@@ -9,8 +9,8 @@ namespace upscaledb {
 //
 // constructor
 //
-InMemoryDevice::InMemoryDevice(const EnvConfig &config)
-    : Device(config)
+InMemoryDevice::InMemoryDevice( const EnvConfig &config )
+    : Device( config )
 {
     is_open_ = false;
     allocated_size_ = 0;
