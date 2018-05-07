@@ -36,7 +36,7 @@ void InMemoryDevice::open()
 //
 // returns true if the device is open
 //
-bool InMemoryDevice::is_open()
+bool InMemoryDevice::is_open() const
 {
     return is_open_;
 }
@@ -52,7 +52,7 @@ void InMemoryDevice::close()
 
 //
 // flushes the device
-void InMemoryDevice::flush()
+void InMemoryDevice::flush() const
 {
 }
 
@@ -66,7 +66,7 @@ void InMemoryDevice::truncate( uint64_t )
 //
 // get the current file/storage size
 //
-uint64_t InMemoryDevice::file_size()
+uint64_t InMemoryDevice::file_size() const
 {
     assert(!"this operation is not possible for in-memory-databases");
     throw Exception( UPS_NOT_IMPLEMENTED );
@@ -75,7 +75,7 @@ uint64_t InMemoryDevice::file_size()
 //
 // seek position in a file
 //
-void InMemoryDevice::seek( uint64_t, int )
+void InMemoryDevice::seek( uint64_t, int ) const
 {
     assert( !"can't seek in an in-memory-device" );
     throw Exception( UPS_NOT_IMPLEMENTED );
@@ -84,7 +84,7 @@ void InMemoryDevice::seek( uint64_t, int )
 //
 // tell the position in a file
 //
-uint64_t InMemoryDevice::tell()
+uint64_t InMemoryDevice::tell() const
 {
     assert( !"can't tell in an in-memory-device" );
     throw Exception( UPS_NOT_IMPLEMENTED );
@@ -93,7 +93,7 @@ uint64_t InMemoryDevice::tell()
 //
 // reads from the device; this function does not use mmap
 //
-void InMemoryDevice::read( uint64_t, void*, size_t )
+void InMemoryDevice::read( uint64_t, void*, size_t ) const
 {
     assert( !"operation is not possible for in-memory-databases" );
     throw Exception( UPS_NOT_IMPLEMENTED );
@@ -102,14 +102,14 @@ void InMemoryDevice::read( uint64_t, void*, size_t )
 //
 // writes to the device
 //
-void InMemoryDevice::write( uint64_t, void*, size_t )
+void InMemoryDevice::write( uint64_t, void*, size_t ) const
 {
 }
 
 //
 // reads a page from the device
 //
-void InMemoryDevice::read_page( Page*, uint64_t )
+void InMemoryDevice::read_page( Page*, uint64_t ) const
 {
     assert( !"operation is not possible for in-memory-databases" );
     throw Exception( UPS_NOT_IMPLEMENTED );

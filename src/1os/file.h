@@ -51,22 +51,22 @@ public:
 
     bool is_open() const;
 
-    void flush();
+    void flush() const;
 
     void set_posix_advice( int parameter );
 
-    void mmap( uint64_t position, size_t size, bool readonly, uint8_t **buffer );
-    void munmap( void *buffer, size_t size );
+    void mmap( uint64_t position, size_t size, bool readonly, uint8_t **buffer ) const;
+    void munmap( void *buffer, size_t size ) const;
 
-    void pread( uint64_t addr, void *buffer, size_t len );
-    void pwrite( uint64_t addr, const void *buffer, size_t len );
-    void write( const void *buffer, size_t len );
+    void pread( uint64_t addr, void *buffer, size_t len ) const;
+    void pwrite( uint64_t addr, const void *buffer, size_t len ) const;
+    void write( const void *buffer, size_t len ) const;
 
 
     void seek( uint64_t offset, int whence ) const;
     uint64_t tell() const;
     uint64_t file_size() const;
-    void truncate( uint64_t newsize );
+    void truncate( uint64_t newsize ) const;
 
 
     static size_t granularity();

@@ -44,19 +44,19 @@ public:
 
     void create() override;
     void open() override;
-    bool is_open() override;
+    bool is_open() const override;
     void close() override;
 
-    void flush() override;
+    void flush() const override;
     void truncate( uint64_t ) override;
 
-    uint64_t file_size() override;
-    void seek( uint64_t, int ) override;
-    uint64_t tell() override;
+    uint64_t file_size() const override;
+    void seek( uint64_t, int ) const override;
+    uint64_t tell() const override;
 
-    void read( uint64_t, void*, size_t ) override;
-    void write( uint64_t, void*, size_t ) override;
-    void read_page( Page*, uint64_t ) override;
+    void read( uint64_t, void*, size_t ) const override;
+    void write( uint64_t, void*, size_t ) const override;
+    void read_page( Page*, uint64_t ) const override;
 
     uint64_t alloc( size_t size ) override;
     void alloc_page( Page *page ) override;

@@ -62,38 +62,38 @@ struct Device {
   virtual void open() = 0;
 
   // Returns true if the device is open
-  virtual bool is_open() = 0;
+  virtual bool is_open() const = 0;
 
   // Closes the device - called in ups_env_close
   virtual void close() = 0;
 
   // Flushes the device - called in ups_env_flush
-  virtual void flush() = 0;
+  virtual void flush() const = 0;
 
   // Truncate/resize the device
   virtual void truncate(uint64_t new_size) = 0;
 
   // Returns the current file/storage size
-  virtual uint64_t file_size() = 0;
+  virtual uint64_t file_size() const = 0;
 
   // Seek position in a file
-  virtual void seek(uint64_t offset, int whence) = 0;
+  virtual void seek(uint64_t offset, int whence) const = 0;
 
   // Tell the position in a file
-  virtual uint64_t tell() = 0;
+  virtual uint64_t tell() const = 0;
 
   // Reads from the device; this function does not use mmap
-  virtual void read(uint64_t offset, void *buffer, size_t len) = 0;
+  virtual void read(uint64_t offset, void *buffer, size_t len) const = 0;
 
   // Writes to the device; this function does not use mmap
-  virtual void write(uint64_t offset, void *buffer, size_t len) = 0;
+  virtual void write(uint64_t offset, void *buffer, size_t len) const = 0;
 
   // Allocate storage from this device; this function
   // will *NOT* use mmap. returns the offset of the allocated storage.
   virtual uint64_t alloc(size_t len) = 0;
 
   // Reads a page from the device; this function CAN use mmap
-  virtual void read_page(Page *page, uint64_t address) = 0;
+  virtual void read_page(Page *page, uint64_t address) const = 0;
 
   // Allocate storage for a page from this device; this function
   // can use mmap if available

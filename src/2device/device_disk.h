@@ -83,19 +83,19 @@ public:
 
     void create() override;
     void open() override;
-    bool is_open() override;
+    bool is_open() const override;
     void close() override;
-    void flush() override;
+    void flush() const override;
     void truncate( uint64_t new_file_size ) override;
-    uint64_t file_size() override;
-    void seek( uint64_t offset, int whence ) override;
-    uint64_t tell() override;
+    uint64_t file_size() const override;
+    void seek( uint64_t offset, int whence ) const override;
+    uint64_t tell() const override;
 
-    void read( uint64_t offset, void *buffer, size_t len ) override;
-    void write( uint64_t offset, void *buffer, size_t len ) override;
+    void read( uint64_t offset, void *buffer, size_t len ) const override;
+    void write( uint64_t offset, void *buffer, size_t len ) const override;
 
     uint64_t alloc( size_t requested_length ) override;
-    void read_page( Page *page, uint64_t address ) override;
+    void read_page( Page *page, uint64_t address ) const override;
     void alloc_page( Page *page ) override;
     void free_page( Page *page ) override;
 
@@ -110,7 +110,7 @@ private:
 
 private:
     // For synchronizing access
-    Spinlock m_mutex;
+    mutable Spinlock m_mutex;
 
     State m_state;
 };

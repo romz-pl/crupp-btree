@@ -76,7 +76,7 @@ void DiskDevice::open()
 //
 // returns true if the device is open
 //
-bool DiskDevice::is_open()
+bool DiskDevice::is_open() const
 {
     ScopedSpinlock lock(m_mutex);
     return m_state.file.is_open();
@@ -99,7 +99,7 @@ void DiskDevice::close()
 //
 // flushes the device
 //
-void DiskDevice::flush()
+void DiskDevice::flush() const
 {
     ScopedSpinlock lock(m_mutex);
     m_state.file.flush();
@@ -117,7 +117,7 @@ void DiskDevice::truncate(uint64_t new_file_size)
 //
 // get the current file/storage size
 //
-uint64_t DiskDevice::file_size()
+uint64_t DiskDevice::file_size() const
 {
     ScopedSpinlock lock(m_mutex);
     assert(m_state.file_size == m_state.file.file_size());
@@ -127,7 +127,7 @@ uint64_t DiskDevice::file_size()
 //
 // seek to a position in a file
 //
-void DiskDevice::seek(uint64_t offset, int whence)
+void DiskDevice::seek(uint64_t offset, int whence) const
 {
     ScopedSpinlock lock(m_mutex);
     m_state.file.seek(offset, whence);
@@ -136,7 +136,7 @@ void DiskDevice::seek(uint64_t offset, int whence)
 //
 // tell the position in a file
 //
-uint64_t DiskDevice::tell()
+uint64_t DiskDevice::tell() const
 {
     ScopedSpinlock lock(m_mutex);
     return m_state.file.tell();
@@ -145,7 +145,7 @@ uint64_t DiskDevice::tell()
 //
 // reads from the device; this function does NOT use mmap
 //
-void DiskDevice::read(uint64_t offset, void *buffer, size_t len)
+void DiskDevice::read(uint64_t offset, void *buffer, size_t len) const
 {
     ScopedSpinlock lock(m_mutex);
     m_state.file.pread(offset, buffer, len);
@@ -162,7 +162,7 @@ void DiskDevice::read(uint64_t offset, void *buffer, size_t len)
 // and is responsible for writing the data is run through the file
 // filters
 //
-void DiskDevice::write(uint64_t offset, void *buffer, size_t len)
+void DiskDevice::write(uint64_t offset, void *buffer, size_t len) const
 {
     ScopedSpinlock lock(m_mutex);
 #ifdef UPS_ENABLE_ENCRYPTION
@@ -225,7 +225,7 @@ uint64_t DiskDevice::alloc(size_t requested_length)
 // reads a page from the device; this function CAN return a
 // pointer to mmapped memory
 //
-void DiskDevice::read_page(Page *page, uint64_t address)
+void DiskDevice::read_page(Page *page, uint64_t address) const
 {
     ScopedSpinlock lock(m_mutex);
     // if this page is in the mapped area: return a pointer into that area.
