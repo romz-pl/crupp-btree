@@ -36,8 +36,13 @@ class File
 {
 public:
     File();
+
     File( File&& other );
-    File& operator=( File &&other );
+    File& operator=( File&& other );
+
+    File( const File& other ) = delete;
+    File& operator=( const File& other ) = delete;
+
     ~File();
 
     void create( const char *filename, uint32_t mode );
