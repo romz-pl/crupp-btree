@@ -169,16 +169,17 @@ void File::set_posix_advice(int advice)
     m_posix_advice = advice;
     assert(m_fd != UPS_INVALID_FD);
 
-#if HAVE_POSIX_FADVISE
-    if (m_posix_advice == UPS_POSIX_FADVICE_RANDOM) {
-        int r = ::posix_fadvise(m_fd, 0, 0, POSIX_FADV_RANDOM);
-        if (r != 0) {
-            ups_log(("posix_fadvise failed with status %d (%s)",
-                     errno, strerror(errno)));
-            throw Exception(UPS_IO_ERROR);
+
+    if( m_posix_advice == UPS_POSIX_FADVICE_RANDOM )
+    {
+        int r = ::posix_fadvise( m_fd, 0, 0, POSIX_FADV_RANDOM );
+        if( r != 0 )
+        {
+            ups_log(("posix_fadvise failed with status %d (%s)", errno, strerror(errno)));
+            throw Exception( UPS_IO_ERROR );
         }
     }
-#endif
+
 }
 
 //
@@ -207,16 +208,16 @@ void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
         throw Exception(UPS_IO_ERROR);
     }
 
-
-#if HAVE_MADVISE
-    if (m_posix_advice == UPS_POSIX_FADVICE_RANDOM) {
-        int r = ::madvise(*buffer, size, MADV_RANDOM);
-        if (r != 0) {
+    if( m_posix_advice == UPS_POSIX_FADVICE_RANDOM )
+    {
+        int r = ::madvise( *buffer, size, MADV_RANDOM );
+        if( r != 0 )
+        {
             ups_log(("madvise failed with status %d (%s)", errno, strerror(errno)));
-            throw Exception(UPS_IO_ERROR);
+            throw Exception( UPS_IO_ERROR );
         }
     }
-#endif
+
 }
 
 //
