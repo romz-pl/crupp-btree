@@ -69,7 +69,6 @@ public:
     static void os_write( int fd, const void *buffer, size_t len );
 
 private:
-    static void enable_largefile( int fd );
     static void lock_exclusive( int fd, bool lock );
 
   private:

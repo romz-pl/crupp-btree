@@ -1,6 +1,3 @@
-#define _GNU_SOURCE        1 // for O_LARGEFILE
-#define _FILE_OFFSET_BITS 64
-
 #include "0root/root.h"
 
 #include <sys/mman.h>
@@ -76,27 +73,8 @@ bool File::is_open() const
 //
 //
 //
-void File::enable_largefile(int fd)
-{
-  // not available on cygwin...
-#ifdef HAVE_O_LARGEFILE
-  int oflag = fcntl(fd, F_GETFL, 0);
-  fcntl(fd, F_SETFL, oflag | O_LARGEFILE);
-#endif
-}
-
-//
-//
-//
 void File::lock_exclusive(int fd, bool lock)
 {
-#ifdef UPS_SOLARIS
-  // SunOS 5.9 doesn't have LOCK_* unless i include /usr/ucbinclude; but then,
-  // mmap behaves strangely (the first write-access to the mmapped buffer
-  // leads to a segmentation fault).
-  //
-  // Tell me if this troubles you/if you have suggestions for fixes.
-#else
   int flags;
 
   if (lock)
@@ -112,7 +90,6 @@ void File::lock_exclusive(int fd, bool lock)
       throw Exception(UPS_WOULD_BLOCK);
     throw Exception(UPS_IO_ERROR);
   }
-#endif
 }
 
 //
@@ -375,9 +352,6 @@ void File::create(const char *filename, uint32_t mode)
   /* lock the file - this is default behaviour since 1.1.0 */
   lock_exclusive(fd, true);
 
-  /* enable O_LARGEFILE support */
-  enable_largefile(fd);
-
   m_fd = fd;
 }
 
@@ -422,9 +396,6 @@ void File::open(const char *filename, bool read_only)
 
   /* lock the file - this is default behaviour since 1.1.0 */
   lock_exclusive(fd, true);
-
-  /* enable O_LARGEFILE support */
-  enable_largefile(fd);
 
   m_fd = fd;
 }
