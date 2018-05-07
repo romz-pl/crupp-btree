@@ -73,23 +73,26 @@ bool File::is_open() const
 //
 //
 //
-void File::lock_exclusive(int fd, bool lock)
+void File::lock_exclusive( int fd, bool lock )
 {
     int flags;
 
-    if (lock)
+    if( lock )
         flags = LOCK_EX | LOCK_NB;
     else
         flags = LOCK_UN;
 
-    if( 0 != flock(fd, flags) )
+    if( 0 != ::flock( fd, flags ) )
     {
         ups_log(("flock failed with status %u (%s)", errno, strerror(errno)));
+
         // it seems that linux does not only return EWOULDBLOCK, as stated
         // in the documentation (flock(2)), but also other errors...
-        if (errno && lock)
-            throw Exception(UPS_WOULD_BLOCK);
-        throw Exception(UPS_IO_ERROR);
+        if( errno && lock )
+        {
+            throw Exception( UPS_WOULD_BLOCK );
+        }
+        throw Exception( UPS_IO_ERROR );
     }
 }
 
@@ -100,48 +103,54 @@ void File::os_read(int fd, uint8_t *buffer, size_t len)
 {
     os_log(("os_read: fd=%d, size=%lld", fd, len));
 
-    int r;
     size_t total = 0;
 
     while( total < len )
     {
-        r = read( fd, &buffer[total], len - total );
+        const int r = read( fd, &buffer[total], len - total );
         if( r < 0 )
         {
             ups_log(("os_read failed with status %u (%s)", errno, strerror(errno)));
-            throw Exception(UPS_IO_ERROR);
+            throw Exception( UPS_IO_ERROR );
         }
+
         if( r == 0 )
+        {
             break;
+        }
+
         total += r;
     }
 
     if( total != len )
     {
         ups_log(("os_read() failed with short read (%s)", strerror(errno)));
-        throw Exception(UPS_IO_ERROR);
+        throw Exception( UPS_IO_ERROR );
     }
 }
 
 //
 //
 //
-void File::os_write(int fd, const void *buffer, size_t len)
+void File::os_write( int fd, const void *buffer, size_t len )
 {
-    int w;
     size_t total = 0;
     const char *p = (const char *)buffer;
 
     while( total < len )
     {
-        w = ::write( fd, p + total, len - total );
+        const int w = ::write( fd, p + total, len - total );
         if( w < 0 )
         {
             ups_log(("os_write failed with status %u (%s)", errno, strerror(errno)));
             throw Exception(UPS_IO_ERROR);
         }
+
         if( w == 0 )
+        {
             break;
+        }
+
         total += w;
     }
 
@@ -172,7 +181,7 @@ void File::set_posix_advice(int advice)
 
     if( m_posix_advice == UPS_POSIX_FADVICE_RANDOM )
     {
-        int r = ::posix_fadvise( m_fd, 0, 0, POSIX_FADV_RANDOM );
+        const int r = ::posix_fadvise( m_fd, 0, 0, POSIX_FADV_RANDOM );
         if( r != 0 )
         {
             ups_log(("posix_fadvise failed with status %d (%s)", errno, strerror(errno)));
@@ -193,7 +202,7 @@ void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
 {
     os_log(("File::mmap: fd=%d, position=%lld, size=%lld", m_fd, position, size));
 
-    UPS_INDUCE_ERROR(ErrorInducer::kFileMmap);
+    UPS_INDUCE_ERROR( ErrorInducer::kFileMmap );
 
     int prot = PROT_READ;
     if( !readonly )
@@ -201,16 +210,16 @@ void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
 
 
     *buffer = (uint8_t *)::mmap( 0, size, prot, MAP_PRIVATE, m_fd, position );
-    if (*buffer == (void *)-1)
+    if( *buffer == MAP_FAILED )
     {
-        *buffer = 0;
+        *buffer = nullptr;
         ups_log(("mmap failed with status %d (%s)", errno, strerror(errno)));
-        throw Exception(UPS_IO_ERROR);
+        throw Exception( UPS_IO_ERROR );
     }
 
     if( m_posix_advice == UPS_POSIX_FADVICE_RANDOM )
     {
-        int r = ::madvise( *buffer, size, MADV_RANDOM );
+        const int r = ::madvise( *buffer, size, MADV_RANDOM );
         if( r != 0 )
         {
             ups_log(("madvise failed with status %d (%s)", errno, strerror(errno)));
@@ -227,11 +236,11 @@ void File::munmap(void *buffer, size_t size)
 {
     os_log(("File::munmap: size=%lld", size));
 
-    int r = ::munmap(buffer, size);
+    const int r = ::munmap(buffer, size);
     if( r )
     {
         ups_log(("munmap failed with status %d (%s)", errno, strerror(errno)));
-        throw Exception(UPS_IO_ERROR);
+        throw Exception( UPS_IO_ERROR );
     }
 
 }
@@ -243,19 +252,22 @@ void File::pread(uint64_t addr, void *buffer, size_t len)
 {
     os_log(("File::pread: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
-    int r;
     size_t total = 0;
 
     while( total < len )
     {
-        r = ::pread( m_fd, (uint8_t *)buffer + total, len - total, addr + total );
-        if (r < 0)
+        const ssize_t r = ::pread( m_fd, (uint8_t *)buffer + total, len - total, addr + total );
+        if( r < 0 )
         {
             ups_log(("File::pread failed with status %u (%s)", errno, strerror(errno)));
             throw Exception( UPS_IO_ERROR );
         }
+
         if( r == 0 )
+        {
             break;
+        }
+
         total += r;
     }
 
@@ -273,19 +285,22 @@ void File::pwrite( uint64_t addr, const void *buffer, size_t len )
 {
     os_log(("File::pwrite: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
-    ssize_t s;
     size_t total = 0;
 
     while( total < len )
     {
-        s = ::pwrite( m_fd, buffer, len, addr + total );
+        const ssize_t s = ::pwrite( m_fd, buffer, len, addr + total );
         if (s < 0)
         {
             ups_log(("pwrite() failed with status %u (%s)", errno, strerror(errno)));
             throw Exception( UPS_IO_ERROR );
         }
+
         if( s == 0 )
+        {
             break;
+        }
+
         total += s;
     }
 
@@ -299,7 +314,7 @@ void File::pwrite( uint64_t addr, const void *buffer, size_t len )
 //
 // Write data to a file; uses the current file position
 //
-void File::write(const void *buffer, size_t len)
+void File::write( const void *buffer, size_t len )
 {
     os_log(("File::write: fd=%d, size=%lld", m_fd, len));
     os_write( m_fd, buffer, len );
@@ -311,8 +326,11 @@ void File::write(const void *buffer, size_t len)
 void File::seek(uint64_t offset, int whence) const
 {
     os_log(("File::seek: fd=%d, offset=%lld, whence=%d", m_fd, offset, whence));
-    if( lseek(m_fd, offset, whence) < 0 )
+
+    if( ::lseek( m_fd, offset, whence ) == static_cast< off_t >( -1 ) )
+    {
         throw Exception( UPS_IO_ERROR );
+    }
 }
 
 //
@@ -320,11 +338,16 @@ void File::seek(uint64_t offset, int whence) const
 //
 uint64_t File::tell() const
 {
-    uint64_t offset = lseek( m_fd, 0, SEEK_CUR );
+    const off_t offset = ::lseek( m_fd, 0, SEEK_CUR );
+
     os_log(("File::tell: fd=%d, offset=%lld", m_fd, offset));
-    if ( offset == (uint64_t) - 1 )
+
+    if ( offset == static_cast< off_t >( -1 ) )
+    {
         throw Exception( UPS_IO_ERROR );
-    return offset;
+    }
+
+    return static_cast< uint64_t >( offset );
 }
 
 //
@@ -333,19 +356,24 @@ uint64_t File::tell() const
 uint64_t File::file_size() const
 {
     seek( 0, SEEK_END );
-    uint64_t size = tell();
+    const uint64_t size = tell();
+
     os_log(("File::file_size: fd=%d, size=%lld", m_fd, size));
+
     return size;
 }
 
 //
 // Truncate/resize the file
 //
-void File::truncate(uint64_t newsize)
+void File::truncate( uint64_t newsize )
 {
     os_log(("File::truncate: fd=%d, size=%lld", m_fd, newsize));
-    if( ftruncate( m_fd, newsize ) )
+
+    if( ::ftruncate( m_fd, newsize ) )
+    {
         throw Exception( UPS_IO_ERROR );
+    }
 }
 
 //
@@ -355,8 +383,8 @@ void File::create(const char *filename, uint32_t mode)
 {
     const int osflags = O_CREAT | O_RDWR | O_TRUNC | O_NOATIME ;
 
-    int fd = ::open( filename, osflags, mode ? mode : 0644 );
-    if (fd < 0)
+    const int fd = ::open( filename, osflags, mode ? mode : 0644 );
+    if( fd < 0 )
     {
         ups_log(("creating file %s failed with status %u (%s)", filename, errno, strerror(errno)));
         throw Exception( UPS_IO_ERROR );
@@ -381,9 +409,8 @@ void File::flush()
 #else
     if (fsync(m_fd) == -1) {
 #endif
-        ups_log(("fdatasync failed with status %u (%s)",
-                 errno, strerror(errno)));
-        throw Exception(UPS_IO_ERROR);
+        ups_log(("fdatasync failed with status %u (%s)", errno, strerror(errno)));
+        throw Exception( UPS_IO_ERROR );
     }
 }
 
@@ -400,7 +427,7 @@ void File::open(const char *filename, bool read_only)
         osflags |= O_RDWR;
 
 
-    int fd = ::open( filename, osflags );
+    const int fd = ::open( filename, osflags );
     if( fd < 0 )
     {
         ups_log(("opening file %s failed with status %u (%s)", filename, errno, strerror(errno)));
@@ -427,8 +454,10 @@ void File::close()
         lock_exclusive( m_fd, false );
 
         // now close the descriptor
-        if( ::close(m_fd) == -1 )
+        if( ::close( m_fd ) == -1 )
+        {
             throw Exception( UPS_IO_ERROR );
+        }
 
         m_fd = UPS_INVALID_FD;
     }
