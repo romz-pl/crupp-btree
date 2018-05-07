@@ -26,10 +26,6 @@
 
 #include "0root/root.h"
 
-
-// Always verify that a file of level N does not include headers > N!
-#include "1os/os.h"
-
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"
 #endif
@@ -69,8 +65,8 @@ public:
 
 
     static size_t granularity();
-    static void os_read( ups_fd_t fd, uint8_t *buffer, size_t len );
-    static void os_write( ups_fd_t fd, const void *buffer, size_t len );
+    static void os_read( int fd, uint8_t *buffer, size_t len );
+    static void os_write( int fd, const void *buffer, size_t len );
 
 private:
     static void enable_largefile( int fd );
@@ -78,7 +74,7 @@ private:
 
   private:
     // The file handle
-    ups_fd_t m_fd;
+    int m_fd;
 
     // Parameter for posix_fadvise()
     int m_posix_advice;

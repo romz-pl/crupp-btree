@@ -13,6 +13,7 @@
 
 #include "file.h"
 #include "1errorinducer/errorinducer.h"
+#include "1os/os.h"
 
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"
@@ -117,7 +118,7 @@ void File::lock_exclusive(int fd, bool lock)
 //
 //
 //
-void File::os_read(ups_fd_t fd, uint8_t *buffer, size_t len)
+void File::os_read(int fd, uint8_t *buffer, size_t len)
 {
   os_log(("os_read: fd=%d, size=%lld", fd, len));
 
@@ -144,7 +145,7 @@ void File::os_read(ups_fd_t fd, uint8_t *buffer, size_t len)
 //
 //
 //
-void File::os_write(ups_fd_t fd, const void *buffer, size_t len)
+void File::os_write(int fd, const void *buffer, size_t len)
 {
   int w;
   size_t total = 0;
@@ -364,7 +365,7 @@ void File::create(const char *filename, uint32_t mode)
 {
   const int osflags = O_CREAT | O_RDWR | O_TRUNC | O_NOATIME ;
 
-  ups_fd_t fd = ::open(filename, osflags, mode ? mode : 0644);
+  int fd = ::open(filename, osflags, mode ? mode : 0644);
   if (fd < 0) {
     ups_log(("creating file %s failed with status %u (%s)", filename,
         errno, strerror(errno)));
@@ -412,7 +413,7 @@ void File::open(const char *filename, bool read_only)
     osflags |= O_RDWR;
 
 
-  ups_fd_t fd = ::open(filename, osflags);
+  int fd = ::open(filename, osflags);
   if (fd < 0) {
     ups_log(("opening file %s failed with status %u (%s)", filename,
         errno, strerror(errno)));
