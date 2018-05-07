@@ -58,7 +58,7 @@ clear_file(JournalState &state, int idx)
     // after truncate, the file pointer is far beyond the new end of file;
     // reset the file pointer, or the next write will resize the file to
     // the original size
-    state.files[idx].seek(0, File::kSeekSet);
+    state.files[idx].seek(0, SEEK_SET);
   }
 }
 

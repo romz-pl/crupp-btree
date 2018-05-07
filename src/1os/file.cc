@@ -289,7 +289,7 @@ uint64_t File::tell() const
 //
 uint64_t File::file_size() const
 {
-  seek(0, kSeekEnd);
+  seek(0, SEEK_END);
   uint64_t size = tell();
   os_log(("File::file_size: fd=%d, size=%lld", m_fd, size));
   return size;

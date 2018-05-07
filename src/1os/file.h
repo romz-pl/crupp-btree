@@ -44,13 +44,6 @@ namespace upscaledb {
 class File
 {
   public:
-    enum {
-      kSeekSet = SEEK_SET,
-      kSeekEnd = SEEK_END,
-      kSeekCur = SEEK_CUR,
-      kMaxPath = PATH_MAX
-    };
-
     // Constructor: creates an empty File handle
     File()
       : m_fd(UPS_INVALID_FD), m_mmaph(UPS_INVALID_FD), m_posix_advice(0) {
