@@ -166,10 +166,10 @@ TEST_CASE("Os/createCloseOverwrite")
 
   for (int i = 0; i < 3; i++) {
     fp.require_create("test.db", 0664)
-      .require_seek(0, File::kSeekEnd)
+      .require_seek(0, SEEK_END)
       .require_tell(0)
       .require_truncate(1024)
-      .require_seek(0, File::kSeekEnd)
+      .require_seek(0, SEEK_END)
       .require_tell(1024)
       .close();
   }
@@ -329,7 +329,7 @@ TEST_CASE("Os/seekTell")
   fp.require_create("test.db", 0664);
 
   for (uint64_t i = 0; i < 10; i++) {
-    fp.require_seek(i, File::kSeekSet)
+    fp.require_seek(i, SEEK_SET)
       .require_tell(i);
   }
 }
@@ -356,7 +356,7 @@ TEST_CASE("Os/largefile")
   fp.close();
 
   fp.require_open("test.db", false)
-    .require_seek(0, File::kSeekEnd)
+    .require_seek(0, SEEK_END)
     .require_tell(1024 * 1024 * 4);
 }
 
