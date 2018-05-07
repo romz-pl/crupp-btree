@@ -294,7 +294,6 @@ void DiskDevice::alloc_page( Page *page )
     uint8_t *p = Memory::allocate< uint8_t >( config.page_size_bytes );
     page->assign_allocated_buffer( p, address );
 }
-
 //
 // Frees a page on the device; plays counterpoint to |alloc_page|
 //
