@@ -46,10 +46,10 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <memory>
 
 // Always verify that a file of level N does not include headers > N!
 #include "1globals/globals.h"
-#include "1base/scoped_ptr.h"
 #include "1base/dynamic_array.h"
 #include "2page/page.h"
 #include "3blob_manager/blob_manager.h"
@@ -636,7 +636,7 @@ struct DuplicateRecordList : BaseRecordList {
   size_t duptable_threshold_;
 
   // A cache for duplicate tables
-  ScopedPtr<DuplicateTableCache> duptable_cache_;
+  std::unique_ptr<DuplicateTableCache> duptable_cache_;
 };
 
 //

@@ -45,17 +45,10 @@ class File
 {
   public:
     enum {
-#ifdef UPS_OS_POSIX
       kSeekSet = SEEK_SET,
       kSeekEnd = SEEK_END,
       kSeekCur = SEEK_CUR,
       kMaxPath = PATH_MAX
-#else
-      kSeekSet = FILE_BEGIN,
-      kSeekEnd = FILE_END,
-      kSeekCur = FILE_CURRENT,
-      kMaxPath = MAX_PATH
-#endif
     };
 
     // Constructor: creates an empty File handle
@@ -138,6 +131,14 @@ class File
     // Closes the file descriptor
     void close();
 
+public:
+    static void os_read(ups_fd_t fd, uint8_t *buffer, size_t len);
+    static void os_write(ups_fd_t fd, const void *buffer, size_t len);
+
+private:
+    static void enable_largefile(int fd);
+    static void lock_exclusive(int fd, bool lock);
+
   private:
     // The file handle
     ups_fd_t m_fd;
@@ -147,11 +148,6 @@ class File
 
     // Parameter for posix_fadvise()
     int m_posix_advice;
-
-#ifdef WIN32
-	// A mutex; required for Win32
-	Mutex m_mutex;
-#endif
 };
 
 } // namespace upscaledb

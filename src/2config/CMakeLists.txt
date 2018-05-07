@@ -1,10 +1,8 @@
 
-set( LIB_NAME ups-1os )
+set( LIB_NAME ups-2config )
 
 add_library( ${LIB_NAME} STATIC
-    file.cc
-    os.cc
-    socket.cc
+    env_config.cc
 )
 
 target_include_directories( ${LIB_NAME} PRIVATE 

@@ -31,7 +31,7 @@ namespace upscaledb {
 
 struct DuplicateFixture : BaseFixture {
   uint32_t m_flags;
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   DuplicateFixture(uint32_t flags = 0)
     : m_flags(flags) {

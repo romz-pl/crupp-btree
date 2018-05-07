@@ -1,49 +1,16 @@
-/*
- * Copyright (C) 2005-2017 Christoph Rupp (chris@crupp.de).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * See the file COPYING for License information.
- */
-
 #define _GNU_SOURCE        1 // for O_LARGEFILE
 #define _FILE_OFFSET_BITS 64
 
 #include "0root/root.h"
 
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#if HAVE_MMAP
-#  include <sys/mman.h>
-#endif
-#if HAVE_WRITEV
-#  include <sys/uio.h>
-#endif
+#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/file.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <sys/file.h>
 
-// Always verify that a file of level N does not include headers > N!
-#include "1base/error.h"
+#include "file.h"
 #include "1errorinducer/errorinducer.h"
-#include "1os/file.h"
-#include "1os/socket.h"
 
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"
@@ -57,8 +24,22 @@ namespace upscaledb {
 #  define os_log(x)
 #endif
 
-static void
-lock_exclusive(int fd, bool lock)
+//
+//
+//
+void File::enable_largefile(int fd)
+{
+  // not available on cygwin...
+#ifdef HAVE_O_LARGEFILE
+  int oflag = fcntl(fd, F_GETFL, 0);
+  fcntl(fd, F_SETFL, oflag | O_LARGEFILE);
+#endif
+}
+
+//
+//
+//
+void File::lock_exclusive(int fd, bool lock)
 {
 #ifdef UPS_SOLARIS
   // SunOS 5.9 doesn't have LOCK_* unless i include /usr/ucbinclude; but then,
@@ -85,18 +66,10 @@ lock_exclusive(int fd, bool lock)
 #endif
 }
 
-static void
-enable_largefile(int fd)
-{
-  // not available on cygwin...
-#ifdef HAVE_O_LARGEFILE
-  int oflag = fcntl(fd, F_GETFL, 0);
-  fcntl(fd, F_SETFL, oflag | O_LARGEFILE);
-#endif
-}
-
-static void
-os_read(ups_fd_t fd, uint8_t *buffer, size_t len)
+//
+//
+//
+void File::os_read(ups_fd_t fd, uint8_t *buffer, size_t len)
 {
   os_log(("os_read: fd=%d, size=%lld", fd, len));
 
@@ -120,8 +93,10 @@ os_read(ups_fd_t fd, uint8_t *buffer, size_t len)
   }
 }
 
-static void
-os_write(ups_fd_t fd, const void *buffer, size_t len)
+//
+//
+//
+void File::os_write(ups_fd_t fd, const void *buffer, size_t len)
 {
   int w;
   size_t total = 0;
@@ -145,14 +120,19 @@ os_write(ups_fd_t fd, const void *buffer, size_t len)
   }
 }
 
-size_t
-File::granularity()
+
+//
+//
+//
+size_t File::granularity()
 {
   return (size_t)sysconf(_SC_PAGE_SIZE);
 }
 
-void
-File::set_posix_advice(int advice)
+//
+//
+//
+void File::set_posix_advice(int advice)
 {
   m_posix_advice = advice;
   assert(m_fd != UPS_INVALID_FD);
@@ -169,8 +149,10 @@ File::set_posix_advice(int advice)
 #endif
 }
 
-void
-File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
+//
+//
+//
+void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
 {
   os_log(("File::mmap: fd=%d, position=%lld, size=%lld", m_fd, position, size));
 
@@ -180,16 +162,14 @@ File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
   if (!readonly)
     prot |= PROT_WRITE;
 
-#if HAVE_MMAP
+
   *buffer = (uint8_t *)::mmap(0, size, prot, MAP_PRIVATE, m_fd, position);
   if (*buffer == (void *)-1) {
     *buffer = 0;
     ups_log(("mmap failed with status %d (%s)", errno, strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  throw Exception(UPS_NOT_IMPLEMENTED);
-#endif
+
 
 #if HAVE_MADVISE
   if (m_posix_advice == UPS_POSIX_FADVICE_RANDOM) {
@@ -202,28 +182,28 @@ File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
 #endif
 }
 
-void
-File::munmap(void *buffer, size_t size)
+//
+//
+//
+void File::munmap(void *buffer, size_t size)
 {
   os_log(("File::munmap: size=%lld", size));
 
-#if HAVE_MUNMAP
   int r = ::munmap(buffer, size);
   if (r) {
     ups_log(("munmap failed with status %d (%s)", errno, strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  throw Exception(UPS_NOT_IMPLEMENTED);
-#endif
+
 }
 
-void
-File::pread(uint64_t addr, void *buffer, size_t len)
+//
+//
+//
+void File::pread(uint64_t addr, void *buffer, size_t len)
 {
   os_log(("File::pread: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
-#if HAVE_PREAD
   int r;
   size_t total = 0;
 
@@ -244,18 +224,15 @@ File::pread(uint64_t addr, void *buffer, size_t len)
     ups_log(("File::pread() failed with short read (%s)", strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  File::seek(addr, kSeekSet);
-  os_read(m_fd, (uint8_t *)buffer, len);
-#endif
 }
 
-void
-File::pwrite(uint64_t addr, const void *buffer, size_t len)
+//
+//
+//
+void File::pwrite(uint64_t addr, const void *buffer, size_t len)
 {
   os_log(("File::pwrite: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
-#if HAVE_PWRITE
   ssize_t s;
   size_t total = 0;
 
@@ -274,29 +251,31 @@ File::pwrite(uint64_t addr, const void *buffer, size_t len)
     ups_log(("pwrite() failed with short read (%s)", strerror(errno)));
     throw Exception(UPS_IO_ERROR);
   }
-#else
-  seek(addr, kSeekSet);
-  write(buffer, len);
-#endif
 }
 
-void
-File::write(const void *buffer, size_t len)
+//
+//
+//
+void File::write(const void *buffer, size_t len)
 {
   os_log(("File::write: fd=%d, size=%lld", m_fd, len));
   os_write(m_fd, buffer, len);
 }
 
-void
-File::seek(uint64_t offset, int whence) const
+//
+//
+//
+void File::seek(uint64_t offset, int whence) const
 {
   os_log(("File::seek: fd=%d, offset=%lld, whence=%d", m_fd, offset, whence));
   if (lseek(m_fd, offset, whence) < 0)
     throw Exception(UPS_IO_ERROR);
 }
 
-uint64_t
-File::tell() const
+//
+//
+//
+uint64_t File::tell() const
 {
   uint64_t offset = lseek(m_fd, 0, SEEK_CUR);
   os_log(("File::tell: fd=%d, offset=%lld", m_fd, offset));
@@ -305,8 +284,10 @@ File::tell() const
   return offset;
 }
 
-uint64_t
-File::file_size() const
+//
+//
+//
+uint64_t File::file_size() const
 {
   seek(0, kSeekEnd);
   uint64_t size = tell();
@@ -314,21 +295,22 @@ File::file_size() const
   return size;
 }
 
-void
-File::truncate(uint64_t newsize)
+//
+//
+//
+void File::truncate(uint64_t newsize)
 {
   os_log(("File::truncate: fd=%d, size=%lld", m_fd, newsize));
   if (ftruncate(m_fd, newsize))
     throw Exception(UPS_IO_ERROR);
 }
 
-void
-File::create(const char *filename, uint32_t mode)
+//
+//
+//
+void File::create(const char *filename, uint32_t mode)
 {
-  int osflags = O_CREAT | O_RDWR | O_TRUNC;
-#if HAVE_O_NOATIME
-  osflags |= O_NOATIME;
-#endif
+  const int osflags = O_CREAT | O_RDWR | O_TRUNC | O_NOATIME ;
 
   ups_fd_t fd = ::open(filename, osflags, mode ? mode : 0644);
   if (fd < 0) {
@@ -346,8 +328,10 @@ File::create(const char *filename, uint32_t mode)
   m_fd = fd;
 }
 
-void
-File::flush()
+//
+//
+//
+void File::flush()
 {
   os_log(("File::flush: fd=%d", m_fd));
   /* unlike fsync(), fdatasync() does not flush the metadata unless
@@ -363,18 +347,18 @@ File::flush()
   }
 }
 
-void
-File::open(const char *filename, bool read_only)
+//
+//
+//
+void File::open(const char *filename, bool read_only)
 {
-  int osflags = 0;
+  int osflags = O_NOATIME;
 
   if (read_only)
     osflags |= O_RDONLY;
   else
     osflags |= O_RDWR;
-#if HAVE_O_NOATIME
-  osflags |= O_NOATIME;
-#endif
+
 
   ups_fd_t fd = ::open(filename, osflags);
   if (fd < 0) {
@@ -392,8 +376,10 @@ File::open(const char *filename, bool read_only)
   m_fd = fd;
 }
 
-void
-File::close()
+//
+//
+//
+void File::close()
 {
   if (m_fd != UPS_INVALID_FD) {
     // on posix, we most likely don't want to close descriptors 0 and 1
@@ -410,69 +396,5 @@ File::close()
   }
 }
 
-void
-Socket::connect(const char *hostname, uint16_t port, uint32_t timeout_sec)
-{
-  ups_socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
-  if (s < 0) {
-    ups_log(("failed creating socket: %s", strerror(errno)));
-    throw Exception(UPS_IO_ERROR);
-  }
 
-  struct hostent *server = ::gethostbyname(hostname);
-  if (!server) {
-    ups_log(("unable to resolve hostname %s: %s", hostname,
-                hstrerror(h_errno)));
-    ::close(s);
-    throw Exception(UPS_NETWORK_ERROR);
-  }
-
-  struct sockaddr_in addr;
-  memset(&addr, 0, sizeof(addr));
-  addr.sin_family = AF_INET;
-  memcpy(&addr.sin_addr.s_addr, server->h_addr, server->h_length);
-  addr.sin_port = htons(port);
-  if (::connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-    ups_log(("unable to connect to %s:%d: %s", hostname, (int)port,
-                strerror(errno)));
-    ::close(s);
-    throw Exception(UPS_NETWORK_ERROR);
-  }
-
-  if (timeout_sec) {
-    struct timeval tv;
-    tv.tv_sec = timeout_sec;
-    tv.tv_usec = 0;
-    if (::setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv)) < 0) {
-      ups_log(("unable to set socket timeout to %d sec: %s", timeout_sec,
-                  strerror(errno)));
-      // fall through, this is not critical
-    }
-  }
-
-  m_socket = s;
 }
-
-void
-Socket::send(const uint8_t *data, size_t len)
-{
-  os_write(m_socket, data, len);
-}
-
-void
-Socket::recv(uint8_t *data, size_t len)
-{
-  os_read(m_socket, data, len);
-}
-
-void
-Socket::close()
-{
-  if (m_socket != UPS_INVALID_FD) {
-    if (::close(m_socket) == -1)
-      throw Exception(UPS_IO_ERROR);
-    m_socket = UPS_INVALID_FD;
-  }
-}
-
-} // namespace upscaledb

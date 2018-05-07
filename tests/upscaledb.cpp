@@ -31,7 +31,7 @@
 
 namespace upscaledb {
 
-static int UPS_CALLCONV
+static int 
 my_compare_func(ups_db_t *, const uint8_t *lhs, uint32_t lhs_length,
                 const uint8_t *rhs, uint32_t rhs_length) {
   (void)lhs;
@@ -41,7 +41,7 @@ my_compare_func(ups_db_t *, const uint8_t *lhs, uint32_t lhs_length,
   return 0;
 }
 
-static int UPS_CALLCONV
+static int 
 custom_compare_func(ups_db_t *, const uint8_t *lhs, uint32_t lhs_length,
                 const uint8_t *rhs, uint32_t rhs_length) {
   REQUIRE(lhs_length == rhs_length);
@@ -262,7 +262,7 @@ struct UpscaledbFixture : BaseFixture {
   }
 
 
-  static int UPS_CALLCONV my_compare_func_u32(ups_db_t *,
+  static int my_compare_func_u32(ups_db_t *,
                   const uint8_t *lhs, uint32_t lhs_length,
                   const uint8_t *rhs, uint32_t rhs_length)
   {
@@ -1641,7 +1641,7 @@ struct UpscaledbFixture : BaseFixture {
     // open, make sure the property was not persisted
     REQUIRE(0 == ups_env_open(&env, "test.db", 0, 0));
     REQUIRE(0 == ups_env_get_parameters(env, &pout[0]));
-    REQUIRE(UPS_POSIX_FADVICE_NORMAL == pout[0].value);
+    REQUIRE(EnvConfig::UPS_POSIX_FADVICE_NORMAL == pout[0].value);
     REQUIRE(0 == ups_env_close(env, UPS_AUTO_CLEANUP));
 
     // open with flag

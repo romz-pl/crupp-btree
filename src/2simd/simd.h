@@ -31,22 +31,10 @@
 
 #ifdef __SSE__
 
-#ifdef WIN32
-//#  include <xmmintrin.h>
-//#  include <smmintrin.h>
-#  include <intrin.h>
-#  include <windows.h>
-uint32_t __inline ctz(uint32_t value)
-{
-  DWORD trailing_zero = 0;
-  if (_BitScanForward(&trailing_zero, value))
-    return trailing_zero;
-  return 0;
-}
-#else
-#  include <x86intrin.h>
-#  define ctz(x) __builtin_ctz(x)
-#endif
+
+#include <x86intrin.h>
+#define ctz(x) __builtin_ctz(x)
+
 
 // Always verify that a file of level N does not include headers > N!
 #include "1base/error.h"

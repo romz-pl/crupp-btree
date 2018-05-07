@@ -36,7 +36,6 @@ using namespace boost::filesystem;
 
 #include <ups/upscaledb.h>
 #include "1base/error.h"
-#include "1base/util.h"
 
 #ifdef WIN32
 static inline const char *

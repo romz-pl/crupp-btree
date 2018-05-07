@@ -27,11 +27,7 @@ namespace upscaledb {
 
 // from http://stackoverflow.com/questions/6121792/how-to-check-if-a-cpu-supports-the-sse3-instruction-set
 
-#ifdef _WIN32
-//  Windows
-#  include <intrin.h>
-#  define cpuid    __cpuid
-#else
+
 #  include <cpuid.h>
 static void
 cpuid(int info[4], int level) {
@@ -47,7 +43,6 @@ cpuid(int info[4], int level) {
       "a" (infotype)
   );*/
 }
-#endif
 
 bool
 os_has_avx()

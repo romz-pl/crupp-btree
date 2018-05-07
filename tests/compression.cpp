@@ -27,7 +27,7 @@ using namespace upscaledb;
 
 TEST_CASE("Compression/factory", "")
 {
-  ScopedPtr<Compressor> c;
+  std::unique_ptr<Compressor> c;
 
 #ifdef HAVE_ZLIB_H
   c.reset(CompressorFactory::create(UPS_COMPRESSOR_ZLIB));
@@ -46,7 +46,7 @@ TEST_CASE("Compression/factory", "")
 static void
 simple_compressor_test(int library)
 {
-  ScopedPtr<Compressor> c(CompressorFactory::create(library));
+  std::unique_ptr<Compressor> c(CompressorFactory::create(library));
   REQUIRE(c.get() != nullptr);
   uint32_t len = c->compress((uint8_t *)"hello", 6);
   const uint8_t *ptr = c->arena.data();

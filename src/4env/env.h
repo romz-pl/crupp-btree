@@ -23,6 +23,7 @@
 
 #include <map>
 #include <string>
+#include <memory>
 
 #include "ups/upscaledb_int.h"
 #include "ups/upscaledb_uqi.h"
@@ -30,7 +31,6 @@
 // Always verify that a file of level N does not include headers > N!
 #include "1base/error.h"
 #include "1base/mutex.h"
-#include "1base/scoped_ptr.h"
 #include "2config/db_config.h"
 #include "2config/env_config.h"
 #include "4txn/txn.h"
@@ -142,7 +142,7 @@ struct Env
   EnvConfig config;
 
   // The Txn manager; can be null
-  ScopedPtr<TxnManager> txn_manager;
+  std::unique_ptr<TxnManager> txn_manager;
 
   // A map of all opened Databases
   typedef std::map<uint16_t, Db *> DatabaseMap;

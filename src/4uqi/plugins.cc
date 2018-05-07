@@ -21,11 +21,8 @@
 #include <string>
 #include <map>
 #include <vector>
-#ifdef WIN32
-#  include <windows.h>
-#else
-#  include <dlfcn.h>
-#endif
+#include <dlfcn.h>
+
 
 #include "1base/error.h"
 #include "1base/mutex.h"
@@ -41,11 +38,8 @@ namespace upscaledb {
 
 typedef std::map<std::string, uqi_plugin_t> PluginMap;
 
-#ifdef WIN32
-typedef HINSTANCE dll_instance_t;
-#else
 typedef void *dll_instance_t; 
-#endif
+
 
 static std::vector<dll_instance_t> handles;
 static Mutex handle_mutex;
@@ -58,11 +52,8 @@ PluginManager::cleanup()
   ScopedLock lock(handle_mutex);
   for (std::vector<dll_instance_t>::iterator it = handles.begin();
         it != handles.end(); it++) {
-#ifdef WIN32
-    ::FreeLibrary(*it);
-#else
+
     ::dlclose(*it);
-#endif
   }
 
   handles.clear();
@@ -71,19 +62,6 @@ PluginManager::cleanup()
 ups_status_t
 PluginManager::import(const char *library, const char *plugin_name)
 {
-#ifdef WIN32
-#if defined(__MINGW32__)
-  dll_instance_t dl = ::LoadLibrary(library);
-#else
-  wchar_t wlibrary[MAX_PATH];
-  ::mbstowcs(wlibrary, library, ::strlen(library) + 1);
-  dll_instance_t dl = ::LoadLibrary(wlibrary);
-#endif
-  if (!dl) {
-    ups_log(("Failed to open library %s: %u", library, ::GetLastError()));
-    return UPS_PLUGIN_NOT_FOUND;
-  }
-#else
   // clear reported errors
   ::dlerror();
   dll_instance_t dl = ::dlopen(library, RTLD_NOW);
@@ -91,7 +69,7 @@ PluginManager::import(const char *library, const char *plugin_name)
     ups_log(("Failed to open library %s: %s", library, ::dlerror()));
     return UPS_PLUGIN_NOT_FOUND;
   }
-#endif
+
 
   // store the handle, otherwise we cannot clean it up later on
   {
@@ -100,21 +78,12 @@ PluginManager::import(const char *library, const char *plugin_name)
   }
 
   uqi_plugin_export_function foo;
-#ifdef WIN32
-  foo = (uqi_plugin_export_function)::GetProcAddress(dl, "plugin_descriptor");
-  if (!foo) {
-    ups_log(("Failed to load exported symbol from library %s: %u",
-      library, ::GetLastError()));
-    return UPS_PLUGIN_NOT_FOUND;
-  }
-#else
   foo = (uqi_plugin_export_function)::dlsym(dl, "plugin_descriptor");
   if (!foo) {
     ups_log(("Failed to load exported symbol from library %s: %s",
       library, ::dlerror()));
     return UPS_PLUGIN_NOT_FOUND;
   }
-#endif
 
   uqi_plugin_t *plugin = foo(plugin_name);
   if (!plugin) {

@@ -3,7 +3,6 @@ set( LIB_NAME ups-1base )
 
 add_library( ${LIB_NAME} STATIC
     error.cc
-    util.cc
 )
 
 target_include_directories( ${LIB_NAME} PRIVATE 

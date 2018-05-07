@@ -750,7 +750,7 @@ static inline ups_status_t
 fetch_record_number(Context *context, LocalDb *db)
 {
   ups_key_t key;
-  ScopedPtr<LocalCursor> c(new LocalCursor(db, 0));
+  std::unique_ptr<LocalCursor> c(new LocalCursor(db, 0));
   ups_status_t st = c->move(context, &key, 0, UPS_CURSOR_LAST);
   if (unlikely(st))
     return st == UPS_KEY_NOT_FOUND ? 0 : st;
@@ -1206,7 +1206,7 @@ LocalDb::find(Cursor *hcursor, Txn *txn, ups_key_t *key,
   if (!cursor
           && ISSET(this->flags(), UPS_ENABLE_TRANSACTIONS
                                     | UPS_ENABLE_DUPLICATES)) {
-    ScopedPtr<LocalCursor> c(new LocalCursor(this, txn));
+    std::unique_ptr<LocalCursor> c(new LocalCursor(this, txn));
     return find(c.get(), txn, key, record, flags);
   }
 
@@ -1449,7 +1449,7 @@ LocalDb::select_range(SelectStatement *stmt, LocalCursor *begin,
   int slot;
   ups_key_t key;
   ups_record_t record;
-  ScopedPtr<LocalCursor> tmpcursor;
+  std::unique_ptr<LocalCursor> tmpcursor;
  
   LocalCursor *cursor = begin;
   if (unlikely(cursor && cursor->is_nil()))
@@ -1458,7 +1458,7 @@ LocalDb::select_range(SelectStatement *stmt, LocalCursor *begin,
   if (unlikely(end && end->is_nil()))
     return UPS_CURSOR_IS_NIL;
 
-  ScopedPtr<ScanVisitor> visitor(ScanVisitorFactory::from_select(stmt, this));
+  std::unique_ptr<ScanVisitor> visitor(ScanVisitorFactory::from_select(stmt, this));
   if (unlikely(!visitor.get()))
     return UPS_PARSER_ERROR;
 

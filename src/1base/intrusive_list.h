@@ -47,7 +47,6 @@
 #define UPS_INTRUSIVE_LIST_H
 
 #include "0root/root.h"
-#include "1base/uncopyable.h"
 
 // Always verify that a file of level N does not include headers > N!
 
@@ -58,11 +57,14 @@
 namespace upscaledb {
 
 template<typename T, int I = 1>
-struct IntrusiveListNode : public Uncopyable {
+struct IntrusiveListNode {
   IntrusiveListNode() {
     for (int i = 0; i < I; i++)
       previous[i] = next[i] = 0;
   }
+
+  IntrusiveListNode(const IntrusiveListNode&) = delete;
+  IntrusiveListNode& operator=(const IntrusiveListNode&) = delete;
 
   T *previous[I];
   T *next[I];

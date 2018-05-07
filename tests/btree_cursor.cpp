@@ -29,7 +29,7 @@ namespace upscaledb {
 
 struct BtreeCursorFixture : BaseFixture {
   bool inmemory;
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   BtreeCursorFixture(bool inmemory_ = false, uint32_t page_size = 0)
     : inmemory(inmemory_) {

@@ -31,7 +31,7 @@
 namespace upscaledb {
 
 struct BtreeKeyFixture : BaseFixture {
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
   Page *page;
 
   BtreeKeyFixture(bool duplicate = false) {

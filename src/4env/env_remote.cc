@@ -20,9 +20,10 @@
 
 #include "0root/root.h"
 
+#include <memory>
+
 // Always verify that a file of level N does not include headers > N!
 #include "1os/os.h"
-#include "1base/scoped_ptr.h"
 #include "2protobuf/protocol.h"
 #include "4cursor/cursor.h"
 #include "4cursor/cursor_remote.h"
@@ -153,7 +154,7 @@ RemoteEnv::select_range(const char *query, Cursor *begin, const Cursor *end,
                     c->remote_handle);
   }
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
 
   assert(reply->has_select_range_reply());
 
@@ -211,7 +212,7 @@ RemoteEnv::open()
   Protocol request(Protocol::CONNECT_REQUEST);
   request.mutable_connect_request()->set_path(filename);
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
 
   assert(reply->type() == Protocol::CONNECT_REPLY);
 
@@ -234,7 +235,7 @@ RemoteEnv::get_database_names()
   request.mutable_env_get_database_names_request();
   request.mutable_env_get_database_names_request()->set_env_handle(remote_handle);
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
 
   assert(reply->has_env_get_database_names_reply());
 
@@ -266,7 +267,7 @@ RemoteEnv::get_parameters(ups_parameter_t *param)
     p++;
   }
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
 
   assert(reply->has_env_get_parameters_reply());
 
@@ -325,7 +326,7 @@ RemoteEnv::flush(uint32_t flags)
   request.mutable_env_flush_request()->set_flags(flags);
   request.mutable_env_flush_request()->set_env_handle(remote_handle);
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
   assert(reply->has_env_flush_reply());
   return reply->env_flush_reply().status();
 }
@@ -352,7 +353,7 @@ RemoteEnv::do_create_db(DbConfig &config, const ups_parameter_t *param)
     }
   }
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
 
   assert(reply->has_env_create_db_reply());
 
@@ -380,7 +381,7 @@ RemoteEnv::do_open_db(DbConfig &config, const ups_parameter_t *param)
     }
   }
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
 
   assert(reply->has_env_open_db_reply());
 
@@ -401,7 +402,7 @@ RemoteEnv::rename_db( uint16_t oldname, uint16_t newname, uint32_t flags)
   request.mutable_env_rename_request()->set_newname(newname);
   request.mutable_env_rename_request()->set_flags(flags);
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
   assert(reply->has_env_rename_reply());
   return reply->env_rename_reply().status();
 }
@@ -414,7 +415,7 @@ RemoteEnv::erase_db(uint16_t name, uint32_t flags)
   request.mutable_env_erase_db_request()->set_name(name);
   request.mutable_env_erase_db_request()->set_flags(flags);
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
   assert(reply->has_env_erase_db_reply());
   return reply->env_erase_db_reply().status();
 }
@@ -491,7 +492,7 @@ RemoteEnv::do_close(uint32_t flags)
   Protocol request(Protocol::DISCONNECT_REQUEST);
   request.mutable_disconnect_request()->set_env_handle(remote_handle);
 
-  ScopedPtr<Protocol> reply(perform_request(&request));
+  std::unique_ptr<Protocol> reply(perform_request(&request));
 
   // ignore the reply
   _socket.close();

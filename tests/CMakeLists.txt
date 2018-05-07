@@ -60,6 +60,7 @@ target_link_libraries( ${TEST_NAME}
     ups-3changeset
     ups-3btree
     ups-3blob_manager
+    ups-2config
     ups-2page
     ups-2compressor
     ups-1os

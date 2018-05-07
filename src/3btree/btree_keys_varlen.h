@@ -556,14 +556,14 @@ struct VariableLengthKeyList : BaseKeyList {
   uint8_t *_data;
 
   // Cache for extended keys
-  ScopedPtr<ExtKeyCache> _extkey_cache;
+  std::unique_ptr<ExtKeyCache> _extkey_cache;
 
   // Threshold for extended keys; if key size is > threshold then the
   // key is moved to a blob
   size_t _extkey_threshold;
 
   // Compressor for the keys
-  ScopedPtr<Compressor> _compressor;
+  std::unique_ptr<Compressor> _compressor;
 };
 
 } // namespace upscaledb

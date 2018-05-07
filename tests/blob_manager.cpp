@@ -74,7 +74,7 @@ struct BlobManagerProxy {
 
 struct BlobManagerFixture : BaseFixture {
 
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   BlobManagerFixture(uint32_t flags = 0, uint32_t cache_size = 0,
                   uint32_t page_size = 0) {

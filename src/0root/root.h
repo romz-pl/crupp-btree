@@ -31,30 +31,13 @@
 #ifdef HAVE_CONFIG_H
 #   include "../config.h"
 #else
-#   define HAVE_MMAP              1
-#   define HAVE_MUNMAP            1
-#   define HAVE_PREAD             1
-#   define HAVE_PWRITE            1
 #   define HAVE_SCHED_YIELD       1
 #   define HAVE_USLEEP            1
 #endif
 
 #include "ups/types.h"
 
-// the default cache size is 2 MB
-#define UPS_DEFAULT_CACHE_SIZE    (2 * 1024 * 1024)
 
-// the default page size is 16 kb
-#define UPS_DEFAULT_PAGE_SIZE     (16 * 1024)
-
-// boost/asio has nasty build dependencies and requires Windows.h,
-// therefore it is included here
-#ifdef WIN32
-#  define WIN32_LEAN_AND_MEAN
-#  include <Windows.h>
-#  include <boost/asio.hpp>
-#  include <boost/thread/thread.hpp>
-#endif
 
 // use tcmalloc?
 #if HAVE_GOOGLE_TCMALLOC_H == 1
@@ -64,7 +47,6 @@
 #endif
 
 #include <stddef.h>
-#define OFFSETOF(type, member) offsetof(type, member)
 
 // helper macros to improve CPU branch prediction
 #if defined __GNUC__
@@ -75,10 +57,6 @@
 #   define unlikely(x) (x)
 #endif
 
-// MSVC: disable warning about use of 'this' in base member initializer list
-#ifdef WIN32
-#  pragma warning(disable:4355)
-#endif
 
 // some compilers define min and max as macros; this leads to errors
 // when using std::min and std::max

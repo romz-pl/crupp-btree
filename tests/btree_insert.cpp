@@ -26,7 +26,7 @@
 using namespace upscaledb;
 
 struct BtreeInsertFixture : BaseFixture {
-  ScopedPtr<Context> context;
+  std::unique_ptr<Context> context;
 
   BtreeInsertFixture() {
     ups_parameter_t p1[] = {

@@ -86,7 +86,7 @@ struct DeviceFixture : BaseFixture {
     std::vector<PageProxy *> pages;
     for (int i = 0; i < 10; i++)
       pages.push_back(new PageProxy(lenv(), ldb()));
-    uint32_t page_size = UPS_DEFAULT_PAGE_SIZE;
+    uint32_t page_size = EnvConfig::UPS_DEFAULT_PAGE_SIZE;
     std::vector<uint8_t> temp(page_size);
 
     DeviceProxy dp(lenv());
@@ -118,7 +118,7 @@ struct DeviceFixture : BaseFixture {
 
   void readWriteTest() {
     int i;
-    uint32_t page_size = UPS_DEFAULT_PAGE_SIZE;
+    uint32_t page_size = EnvConfig::UPS_DEFAULT_PAGE_SIZE;
     std::vector<std::vector<uint8_t>> buffers(10);
     std::vector<uint8_t> temp(page_size);
 
@@ -146,7 +146,7 @@ struct DeviceFixture : BaseFixture {
 
   void readWritePageTest() {
     PageProxy pages[2] = {{lenv(), ldb()}, {lenv(), ldb()}};
-    uint32_t page_size = UPS_DEFAULT_PAGE_SIZE;
+    uint32_t page_size = EnvConfig::UPS_DEFAULT_PAGE_SIZE;
 
     EnvConfig &cfg = const_cast<EnvConfig &>(lenv()->config);
     cfg.flags |= UPS_DISABLE_MMAP;
@@ -170,7 +170,7 @@ struct DeviceFixture : BaseFixture {
     }
 
     for (uint8_t i = 0; i < 2; i++) {
-      char temp[UPS_DEFAULT_PAGE_SIZE];
+      char temp[EnvConfig::UPS_DEFAULT_PAGE_SIZE];
       ::memset(temp, i + 1, sizeof(temp));
       PageProxy pp(lenv());
       pp.set_address(page_size * i);

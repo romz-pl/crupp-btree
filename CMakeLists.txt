@@ -26,6 +26,7 @@ add_subdirectory(src/1mem)
 add_subdirectory(src/1os)
 
 add_subdirectory(src/2compressor)
+add_subdirectory(src/2config)
 add_subdirectory(src/2page)
 
 add_subdirectory(src/3btree)

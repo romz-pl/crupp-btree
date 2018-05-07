@@ -23,11 +23,11 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "ups/types.h" // for metrics
 
 #include "1base/dynamic_array.h"
-#include "1base/scoped_ptr.h"
 #include "1os/file.h"
 #include "2page/page_collection.h"
 #include "2compressor/compressor.h"
@@ -82,7 +82,7 @@ struct JournalState {
   DatabaseMap database_map;
 
   // The compressor; can be null
-  ScopedPtr<Compressor> compressor;
+  std::unique_ptr<Compressor> compressor;
 };
 
 } // namespace upscaledb

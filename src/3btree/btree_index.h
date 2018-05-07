@@ -22,11 +22,11 @@
 #include "0root/root.h"
 
 #include <algorithm>
+#include <memory>
 
 // Always verify that a file of level N does not include headers > N!
 #include "1base/abi.h"
 #include "1base/dynamic_array.h"
-#include "1base/scoped_ptr.h"
 #include "1globals/globals.h"
 #include "3btree/btree_cursor.h"
 #include "3btree/btree_stats.h"
@@ -146,11 +146,11 @@ struct BtreeIndexState {
 
   // the Traits class wrapping the template parameters (factory for
   // leaf nodes)
-  ScopedPtr<BtreeIndexTraits> leaf_traits;
+  std::unique_ptr<BtreeIndexTraits> leaf_traits;
 
   // the Traits class wrapping the template parameters (factory for
   // internal nodes)
-  ScopedPtr<BtreeIndexTraits> internal_traits;
+  std::unique_ptr<BtreeIndexTraits> internal_traits;
 
   // the index of the PBtreeHeader in the Environment's header page
   PBtreeHeader *btree_header;

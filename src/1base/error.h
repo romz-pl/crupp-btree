@@ -50,7 +50,7 @@ struct Exception
 };
 
 // the default error handler
-void UPS_CALLCONV
+void 
 default_errhandler(int level, const char *message);
 
 extern void

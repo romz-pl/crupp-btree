@@ -21,9 +21,9 @@
 #include "0root/root.h"
 
 #include <string.h>
+#include <memory>
 
 // Always verify that a file of level N does not include headers > N!
-#include "1base/scoped_ptr.h"
 #include "2protobuf/protocol.h"
 #include "3btree/btree_flags.h"
 #include "4db/db_remote.h"
@@ -55,7 +55,7 @@ RemoteDb::get_parameters(ups_parameter_t *param)
       request.mutable_db_get_parameters_request()->add_names(p->name);
   }
 
-  ScopedPtr<Protocol> reply(renv(this)->perform_request(&request));
+  std::unique_ptr<Protocol> reply(renv(this)->perform_request(&request));
 
   assert(reply->has_db_get_parameters_reply());
 
@@ -410,7 +410,7 @@ RemoteDb::bulk_operations(Txn *htxn, ups_operation_t *ops,
     op->set_flags(ops[i].flags);
   }
 
-  ScopedPtr<Protocol> reply(renv(this)->perform_request(&request));
+  std::unique_ptr<Protocol> reply(renv(this)->perform_request(&request));
   assert(reply->has_db_bulk_operations_reply() != 0);
   ups_status_t st = reply->db_bulk_operations_reply().status();
   if (unlikely(st))
@@ -530,7 +530,7 @@ RemoteDb::cursor_move(Cursor *hcursor, ups_key_t *key,
     Protocol::assign_record(request.mutable_cursor_move_request()->mutable_record(),
                   record, false);
 
-  ScopedPtr<Protocol> reply(renv(this)->perform_request(&request));
+  std::unique_ptr<Protocol> reply(renv(this)->perform_request(&request));
   assert(reply->has_cursor_move_reply() != 0);
   ups_status_t st = reply->cursor_move_reply().status();
   if (unlikely(st))
@@ -574,7 +574,7 @@ RemoteDb::close(uint32_t flags)
   request.mutable_db_close_request()->set_db_handle(remote_handle);
   request.mutable_db_close_request()->set_flags(flags);
 
-  ScopedPtr<Protocol> reply(renv(this)->perform_request(&request));
+  std::unique_ptr<Protocol> reply(renv(this)->perform_request(&request));
 
   assert(reply->has_db_close_reply());
 
