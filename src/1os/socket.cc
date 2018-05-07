@@ -32,7 +32,7 @@ namespace upscaledb {
 void
 Socket::connect(const char *hostname, uint16_t port, uint32_t timeout_sec)
 {
-  ups_socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
+  int s = ::socket(AF_INET, SOCK_STREAM, 0);
   if (s < 0) {
     ups_log(("failed creating socket: %s", strerror(errno)));
     throw Exception(UPS_IO_ERROR);

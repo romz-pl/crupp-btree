@@ -32,7 +32,6 @@
 #include <stdio.h>
 #include <limits.h>
 
-#include "ups/types.h"
 
 // Always verify that a file of level N does not include headers > N!
 #include "1os/os.h"
@@ -69,7 +68,7 @@ class Socket
     void close();
 
   private:
-    ups_socket_t m_socket;
+    int m_socket;
 };
 
 } // namespace upscaledb

@@ -39,7 +39,6 @@
 namespace upscaledb {
 
 
-typedef int	               ups_socket_t;
 #undef UPS_INVALID_FD
 #define UPS_INVALID_FD  (-1)
 
