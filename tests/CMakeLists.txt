@@ -63,6 +63,7 @@ target_link_libraries( ${TEST_NAME}
     ups-2config
     ups-2page
     ups-2compressor
+    ups-2device
     ups-1os
     ups-1mem
     ups-1globals

@@ -59,7 +59,7 @@ copy_record(LocalDb *db, Txn *txn, TxnOperation *op, ups_record_t *record)
 
   record->size = op->record.size;
 
-  if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+  if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
     arena->resize(record->size);
     record->data = arena->data();
   }
@@ -75,7 +75,7 @@ copy_key(LocalDb *db, Txn *txn, ups_key_t *source, ups_key_t *key)
   key->size = source->size;
   key->_flags = source->_flags;
 
-  if (NOTSET(key->flags, UPS_KEY_USER_ALLOC) && source->data) {
+  if (NOT_SET(key->flags, UPS_KEY_USER_ALLOC) && source->data) {
     arena->resize(source->size);
     key->data = arena->data();
   }
@@ -124,7 +124,7 @@ is_modified_by_active_transaction(TxnIndex *txn_index)
       // if the transaction is still active, or if it is committed
       // but was not yet flushed then return an error
       if (!optxn->is_aborted() && !optxn->is_committed())
-        if (NOTSET(op->flags, TxnOperation::kIsFlushed))
+        if (NOT_SET(op->flags, TxnOperation::kIsFlushed))
           return true;
     }
   }
@@ -148,13 +148,13 @@ is_key_erased(Context *context, TxnIndex *txn_index, ups_key_t *key)
     if (optxn->is_aborted())
       continue;
     if (optxn->is_committed() || context->txn == optxn) {
-      if (ISSET(op->flags, TxnOperation::kIsFlushed))
+      if (IS_SET(op->flags, TxnOperation::kIsFlushed))
         continue;
-      if (ISSET(op->flags, TxnOperation::kErase)) {
+      if (IS_SET(op->flags, TxnOperation::kErase)) {
         // TODO does not check duplicates!!
         return true;
       }
-      if (ISSETANY(op->flags, TxnOperation::kInsert
+      if (IS_SET_ANY(op->flags, TxnOperation::kInsert
                                     | TxnOperation::kInsertOverwrite
                                     | TxnOperation::kInsertDuplicate))
         return false;
@@ -189,19 +189,19 @@ check_erase_conflicts(LocalDb *db, Context *context, TxnNode *node,
       continue;
 
     if (optxn->is_committed() || context->txn == optxn) {
-      if (ISSET(op->flags, TxnOperation::kIsFlushed))
+      if (IS_SET(op->flags, TxnOperation::kIsFlushed))
         continue;
       // if key was erased then it doesn't exist and can be
       // inserted without problems
-      if (ISSET(op->flags, TxnOperation::kErase))
+      if (IS_SET(op->flags, TxnOperation::kErase))
         return UPS_KEY_NOT_FOUND;
       // if the key already exists then we can only continue if
       // we're allowed to overwrite it or to insert a duplicate
-      if (ISSETANY(op->flags, TxnOperation::kInsert
+      if (IS_SET_ANY(op->flags, TxnOperation::kInsert
                                     | TxnOperation::kInsertOverwrite
                                     | TxnOperation::kInsertDuplicate))
         return 0;
-      if (NOTSET(op->flags, TxnOperation::kNop)) {
+      if (NOT_SET(op->flags, TxnOperation::kNop)) {
         assert(!"shouldn't be here");
         return UPS_INTERNAL_ERROR;
       }
@@ -244,22 +244,22 @@ check_insert_conflicts(LocalDb *db, Context *context, TxnNode *node,
       continue;
 
     if (optxn->is_committed() || context->txn == optxn) {
-      if (ISSET(op->flags, TxnOperation::kIsFlushed))
+      if (IS_SET(op->flags, TxnOperation::kIsFlushed))
         continue;
       /* if key was erased then it doesn't exist and can be
        * inserted without problems */
-      if (ISSET(op->flags, TxnOperation::kErase))
+      if (IS_SET(op->flags, TxnOperation::kErase))
         return 0;
       /* if the key already exists then we can only continue if
        * we're allowed to overwrite it or to insert a duplicate */
-      if (ISSETANY(op->flags, TxnOperation::kInsert
+      if (IS_SET_ANY(op->flags, TxnOperation::kInsert
                                     | TxnOperation::kInsertOverwrite
                                     | TxnOperation::kInsertDuplicate)) {
-        if (ISSETANY(flags, UPS_OVERWRITE | UPS_DUPLICATE))
+        if (IS_SET_ANY(flags, UPS_OVERWRITE | UPS_DUPLICATE))
           return 0;
         return UPS_DUPLICATE_KEY;
       }
-      if (NOTSET(op->flags, TxnOperation::kNop)) {
+      if (NOT_SET(op->flags, TxnOperation::kNop)) {
         assert(!"shouldn't be here");
         return UPS_INTERNAL_ERROR;
       }
@@ -275,7 +275,7 @@ check_insert_conflicts(LocalDb *db, Context *context, TxnNode *node,
   // flushed - basically that's identical to a btree lookup.
   //
   // we can skip this check if we do not care about duplicates.
-  if (ISSETANY(flags, UPS_OVERWRITE | UPS_DUPLICATE
+  if (IS_SET_ANY(flags, UPS_OVERWRITE | UPS_DUPLICATE
                           | UPS_HINT_APPEND | UPS_HINT_PREPEND))
     return 0;
 
@@ -337,19 +337,19 @@ retry:
       continue;
 
     if (optxn->is_committed() || context->txn == optxn) {
-      if (unlikely(ISSET(op->flags, TxnOperation::kIsFlushed)))
+      if (unlikely(IS_SET(op->flags, TxnOperation::kIsFlushed)))
         continue;
 
       // if the key already exists then return its record; do not
       // return pointers to TxnOperation::get_record, because it may be
       // flushed and the user's pointers would be invalid
-      if (ISSETANY(op->flags, TxnOperation::kInsert
+      if (IS_SET_ANY(op->flags, TxnOperation::kInsert
                                 | TxnOperation::kInsertOverwrite
                                 | TxnOperation::kInsertDuplicate)) {
         if (cursor)
           cursor->activate_txn(op);
         // approx match? leave the loop and continue with the btree
-        if (ISSETANY(ups_key_get_intflags(key), BtreeKey::kApproximate))
+        if (IS_SET_ANY(ups_key_get_intflags(key), BtreeKey::kApproximate))
           break;
         // otherwise copy the record and return
         if (likely(record != 0))
@@ -362,10 +362,10 @@ retry:
       //
       // if an approximate match is requested then move to the next
       // or previous node
-      if (ISSET(op->flags, TxnOperation::kErase)) {
-        if (NOTSET(ups_key_get_intflags(key), BtreeKey::kApproximate))
+      if (IS_SET(op->flags, TxnOperation::kErase)) {
+        if (NOT_SET(ups_key_get_intflags(key), BtreeKey::kApproximate))
           exact_is_erased = true;
-        if (ISSET(flags, UPS_FIND_LT_MATCH)) {
+        if (IS_SET(flags, UPS_FIND_LT_MATCH)) {
           node = node->previous_sibling();
           if (!node)
             break;
@@ -373,7 +373,7 @@ retry:
               (ups_key_get_intflags(key) | BtreeKey::kApproximate));
           goto retry;
         }
-        if (ISSET(flags, UPS_FIND_GT_MATCH)) {
+        if (IS_SET(flags, UPS_FIND_GT_MATCH)) {
           node = node->next_sibling();
           if (!node)
             break;
@@ -399,7 +399,7 @@ retry:
         return UPS_KEY_NOT_FOUND;
       }
 
-      if (unlikely(NOTSET(op->flags, TxnOperation::kNop))) {
+      if (unlikely(NOT_SET(op->flags, TxnOperation::kNop))) {
         assert(!"shouldn't be here");
         return UPS_KEY_NOT_FOUND;
       }
@@ -413,7 +413,7 @@ retry:
   // if there was an approximate match: check if the btree provides
   // a better match
   if (unlikely(op
-          && ISSETANY(ups_key_get_intflags(key), BtreeKey::kApproximate))) {
+          && IS_SET_ANY(ups_key_get_intflags(key), BtreeKey::kApproximate))) {
     ups_key_set_intflags(key, 0);
 
     // create a duplicate of the key
@@ -456,8 +456,8 @@ retry:
       return st;
 
     // the btree key is a direct match? then return it
-    if (NOTSET(ups_key_get_intflags(key), BtreeKey::kApproximate)
-          && ISSET(flags, UPS_FIND_EQ_MATCH)
+    if (NOT_SET(ups_key_get_intflags(key), BtreeKey::kApproximate)
+          && IS_SET(flags, UPS_FIND_EQ_MATCH)
           && !exact_is_erased) {
       if (cursor)
         cursor->activate_btree();
@@ -469,11 +469,11 @@ retry:
     // that it was not erased or overwritten in a transaction
     int cmp = db->btree_index->compare_keys(key, &copy);
     bool use_btree = false;
-    if (ISSET(flags, UPS_FIND_GT_MATCH)) {
+    if (IS_SET(flags, UPS_FIND_GT_MATCH)) {
       if (cmp < 0)
         use_btree = true;
     }
-    else if (ISSET(flags, UPS_FIND_LT_MATCH)) {
+    else if (IS_SET(flags, UPS_FIND_LT_MATCH)) {
       if (cmp > 0)
         use_btree = true;
     }
@@ -609,7 +609,7 @@ erase_impl(LocalDb *db, Context *context, LocalCursor *cursor, ups_key_t *key,
                 uint32_t flags)
 {
   // No transactions? Then delete the key/value pair from the Btree
-  if (NOTSET(db->env->flags(), UPS_ENABLE_TRANSACTIONS))
+  if (NOT_SET(db->env->flags(), UPS_ENABLE_TRANSACTIONS))
     return db->btree_index->erase(context, cursor, key, 0, flags);
 
   // if transactions are enabled: append a 'erase key' operation into
@@ -755,7 +755,7 @@ fetch_record_number(Context *context, LocalDb *db)
   if (unlikely(st))
     return st == UPS_KEY_NOT_FOUND ? 0 : st;
 
-  if (ISSET(db->flags(), UPS_RECORD_NUMBER32))
+  if (IS_SET(db->flags(), UPS_RECORD_NUMBER32))
     db->_current_record_number = *(uint32_t *)key.data;
   else
     db->_current_record_number = *(uint64_t *)key.data;
@@ -780,7 +780,7 @@ LocalDb::open(Context *context, PBtreeHeader *btree_header)
   // load the custom compare function?
   if (config.key_type == UPS_TYPE_CUSTOM) {
     ups_compare_func_t f = CallbackManager::get(btree_index->compare_hash());
-    if (f == 0 && NOTSET(flags(), UPS_IGNORE_MISSING_CALLBACK)) {
+    if (f == 0 && NOT_SET(flags(), UPS_IGNORE_MISSING_CALLBACK)) {
       ups_trace(("custom compare function is not yet registered"));
       return UPS_NOT_READY;
     }
@@ -794,7 +794,7 @@ LocalDb::open(Context *context, PBtreeHeader *btree_header)
   }
 
   // fetch the current record number
-  if (ISSETANY(flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64))
+  if (IS_SET_ANY(flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64))
     return fetch_record_number(context, this);
 
   return 0;
@@ -918,7 +918,7 @@ LocalDb::count(Txn *htxn, bool distinct)
 
   // if transactions are enabled, then also sum up the number of keys
   // from the transaction tree
-  if (ISSET(flags(), UPS_ENABLE_TRANSACTIONS))
+  if (IS_SET(flags(), UPS_ENABLE_TRANSACTIONS))
     keycount += txn_index->count(&context, txn, distinct);
 
   return keycount;
@@ -942,7 +942,7 @@ prepare_record_number(LocalDb *db, ups_key_t *key, ByteArray *arena,
 {
   T record_number = 0;
 
-  if (unlikely(ISSET(flags, UPS_OVERWRITE))) {
+  if (unlikely(IS_SET(flags, UPS_OVERWRITE))) {
     assert(key->size == sizeof(T));
     assert(key->data != 0);
     record_number = *(T *)key->data;
@@ -1017,9 +1017,9 @@ insert_txn(LocalDb *db, Context *context, ups_key_t *key, ups_record_t *record,
 
   // append a new operation to this node
   TxnOperation *op = node->append(context->txn, flags,
-                (ISSET(flags, UPS_DUPLICATE)
+                (IS_SET(flags, UPS_DUPLICATE)
                     ? TxnOperation::kInsertDuplicate
-                    : ISSET(flags, UPS_OVERWRITE)
+                    : IS_SET(flags, UPS_OVERWRITE)
                         ? TxnOperation::kInsertOverwrite
                         : TxnOperation::kInsert),
                 lsn, key, record);
@@ -1049,7 +1049,7 @@ insert_impl(LocalDb *db, Context *context, LocalCursor *cursor,
 
   // if Transactions are disabled: directly insert the new key/record pair
   // in the Btree, then return
-  if (NOTSET(db->env->flags(), UPS_ENABLE_TRANSACTIONS)) {
+  if (NOT_SET(db->env->flags(), UPS_ENABLE_TRANSACTIONS)) {
     st = db->btree_index->insert(context, cursor, key, record, flags);
     if (likely(st == 0) && cursor)
       cursor->activate_btree();
@@ -1102,7 +1102,7 @@ LocalDb::insert(Cursor *hcursor, Txn *txn, ups_key_t *key,
       return UPS_INV_KEY_SIZE;
     }
 
-    if (ISSET(config.flags, UPS_RECORD_NUMBER32))
+    if (IS_SET(config.flags, UPS_RECORD_NUMBER32))
       prepare_record_number<uint32_t>(this, key, &key_arena(txn), flags);
     else
       prepare_record_number<uint64_t>(this, key, &key_arena(txn), flags);
@@ -1126,11 +1126,11 @@ LocalDb::insert(Cursor *hcursor, Txn *txn, ups_key_t *key,
   LocalCursor *cursor = (LocalCursor *)hcursor;
   Context context(lenv(this), (LocalTxn *)txn, this);
 
-  if (cursor && NOTSET(flags, UPS_DUPLICATE) && NOTSET(flags, UPS_OVERWRITE))
+  if (cursor && NOT_SET(flags, UPS_DUPLICATE) && NOT_SET(flags, UPS_OVERWRITE))
     cursor->duplicate_cache_index = 0;
 
   // create temporary transaction, if neccessary
-  if (!txn && ISSET(this->flags(), UPS_ENABLE_TRANSACTIONS)) {
+  if (!txn && IS_SET(this->flags(), UPS_ENABLE_TRANSACTIONS)) {
     local_txn = begin_temp_txn(lenv(this));
     context.txn = local_txn;
   }
@@ -1138,8 +1138,8 @@ LocalDb::insert(Cursor *hcursor, Txn *txn, ups_key_t *key,
   // check the "histogram" to avoid further btree lookups
   // (only if transactions are enabled and if record numbers are disabled -
   // otherwise we overwrite the internal memory used by the record number)
-  if (ISSET(this->flags(), UPS_ENABLE_TRANSACTIONS)
-      && !ISSETANY(this->flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)) {
+  if (IS_SET(this->flags(), UPS_ENABLE_TRANSACTIONS)
+      && !IS_SET_ANY(this->flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)) {
     if (histogram.test_and_update_if_lower(context.txn, key))
       flags |= UPS_HINT_PREPEND;
     if (histogram.test_and_update_if_greater(context.txn, key))
@@ -1173,7 +1173,7 @@ LocalDb::erase(Cursor *hcursor, Txn *txn, ups_key_t *key, uint32_t flags)
   LocalTxn *local_txn = 0;
   Context context(lenv(this), (LocalTxn *)txn, this);
 
-  if (!txn && ISSET(this->flags(), UPS_ENABLE_TRANSACTIONS)) {
+  if (!txn && IS_SET(this->flags(), UPS_ENABLE_TRANSACTIONS)) {
     local_txn = begin_temp_txn(lenv(this));
     context.txn = local_txn;
   }
@@ -1204,7 +1204,7 @@ LocalDb::find(Cursor *hcursor, Txn *txn, ups_key_t *key,
   // Transactions require a Cursor because only Cursors can build lists
   // of duplicates.
   if (!cursor
-          && ISSET(this->flags(), UPS_ENABLE_TRANSACTIONS
+          && IS_SET(this->flags(), UPS_ENABLE_TRANSACTIONS
                                     | UPS_ENABLE_DUPLICATES)) {
     std::unique_ptr<LocalCursor> c(new LocalCursor(this, txn));
     return find(c.get(), txn, key, record, flags);
@@ -1216,7 +1216,7 @@ LocalDb::find(Cursor *hcursor, Txn *txn, ups_key_t *key,
   lenv(this)->page_manager->purge_cache(&context);
 
   // if Transactions are disabled then read from the Btree
-  if (NOTSET(this->flags(), UPS_ENABLE_TRANSACTIONS)) {
+  if (NOT_SET(this->flags(), UPS_ENABLE_TRANSACTIONS)) {
     ups_status_t st = btree_index->find(&context, cursor, key, &key_arena(txn),
                           record, &record_arena(txn), flags);
     if (likely(st == 0) && cursor)
@@ -1282,8 +1282,8 @@ LocalDb::bulk_operations(Txn *txn, ups_operation_t *ops, size_t ops_length,
         ops->result = insert(0, txn, &ops->key, &ops->record, ops->flags);
         // if this a record number database? then we might have to copy the key
         if (likely(ops->result == 0)
-                && ISSETANY(flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)
-                && NOTSET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
+                && IS_SET_ANY(flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)
+                && NOT_SET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
           ka.append((uint8_t *)ops->key.data, ops->key.size);
         }
         break;
@@ -1291,12 +1291,12 @@ LocalDb::bulk_operations(Txn *txn, ups_operation_t *ops, size_t ops_length,
         ops->result = find(0, txn, &ops->key, &ops->record, ops->flags);
         if (likely(ops->result == 0)) {
           // copy key if approx. matching was used
-          if (ISSETANY(ups_key_get_intflags(&ops->key), BtreeKey::kApproximate)
-                  && NOTSET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
+          if (IS_SET_ANY(ups_key_get_intflags(&ops->key), BtreeKey::kApproximate)
+                  && NOT_SET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
             ka.append((uint8_t *)ops->key.data, ops->key.size);
           }
           // copy record unless it's allocated by the user
-          if (NOTSET(ops->record.flags, UPS_RECORD_USER_ALLOC)) {
+          if (NOT_SET(ops->record.flags, UPS_RECORD_USER_ALLOC)) {
             ra.append((uint8_t *)ops->record.data, ops->record.size);
           }
         }
@@ -1322,21 +1322,21 @@ LocalDb::bulk_operations(Txn *txn, ups_operation_t *ops, size_t ops_length,
     switch (ops->type) {
       case UPS_OP_INSERT:
         // if this a record number database? then we might have to copy the key
-        if (ISSETANY(flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)
-                && NOTSET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
+        if (IS_SET_ANY(flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)
+                && NOT_SET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
           ops->key.data = kptr;
           kptr += ops->key.size;
         }
         break;
       case UPS_OP_FIND:
         // copy key if approx. matching was used
-        if (ISSETANY(ups_key_get_intflags(&ops->key), BtreeKey::kApproximate)
-                  && NOTSET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
+        if (IS_SET_ANY(ups_key_get_intflags(&ops->key), BtreeKey::kApproximate)
+                  && NOT_SET(ops->key.flags, UPS_KEY_USER_ALLOC)) {
           ops->key.data = kptr;
           kptr += ops->key.size;
         }
         // copy record unless it's allocated by the user
-        if (NOTSET(ops->record.flags, UPS_RECORD_USER_ALLOC)) {
+        if (NOT_SET(ops->record.flags, UPS_RECORD_USER_ALLOC)) {
           ops->record.data = rptr;
           rptr += ops->record.size;
         }
@@ -1374,11 +1374,11 @@ LocalDb::cursor_move(Cursor *hcursor, ups_key_t *key,
   // moves to FIRST)
   //
   if (unlikely(cursor->is_nil(0))) {
-    if (ISSET(flags, UPS_CURSOR_NEXT)) {
+    if (IS_SET(flags, UPS_CURSOR_NEXT)) {
       flags &= ~UPS_CURSOR_NEXT;
       flags |= UPS_CURSOR_FIRST;
     }
-    else if (ISSET(flags, UPS_CURSOR_PREVIOUS)) {
+    else if (IS_SET(flags, UPS_CURSOR_PREVIOUS)) {
       flags &= ~UPS_CURSOR_PREVIOUS;
       flags |= UPS_CURSOR_LAST;
     }
@@ -1407,7 +1407,7 @@ LocalDb::close(uint32_t )
   }
 
   // in-memory-database: free all allocated blobs
-  if (btree_index && ISSET(env->flags(), UPS_IN_MEMORY))
+  if (btree_index && IS_SET(env->flags(), UPS_IN_MEMORY))
    btree_index->drop(&context);
 
   // write all pages of this database to disk
@@ -1536,7 +1536,7 @@ LocalDb::select_range(SelectStatement *stmt, LocalCursor *begin,
 
     // case 2) - take a peek at the next transactional key and check
     // if it modifies the current page
-    if (!use_cursors && ISSET(flags(), UPS_ENABLE_TRANSACTIONS)) {
+    if (!use_cursors && IS_SET(flags(), UPS_ENABLE_TRANSACTIONS)) {
       TxnCursor tc(cursor);
       tc.clone(&cursor->txn_cursor);
       if (tc.is_nil())
@@ -1624,11 +1624,11 @@ LocalDb::flush_txn_operation(Context *context, LocalTxn *, TxnOperation *op)
   // which are coupled to this op have to be uncoupled, and must be coupled
   // to the btree item instead.
   //
-  if (ISSETANY(op->flags, TxnOperation::kInsert
+  if (IS_SET_ANY(op->flags, TxnOperation::kInsert
                                 | TxnOperation::kInsertOverwrite
                                 | TxnOperation::kInsertDuplicate)) {
     uint32_t additional_flag = 
-      ISSET(op->flags, TxnOperation::kInsertDuplicate)
+      IS_SET(op->flags, TxnOperation::kInsertDuplicate)
           ? UPS_DUPLICATE
           : UPS_OVERWRITE;
 
@@ -1664,7 +1664,7 @@ LocalDb::flush_txn_operation(Context *context, LocalTxn *, TxnOperation *op)
       }
     }
   }
-  else if (ISSET(op->flags, TxnOperation::kErase)) {
+  else if (IS_SET(op->flags, TxnOperation::kErase)) {
     st = btree_index->erase(context, 0, node->key(),
                   op->referenced_duplicate, op->flags);
     if (unlikely(st == UPS_KEY_NOT_FOUND))

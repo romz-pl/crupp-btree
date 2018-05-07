@@ -751,7 +751,7 @@ struct DuplicateFixture : BaseFixture {
       teardown();
       require_open(m_flags);
     }
-    REQUIRE(ISSET(ldb()->flags(), UPS_ENABLE_DUPLICATE_KEYS));
+    REQUIRE(IS_SET(ldb()->flags(), UPS_ENABLE_DUPLICATE_KEYS));
 
     REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 
@@ -1523,7 +1523,7 @@ struct DuplicateFixture : BaseFixture {
       /* reopen the database */
       teardown();
       require_open(m_flags);
-      REQUIRE(ISSET(ldb()->flags(), UPS_ENABLE_DUPLICATE_KEYS));
+      REQUIRE(IS_SET(ldb()->flags(), UPS_ENABLE_DUPLICATE_KEYS));
 
       REQUIRE(0 == ups_cursor_create(&c, db, 0, 0));
 

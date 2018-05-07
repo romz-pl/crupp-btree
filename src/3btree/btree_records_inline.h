@@ -93,7 +93,7 @@ struct InlineRecordList : BaseRecordList {
   // allocated by the caller
   void record(Context *, int slot, ByteArray *arena, ups_record_t *record,
                   uint32_t flags, int) const {
-    bool direct_access = ISSET(flags, UPS_DIRECT_ACCESS);
+    bool direct_access = IS_SET(flags, UPS_DIRECT_ACCESS);
 
     // the record is stored inline
     record->size = _record_size;
@@ -103,7 +103,7 @@ struct InlineRecordList : BaseRecordList {
     else if (direct_access)
       record->data = (void *)&range_data[slot * _record_size];
     else {
-      if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+      if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
         arena->resize(record->size);
         record->data = arena->data();
       }

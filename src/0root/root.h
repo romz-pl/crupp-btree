@@ -69,8 +69,8 @@
 #endif
 
 // helper macros for handling bitmaps with flags
-#define ISSET(f, b)       (((f) & (b)) == (b))
-#define ISSETANY(f, b)    (((f) & (b)) != 0)
-#define NOTSET(f, b)      (((f) & (b)) == 0)
+#define IS_SET(f, b)        (((f) & (b)) == (b))
+#define IS_SET_ANY(f, b)    (((f) & (b)) != 0)
+#define NOT_SET(f, b)       (((f) & (b)) == 0)
 
 #endif // UPS_ROOT_H

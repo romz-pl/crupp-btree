@@ -130,7 +130,7 @@ UPS_PACK_0 struct UPS_PACK_1 PBtreeNode {
 
     // Returns true if this btree node is a leaf node
     bool is_leaf() const {
-      return ISSET(_flags, kLeafNode);
+      return IS_SET(_flags, kLeafNode);
     }
 
     // Returns a pointer to the key data

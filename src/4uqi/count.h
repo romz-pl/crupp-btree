@@ -103,7 +103,7 @@ struct CountIfScanVisitor : public ScanVisitor
     PodType *record_array = (PodType *)record_data;
     PodType *stream;
 
-    if (ISSET(statement->function.flags, UQI_STREAM_KEY))
+    if (IS_SET(statement->function.flags, UQI_STREAM_KEY))
       stream = key_array;
     else
       stream = record_array;

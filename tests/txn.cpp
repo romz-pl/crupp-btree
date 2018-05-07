@@ -556,18 +556,18 @@ struct HighLevelTxnFixture : BaseFixture {
 
   void noPersistentDatabaseFlagTest() {
     require_create(UPS_ENABLE_TRANSACTIONS);
-    REQUIRE(ISSET(ldb()->flags(), UPS_ENABLE_TRANSACTIONS));
+    REQUIRE(IS_SET(ldb()->flags(), UPS_ENABLE_TRANSACTIONS));
     close();
     require_open(0);
-    REQUIRE(NOTSET(ldb()->flags(), UPS_ENABLE_TRANSACTIONS));
+    REQUIRE(NOT_SET(ldb()->flags(), UPS_ENABLE_TRANSACTIONS));
   }
 
   void noPersistentEnvironmentFlagTest() {
     require_create(UPS_ENABLE_TRANSACTIONS);
-    REQUIRE(ISSET(lenv()->flags(), UPS_ENABLE_TRANSACTIONS));
+    REQUIRE(IS_SET(lenv()->flags(), UPS_ENABLE_TRANSACTIONS));
     close();
     require_open();
-    REQUIRE(NOTSET(lenv()->flags(), UPS_ENABLE_TRANSACTIONS));
+    REQUIRE(NOT_SET(lenv()->flags(), UPS_ENABLE_TRANSACTIONS));
   }
 
   void cursorStillOpenTest() {

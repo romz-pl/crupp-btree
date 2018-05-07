@@ -198,7 +198,7 @@ void File::set_posix_advice(int advice)
 // is just a copy of the file; writing to the buffer will not alter
 // the file itself.
 //
-void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
+void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer) const
 {
     os_log(("File::mmap: fd=%d, position=%lld, size=%lld", m_fd, position, size));
 
@@ -232,7 +232,7 @@ void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
 //
 // Unmaps a buffer
 //
-void File::munmap(void *buffer, size_t size)
+void File::munmap(void *buffer, size_t size) const
 {
     os_log(("File::munmap: size=%lld", size));
 
@@ -248,7 +248,7 @@ void File::munmap(void *buffer, size_t size)
 //
 // Positional read from a file
 //
-void File::pread(uint64_t addr, void *buffer, size_t len)
+void File::pread(uint64_t addr, void *buffer, size_t len) const
 {
     os_log(("File::pread: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
@@ -281,7 +281,7 @@ void File::pread(uint64_t addr, void *buffer, size_t len)
 //
 // Positional write to a file
 //
-void File::pwrite( uint64_t addr, const void *buffer, size_t len )
+void File::pwrite( uint64_t addr, const void *buffer, size_t len ) const
 {
     os_log(("File::pwrite: fd=%d, address=%lld, size=%lld", m_fd, addr, len));
 
@@ -314,7 +314,7 @@ void File::pwrite( uint64_t addr, const void *buffer, size_t len )
 //
 // Write data to a file; uses the current file position
 //
-void File::write( const void *buffer, size_t len )
+void File::write( const void *buffer, size_t len ) const
 {
     os_log(("File::write: fd=%d, size=%lld", m_fd, len));
 
@@ -371,7 +371,7 @@ uint64_t File::file_size() const
 //
 // Truncate/resize the file
 //
-void File::truncate( uint64_t newsize )
+void File::truncate( uint64_t newsize ) const
 {
     os_log(("File::truncate: fd=%d, size=%lld", m_fd, newsize));
 
@@ -404,7 +404,7 @@ void File::create(const char *filename, uint32_t mode)
 //
 // Flushes a file
 //
-void File::flush()
+void File::flush() const
 {
     os_log(("File::flush: fd=%d", m_fd));
     /* unlike fsync(), fdatasync() does not flush the metadata unless

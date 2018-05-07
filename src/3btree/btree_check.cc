@@ -62,7 +62,7 @@ struct BtreeCheckAction
     // get the root page of the tree
     page = btree->root_page(context);
 
-    if (ISSET(flags, UPS_PRINT_GRAPH)) {
+    if (IS_SET(flags, UPS_PRINT_GRAPH)) {
       graph << "digraph g {" << std::endl
             << "  graph [" << std::endl
             << "    rankdir = \"TD\"" << std::endl
@@ -93,7 +93,7 @@ struct BtreeCheckAction
       ++level;
     }
 
-    if (ISSET(flags, UPS_PRINT_GRAPH)) {
+    if (IS_SET(flags, UPS_PRINT_GRAPH)) {
       graph << "}" << std::endl;
 
       std::ofstream file;
@@ -156,7 +156,7 @@ struct BtreeCheckAction
     LocalEnv *env = (LocalEnv *)db->env;
     BtreeNodeProxy *node = btree->get_node_from_page(page);
 
-    if (ISSET(flags, UPS_PRINT_GRAPH)) {
+    if (IS_SET(flags, UPS_PRINT_GRAPH)) {
       std::stringstream ss;
       ss << "node" << page->address();
       graph << "  \"" << ss.str() << "\" [" << std::endl

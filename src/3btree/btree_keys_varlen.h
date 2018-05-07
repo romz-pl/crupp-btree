@@ -148,15 +148,15 @@ struct VariableLengthKeyList : BaseKeyList {
     uint32_t offset = _index.get_chunk_offset(slot);
     uint8_t *p = _index.get_chunk_data_by_offset(offset);
 
-    if (unlikely(ISSET(*p, BtreeKey::kExtendedKey))) {
+    if (unlikely(IS_SET(*p, BtreeKey::kExtendedKey))) {
       get_extended_key(context, get_extended_blob_id(slot), &tmp);
-      if (unlikely(ISSET(*p, BtreeKey::kCompressed)))
+      if (unlikely(IS_SET(*p, BtreeKey::kCompressed)))
         uncompress(&tmp, &tmp);
     }
     else {
       tmp.size = key_size(slot);
       tmp.data = p + 1;
-      if (unlikely(ISSET(*p, BtreeKey::kCompressed)))
+      if (unlikely(IS_SET(*p, BtreeKey::kCompressed)))
         uncompress(&tmp, &tmp);
     }
 
@@ -168,7 +168,7 @@ struct VariableLengthKeyList : BaseKeyList {
     }
 
     // allocate memory (if required)
-    if (NOTSET(dest->flags, UPS_KEY_USER_ALLOC)) {
+    if (NOT_SET(dest->flags, UPS_KEY_USER_ALLOC)) {
       arena->resize(tmp.size);
       dest->data = arena->data();
     }
@@ -188,7 +188,7 @@ struct VariableLengthKeyList : BaseKeyList {
   // (see |erase()|).
   void erase_extended_key(Context *context, int slot) {
     uint8_t flags = get_key_flags(slot);
-    if (ISSET(flags, BtreeKey::kExtendedKey)) {
+    if (IS_SET(flags, BtreeKey::kExtendedKey)) {
       // delete the extended key from the cache
       erase_extended_key(context, get_extended_blob_id(slot));
       // and transform into a key which is non-extended and occupies
@@ -306,12 +306,12 @@ struct VariableLengthKeyList : BaseKeyList {
     // make sure that extkeys are handled correctly
     for (size_t i = 0; i < node_count; i++) {
       if (key_size(i) > _extkey_threshold
-            && NOTSET(get_key_flags(i), BtreeKey::kExtendedKey)) {
+            && NOT_SET(get_key_flags(i), BtreeKey::kExtendedKey)) {
         ups_log(("key size %d, but key is not extended", key_size(i)));
         throw Exception(UPS_INTEGRITY_VIOLATED);
       }
 
-      if (ISSET(get_key_flags(i), BtreeKey::kExtendedKey)) {
+      if (IS_SET(get_key_flags(i), BtreeKey::kExtendedKey)) {
         uint64_t blobid = get_extended_blob_id(i);
         if (!blobid) {
           ups_log(("integrity check failed: item %u "
@@ -387,7 +387,7 @@ struct VariableLengthKeyList : BaseKeyList {
   // Prints a slot to |out| (for debugging)
   void print(Context *context, int slot, std::stringstream &out) {
     ups_key_t tmp;
-    if (ISSET(get_key_flags(slot), BtreeKey::kExtendedKey)) {
+    if (IS_SET(get_key_flags(slot), BtreeKey::kExtendedKey)) {
       get_extended_key(context, get_extended_blob_id(slot), &tmp);
     }
     else {
