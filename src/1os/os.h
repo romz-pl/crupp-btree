@@ -25,13 +25,6 @@
 
 #include "0root/root.h"
 
-#include <stdio.h>
-#include <limits.h>
-
-#include "ups/types.h"
-
-// Always verify that a file of level N does not include headers > N!
-
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"
 #endif
