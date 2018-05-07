@@ -92,14 +92,14 @@ prepare_record(ups_record_t *record)
 static inline ups_status_t
 check_recno_key(ups_key_t *key, uint32_t flags)
 {
-  if (ISSET(flags, UPS_OVERWRITE)) {
+  if (IS_SET(flags, UPS_OVERWRITE)) {
     if (unlikely(!key->data)) {
       ups_trace(("key->data must not be NULL"));
       return UPS_INV_PARAMETER;
     }
   }
   else {
-    if (ISSET(key->flags, UPS_KEY_USER_ALLOC)) {
+    if (IS_SET(key->flags, UPS_KEY_USER_ALLOC)) {
       if (unlikely(!key->data)) {
         ups_trace(("key->data must not be NULL"));
         return UPS_INV_PARAMETER;
@@ -135,10 +135,10 @@ ups_txn_begin(ups_txn_t **htxn, ups_env_t *henv, const char *name,
 
   try {
     ScopedLock lock;
-    if (NOTSET(flags, UPS_DONT_LOCK))
+    if (NOT_SET(flags, UPS_DONT_LOCK))
       lock = ScopedLock(env->mutex);
 
-    if (unlikely(NOTSET(env->config.flags, UPS_ENABLE_TRANSACTIONS))) {
+    if (unlikely(NOT_SET(env->config.flags, UPS_ENABLE_TRANSACTIONS))) {
       ups_trace(("transactions are disabled (see UPS_ENABLE_TRANSACTIONS)"));
       return UPS_INV_PARAMETER;
     }
@@ -307,20 +307,20 @@ ups_env_create(ups_env_t **henv, const char *filename,
   *henv = 0;
 
   /* creating a file in READ_ONLY mode? doesn't make sense */
-  if (unlikely(ISSET(flags, UPS_READ_ONLY))) {
+  if (unlikely(IS_SET(flags, UPS_READ_ONLY))) {
     ups_trace(("cannot create a file in read-only mode"));
     return UPS_INV_PARAMETER;
   }
 
   /* in-memory? crc32 is not possible */
-  if (unlikely(ISSET(flags, UPS_IN_MEMORY) && ISSET(flags, UPS_ENABLE_CRC32))) {
+  if (unlikely(IS_SET(flags, UPS_IN_MEMORY) && IS_SET(flags, UPS_ENABLE_CRC32))) {
     ups_trace(("combination of UPS_IN_MEMORY and UPS_ENABLE_CRC32 "
             "not allowed"));
     return UPS_INV_PARAMETER;
   }
 
   /* flag UPS_AUTO_RECOVERY implies UPS_ENABLE_TRANSACTIONS */
-  if (ISSET(flags, UPS_AUTO_RECOVERY))
+  if (IS_SET(flags, UPS_AUTO_RECOVERY))
     flags |= UPS_ENABLE_TRANSACTIONS;
 
   if (param) {
@@ -334,13 +334,13 @@ ups_env_create(ups_env_t **henv, const char *filename,
         config.journal_compressor = (int)param->value;
         break;
       case UPS_PARAM_CACHESIZE:
-        if (ISSET(flags, UPS_IN_MEMORY) && param->value != 0) {
+        if (IS_SET(flags, UPS_IN_MEMORY) && param->value != 0) {
           ups_trace(("combination of UPS_IN_MEMORY and cache size != 0 "
                 "not allowed"));
           return UPS_INV_PARAMETER;
         }
         /* don't allow cache limits with unlimited cache */
-        if (ISSET(flags, UPS_CACHE_UNLIMITED) && param->value != 0) {
+        if (IS_SET(flags, UPS_CACHE_UNLIMITED) && param->value != 0) {
           ups_trace(("combination of UPS_CACHE_UNLIMITED and cache size != 0 "
                 "not allowed"));
           return UPS_INV_PARAMETER;
@@ -372,7 +372,7 @@ ups_env_create(ups_env_t **henv, const char *filename,
       case UPS_PARAM_ENCRYPTION_KEY:
 #ifdef UPS_ENABLE_ENCRYPTION
         /* in-memory? encryption is not possible */
-        if (ISSET(flags, UPS_IN_MEMORY)) {
+        if (IS_SET(flags, UPS_IN_MEMORY)) {
           ups_trace(("aes encryption not allowed in combination with "
                   "UPS_IN_MEMORY"));
           return UPS_INV_PARAMETER;
@@ -395,7 +395,7 @@ ups_env_create(ups_env_t **henv, const char *filename,
     }
   }
 
-  if (config.filename.empty() && NOTSET(flags, UPS_IN_MEMORY)) {
+  if (config.filename.empty() && NOT_SET(flags, UPS_IN_MEMORY)) {
     ups_trace(("filename is missing"));
     return UPS_INV_PARAMETER;
   }
@@ -469,24 +469,24 @@ ups_env_open(ups_env_t **henv, const char *filename, uint32_t flags,
   *henv = 0;
 
   /* cannot open an in-memory-db */
-  if (unlikely(ISSET(flags, UPS_IN_MEMORY))) {
+  if (unlikely(IS_SET(flags, UPS_IN_MEMORY))) {
     ups_trace(("cannot open an in-memory database"));
     return UPS_INV_PARAMETER;
   }
 
   /* UPS_ENABLE_DUPLICATE_KEYS has to be specified in ups_env_create_db,
    * not ups_env_open */
-  if (unlikely(ISSET(flags, UPS_ENABLE_DUPLICATE_KEYS))) {
+  if (unlikely(IS_SET(flags, UPS_ENABLE_DUPLICATE_KEYS))) {
     ups_trace(("invalid flag UPS_ENABLE_DUPLICATE_KEYS (only allowed when "
         "creating a database"));
     return UPS_INV_PARAMETER;
   }
 
   /* flag UPS_AUTO_RECOVERY implies UPS_ENABLE_TRANSACTIONS */
-  if (ISSET(flags, UPS_AUTO_RECOVERY))
+  if (IS_SET(flags, UPS_AUTO_RECOVERY))
     flags |= UPS_ENABLE_TRANSACTIONS;
 
-  if (unlikely(config.filename.empty() && NOTSET(flags, UPS_IN_MEMORY))) {
+  if (unlikely(config.filename.empty() && NOT_SET(flags, UPS_IN_MEMORY))) {
     ups_trace(("filename is missing"));
     return UPS_INV_PARAMETER;
   }
@@ -500,7 +500,7 @@ ups_env_open(ups_env_t **henv, const char *filename, uint32_t flags,
         return UPS_INV_PARAMETER;
       case UPS_PARAM_CACHE_SIZE:
         /* don't allow cache limits with unlimited cache */
-        if (ISSET(flags, UPS_CACHE_UNLIMITED) && param->value != 0) {
+        if (IS_SET(flags, UPS_CACHE_UNLIMITED) && param->value != 0) {
           ups_trace(("combination of UPS_CACHE_UNLIMITED and cache size != 0 "
                 "not allowed"));
           return UPS_INV_PARAMETER;
@@ -610,7 +610,7 @@ ups_env_create_db(ups_env_t *henv, ups_db_t **hdb, uint16_t db_name,
   try {
     ScopedLock lock(env->mutex);
 
-    if (unlikely(ISSET(env->flags(), UPS_READ_ONLY))) {
+    if (unlikely(IS_SET(env->flags(), UPS_READ_ONLY))) {
       ups_trace(("cannot create database in a read-only environment"));
       return UPS_WRITE_PROTECTED;
     }
@@ -652,7 +652,7 @@ ups_env_open_db(ups_env_t *henv, ups_db_t **hdb, uint16_t db_name,
   try {
     ScopedLock lock(env->mutex);
 
-    if (unlikely(ISSET(env->flags(), UPS_IN_MEMORY))) {
+    if (unlikely(IS_SET(env->flags(), UPS_IN_MEMORY))) {
       ups_trace(("cannot open a Database in an In-Memory Environment"));
       return UPS_INV_PARAMETER;
     }
@@ -924,7 +924,7 @@ ups_db_find(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key,
   try {
     ScopedLock lock(env->mutex);
   
-    if (unlikely(ISSETANY(db->flags(),
+    if (unlikely(IS_SET_ANY(db->flags(),
                             UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)
           && !key->data)) {
       ups_trace(("key->data must not be NULL"));
@@ -965,11 +965,11 @@ ups_db_insert(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key,
     ups_trace(("parameter 'record' must not be NULL"));
     return UPS_INV_PARAMETER;
   }
-  if (unlikely(ISSET(flags, UPS_OVERWRITE) && ISSET(flags, UPS_DUPLICATE))) {
+  if (unlikely(IS_SET(flags, UPS_OVERWRITE) && IS_SET(flags, UPS_DUPLICATE))) {
     ups_trace(("cannot combine UPS_OVERWRITE and UPS_DUPLICATE"));
     return UPS_INV_PARAMETER;
   }
-  if (unlikely(ISSETANY(flags, UPS_DUPLICATE_INSERT_AFTER
+  if (unlikely(IS_SET_ANY(flags, UPS_DUPLICATE_INSERT_AFTER
                                 | UPS_DUPLICATE_INSERT_BEFORE
                                 | UPS_DUPLICATE_INSERT_LAST
                                 | UPS_DUPLICATE_INSERT_FIRST))) {
@@ -984,20 +984,20 @@ ups_db_insert(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key,
 
   try {
     ScopedLock lock;
-    if (likely(NOTSET(flags, UPS_DONT_LOCK)))
+    if (likely(NOT_SET(flags, UPS_DONT_LOCK)))
       lock = ScopedLock(env->mutex);
 
-    if (unlikely(ISSET(db->flags(), UPS_READ_ONLY))) {
+    if (unlikely(IS_SET(db->flags(), UPS_READ_ONLY))) {
       ups_trace(("cannot insert in a read-only database"));
       return UPS_WRITE_PROTECTED;
     }
-    if (unlikely(ISSET(flags, UPS_DUPLICATE)
-        && NOTSET(db->flags(), UPS_ENABLE_DUPLICATE_KEYS))) {
+    if (unlikely(IS_SET(flags, UPS_DUPLICATE)
+        && NOT_SET(db->flags(), UPS_ENABLE_DUPLICATE_KEYS))) {
       ups_trace(("database does not support duplicate keys "
             "(see UPS_ENABLE_DUPLICATE_KEYS)"));
       return UPS_INV_PARAMETER;
     }
-    if (ISSETANY(db->flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)) {
+    if (IS_SET_ANY(db->flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)) {
       ups_status_t st = check_recno_key(key, flags);
       if (unlikely(st))
         return st;
@@ -1033,10 +1033,10 @@ ups_db_erase(ups_db_t *hdb, ups_txn_t *htxn, ups_key_t *key, uint32_t flags)
 
   try {
     ScopedLock lock;
-    if (likely(NOTSET(flags, UPS_DONT_LOCK)))
+    if (likely(NOT_SET(flags, UPS_DONT_LOCK)))
       lock = ScopedLock(env->mutex);
 
-    if (unlikely(ISSET(db->flags(), UPS_READ_ONLY))) {
+    if (unlikely(IS_SET(db->flags(), UPS_READ_ONLY))) {
       ups_trace(("cannot erase from a read-only database"));
       return UPS_WRITE_PROTECTED;
     }
@@ -1059,7 +1059,7 @@ ups_db_check_integrity(ups_db_t *hdb, uint32_t flags)
     ups_trace(("parameter 'db' must not be NULL"));
     return UPS_INV_PARAMETER;
   }
-  if (flags && NOTSET(flags, UPS_PRINT_GRAPH)) {
+  if (flags && NOT_SET(flags, UPS_PRINT_GRAPH)) {
     ups_trace(("unknown flag 0x%u", flags));
     return UPS_INV_PARAMETER;
   }
@@ -1082,8 +1082,8 @@ ups_db_close(ups_db_t *hdb, uint32_t flags)
     ups_trace(("parameter 'db' must not be NULL"));
     return UPS_INV_PARAMETER;
   }
-  if (unlikely(ISSET(flags, UPS_TXN_AUTO_ABORT)
-      && ISSET(flags, UPS_TXN_AUTO_COMMIT))) {
+  if (unlikely(IS_SET(flags, UPS_TXN_AUTO_ABORT)
+      && IS_SET(flags, UPS_TXN_AUTO_COMMIT))) {
     ups_trace(("invalid combination of flags: UPS_TXN_AUTO_ABORT + "
           "UPS_TXN_AUTO_COMMIT"));
     return UPS_INV_PARAMETER;
@@ -1099,11 +1099,11 @@ ups_db_close(ups_db_t *hdb, uint32_t flags)
 
   try {
     ScopedLock lock;
-    if (likely(NOTSET(flags, UPS_DONT_LOCK)))
+    if (likely(NOT_SET(flags, UPS_DONT_LOCK)))
       lock = ScopedLock(env->mutex);
 
     // auto-cleanup cursors?
-    if (ISSET(flags, UPS_AUTO_CLEANUP)) {
+    if (IS_SET(flags, UPS_AUTO_CLEANUP)) {
       Cursor *cursor;
       while ((cursor = db->cursor_list)) {
         cursor->close();
@@ -1146,7 +1146,7 @@ ups_cursor_create(ups_cursor_t **hcursor, ups_db_t *hdb, ups_txn_t *htxn,
 
   try {
     ScopedLock lock;
-    if (likely(NOTSET(flags, UPS_DONT_LOCK)))
+    if (likely(NOT_SET(flags, UPS_DONT_LOCK)))
       lock = ScopedLock(env->mutex);
 
     *cursor = db->cursor_create(txn, flags);
@@ -1219,7 +1219,7 @@ ups_cursor_overwrite(ups_cursor_t *hcursor, ups_record_t *record,
   try {
     ScopedLock lock(db->env->mutex);
 
-    if (unlikely(ISSET(db->flags(), UPS_READ_ONLY))) {
+    if (unlikely(IS_SET(db->flags(), UPS_READ_ONLY))) {
       ups_trace(("cannot overwrite in a read-only database"));
       return UPS_WRITE_PROTECTED;
     }
@@ -1241,8 +1241,8 @@ ups_cursor_move(ups_cursor_t *hcursor, ups_key_t *key,
     ups_trace(("parameter 'cursor' must not be NULL"));
     return UPS_INV_PARAMETER;
   }
-  if (unlikely(ISSET(flags, UPS_ONLY_DUPLICATES)
-      && ISSET(flags, UPS_SKIP_DUPLICATES))) {
+  if (unlikely(IS_SET(flags, UPS_ONLY_DUPLICATES)
+      && IS_SET(flags, UPS_SKIP_DUPLICATES))) {
     ups_trace(("combination of UPS_ONLY_DUPLICATES and "
           "UPS_SKIP_DUPLICATES not allowed"));
     return UPS_INV_PARAMETER;
@@ -1288,7 +1288,7 @@ ups_cursor_find(ups_cursor_t *hcursor, ups_key_t *key, ups_record_t *record,
 
   try {
     ScopedLock lock;
-    if (likely(NOTSET(flags, UPS_DONT_LOCK)))
+    if (likely(NOT_SET(flags, UPS_DONT_LOCK)))
       lock = ScopedLock(env->mutex);
 
     flags &= ~UPS_DONT_LOCK;
@@ -1318,7 +1318,7 @@ ups_cursor_insert(ups_cursor_t *hcursor, ups_key_t *key, ups_record_t *record,
     ups_trace(("parameter 'record' must not be NULL"));
     return UPS_INV_PARAMETER;
   }
-  if (unlikely(ISSET(flags, UPS_DUPLICATE | UPS_OVERWRITE))) {
+  if (unlikely(IS_SET(flags, UPS_DUPLICATE | UPS_OVERWRITE))) {
     ups_trace(("cannot combine UPS_DUPLICATE and UPS_OVERWRITE"));
     return UPS_INV_PARAMETER;
   }
@@ -1330,25 +1330,25 @@ ups_cursor_insert(ups_cursor_t *hcursor, ups_key_t *key, ups_record_t *record,
   try {
     ScopedLock lock(db->env->mutex);
 
-    if (unlikely(ISSET(db->flags(), UPS_READ_ONLY))) {
+    if (unlikely(IS_SET(db->flags(), UPS_READ_ONLY))) {
       ups_trace(("cannot insert to a read-only database"));
       return UPS_WRITE_PROTECTED;
     }
-    if (unlikely(ISSET(flags, UPS_DUPLICATE)
-        && NOTSET(db->flags(), UPS_ENABLE_DUPLICATE_KEYS))) {
+    if (unlikely(IS_SET(flags, UPS_DUPLICATE)
+        && NOT_SET(db->flags(), UPS_ENABLE_DUPLICATE_KEYS))) {
       ups_trace(("database does not support duplicate keys "
             "(see UPS_ENABLE_DUPLICATE_KEYS)"));
       return UPS_INV_PARAMETER;
     }
 
     // set flag UPS_DUPLICATE if one of DUPLICATE_INSERT* is set
-    if (ISSETANY(flags, UPS_DUPLICATE_INSERT_AFTER
+    if (IS_SET_ANY(flags, UPS_DUPLICATE_INSERT_AFTER
                               | UPS_DUPLICATE_INSERT_BEFORE
                               | UPS_DUPLICATE_INSERT_LAST
                               | UPS_DUPLICATE_INSERT_FIRST))
       flags |= UPS_DUPLICATE;
 
-    if (ISSETANY(db->flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)) {
+    if (IS_SET_ANY(db->flags(), UPS_RECORD_NUMBER32 | UPS_RECORD_NUMBER64)) {
       ups_status_t st = check_recno_key(key, flags);
       if (unlikely(st))
         return st;
@@ -1378,7 +1378,7 @@ ups_cursor_erase(ups_cursor_t *hcursor, uint32_t flags)
   try {
     ScopedLock lock(db->env->mutex);
 
-    if (ISSET(db->flags(), UPS_READ_ONLY)) {
+    if (IS_SET(db->flags(), UPS_READ_ONLY)) {
       ups_trace(("cannot erase from a read-only database"));
       return UPS_WRITE_PROTECTED;
     }
@@ -1582,7 +1582,7 @@ ups_db_count(ups_db_t *hdb, ups_txn_t *htxn, uint32_t flags,
   try {
     ScopedLock lock(db->env->mutex);
 
-    *count = db->count(txn, ISSET(flags, UPS_SKIP_DUPLICATES));
+    *count = db->count(txn, IS_SET(flags, UPS_SKIP_DUPLICATES));
     return 0;
   }
   catch (Exception &ex) {

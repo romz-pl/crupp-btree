@@ -1402,7 +1402,7 @@ struct UpscaledbFixture : BaseFixture {
     require_open();
 
     // check if the flags and parameters were stored persistently
-    REQUIRE(ISSET(ldb()->flags(), flags));
+    REQUIRE(IS_SET(ldb()->flags(), flags));
 
 #ifdef HAVE_GCC_ABI_DEMANGLE
     std::string s = btree_index()->test_get_classname();

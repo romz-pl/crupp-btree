@@ -48,7 +48,7 @@ void DiskDevice::open()
     // the file size which backs the mapped ptr
     state.file_size = state.file.file_size();
 
-    if( ISSET( config.flags, UPS_DISABLE_MMAP ) )
+    if( IS_SET( config.flags, UPS_DISABLE_MMAP ) )
     {
         swap( m_state, state );
         return;

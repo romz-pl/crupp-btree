@@ -47,7 +47,7 @@ struct CacheState
   };
 
   CacheState(const EnvConfig &config)
-    : capacity_bytes(ISSET(config.flags, UPS_CACHE_UNLIMITED)
+    : capacity_bytes(IS_SET(config.flags, UPS_CACHE_UNLIMITED)
                             ? std::numeric_limits<uint64_t>::max()
                             : config.cache_size_bytes),
       page_size_bytes(config.page_size_bytes), alloc_elements(0),

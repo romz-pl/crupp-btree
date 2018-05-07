@@ -98,7 +98,7 @@ struct BaseNodeImpl {
                     uint32_t *new_duplicate_index) {
       // automatically overwrite an existing key unless this is a
       // duplicate operation
-      if (!ISSETANY(flags, UPS_DUPLICATE
+      if (!IS_SET_ANY(flags, UPS_DUPLICATE
                             | UPS_DUPLICATE
                             | UPS_DUPLICATE_INSERT_BEFORE
                             | UPS_DUPLICATE_INSERT_AFTER
@@ -253,9 +253,9 @@ struct BaseNodeImpl {
       if (!KeyList::kCustomInsert) {
         if (node_length == 0)
           result.slot = 0;
-        else if (ISSET(flags, PBtreeNode::kInsertPrepend))
+        else if (IS_SET(flags, PBtreeNode::kInsertPrepend))
           result.slot = 0;
-        else if (ISSET(flags, PBtreeNode::kInsertAppend))
+        else if (IS_SET(flags, PBtreeNode::kInsertAppend))
           result.slot = node_length;
         else {
           int cmp;

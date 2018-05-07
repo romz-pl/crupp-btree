@@ -240,12 +240,12 @@ fetch_unlocked(PageManagerState *state, Context *context, uint64_t address,
     page = state->cache.get(address);
 
   if (page) {
-    page->set_without_header(ISSET(flags, PageManager::kNoHeader));
+    page->set_without_header(IS_SET(flags, PageManager::kNoHeader));
     return add_to_changeset(&context->changeset, page);
   }
 
-  if (ISSET(flags, PageManager::kOnlyFromCache)
-          || ISSET(state->config.flags, UPS_IN_MEMORY))
+  if (IS_SET(flags, PageManager::kOnlyFromCache)
+          || IS_SET(state->config.flags, UPS_IN_MEMORY))
     return 0;
 
   page = new Page(state->device, context->db);
@@ -263,14 +263,14 @@ fetch_unlocked(PageManagerState *state, Context *context, uint64_t address,
   state->cache.put(page);
 
   /* write state to disk (if necessary) */
-  if (NOTSET(flags, PageManager::kDisableStoreState)
-          && NOTSET(flags, PageManager::kReadOnly))
+  if (NOT_SET(flags, PageManager::kDisableStoreState)
+          && NOT_SET(flags, PageManager::kReadOnly))
     maybe_store_state(state, context, false);
 
   /* only verify crc if the page has a header */
-  page->set_without_header(ISSET(flags, PageManager::kNoHeader));
+  page->set_without_header(IS_SET(flags, PageManager::kNoHeader));
   if (!page->is_without_header()
-          && ISSET(state->config.flags, UPS_ENABLE_CRC32))
+          && IS_SET(state->config.flags, UPS_ENABLE_CRC32))
     verify_crc32(page);
 
   state->page_count_fetched++;
@@ -287,7 +287,7 @@ alloc_unlocked(PageManagerState *state, Context *context, uint32_t page_type,
   bool allocated = false;
 
   /* first check the internal list for a free page */
-  if (NOTSET(flags, PageManager::kIgnoreFreelist)) {
+  if (NOT_SET(flags, PageManager::kIgnoreFreelist)) {
     address = state->freelist.alloc(1);
 
     if (address != 0) {
@@ -321,7 +321,7 @@ alloc_unlocked(PageManagerState *state, Context *context, uint32_t page_type,
 
 done:
   /* clear the page with zeroes?  */
-  if (ISSET(flags, PageManager::kClearWithZero))
+  if (IS_SET(flags, PageManager::kClearWithZero))
     ::memset(page->data(), 0, page_size);
 
   /* initialize the page; also set the 'dirty' flag to force logging */
@@ -341,8 +341,8 @@ done:
   add_to_changeset(&context->changeset, page);
 
   /* write to disk (if necessary) */
-  if (NOTSET(flags, PageManager::kDisableStoreState)
-          && NOTSET(flags, PageManager::kReadOnly))
+  if (NOT_SET(flags, PageManager::kDisableStoreState)
+          && NOT_SET(flags, PageManager::kReadOnly))
     maybe_store_state(state, context, false);
 
   switch (page_type) {
@@ -398,7 +398,7 @@ PageManager::initialize(uint64_t pageid)
     delete state->state_page;
   state->state_page = new Page(state->device);
   state->state_page->fetch(pageid);
-  if (ISSET(state->config.flags, UPS_ENABLE_CRC32))
+  if (IS_SET(state->config.flags, UPS_ENABLE_CRC32))
     verify_crc32(state->state_page);
 
   Page *page = state->state_page;
@@ -558,7 +558,7 @@ PageManager::purge_cache(Context *)
   //   1. this is an in-memory Environment
   //   2. there's still a "purge cache" operation pending
   //   3. the cache is not full
-  if (ISSET(state->config.flags, UPS_IN_MEMORY)
+  if (IS_SET(state->config.flags, UPS_IN_MEMORY)
       || (state->message && state->message->in_progress == true)
       || !state->cache.is_cache_full())
     return;
@@ -600,7 +600,7 @@ PageManager::reclaim_space(Context *context)
     state->last_blob_page_id = state->last_blob_page->address();
     state->last_blob_page = 0;
   }
-  assert(NOTSET(state->config.flags, UPS_DISABLE_RECLAIM_INTERNAL));
+  assert(NOT_SET(state->config.flags, UPS_DISABLE_RECLAIM_INTERNAL));
 
   bool do_truncate = false;
   uint32_t page_size = state->config.page_size_bytes;
@@ -699,7 +699,7 @@ PageManager::del(Context *context, Page *page, size_t page_count)
   assert(page_count > 0);
 
   ScopedSpinlock lock(state->mutex);
-  if (ISSET(state->config.flags, UPS_IN_MEMORY))
+  if (IS_SET(state->config.flags, UPS_IN_MEMORY))
     return;
 
   // remove the page(s) from the changeset
@@ -738,14 +738,14 @@ PageManager::close(Context *context)
   // reclaim unused disk space
   // if logging is enabled: also flush the changeset to write back the
   // modified freelist pages
-  bool try_reclaim = NOTSET(state->config.flags, UPS_DISABLE_RECLAIM_INTERNAL);
+  bool try_reclaim = NOT_SET(state->config.flags, UPS_DISABLE_RECLAIM_INTERNAL);
 
   if (try_reclaim)
     reclaim_space(context);
 
   // store the state of the PageManager
-  if (NOTSET(state->config.flags, UPS_IN_MEMORY)
-        && NOTSET(state->config.flags, UPS_READ_ONLY))
+  if (NOT_SET(state->config.flags, UPS_IN_MEMORY)
+        && NOT_SET(state->config.flags, UPS_READ_ONLY))
     maybe_store_state(state.get(), context, true);
 
   // clear the Changeset because flush() will delete all Page pointers

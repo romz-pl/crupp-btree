@@ -101,7 +101,7 @@ struct BinaryKeyList : BaseKeyList {
     }
 
     // allocate memory (if required)
-    if (NOTSET(dest->flags, UPS_KEY_USER_ALLOC)) {
+    if (NOT_SET(dest->flags, UPS_KEY_USER_ALLOC)) {
       arena->resize(dest->size);
       dest->data = arena->data();
     }

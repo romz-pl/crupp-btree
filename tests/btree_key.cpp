@@ -94,7 +94,7 @@ struct BtreeKeyFixture : BaseFixture {
 
     bnpp.node->set_record(context.get(), result.slot, &record, 0, flags, 0);
 
-    if (NOTSET(flags, UPS_DUPLICATE)) {
+    if (NOT_SET(flags, UPS_DUPLICATE)) {
       ups_record_t record2;
       bnpp.node->record(context.get(), result.slot, &arena, &record2, 0);
       REQUIRE(record.size == record2.size);
@@ -128,10 +128,10 @@ struct BtreeKeyFixture : BaseFixture {
     ups_record_t record = ups_make_record((void *)data, sizeof(uint64_t));
 
     bnpp.node->set_record(context.get(), result.slot, &record, 0, flags, 0);
-    if (ISSET(flags, UPS_DUPLICATE))
+    if (IS_SET(flags, UPS_DUPLICATE))
       REQUIRE(bnpp.node->record_count(context.get(), result.slot) > 1);
 
-    if (NOTSET(flags, UPS_DUPLICATE)) {
+    if (NOT_SET(flags, UPS_DUPLICATE)) {
       ups_record_t record2;
       bnpp.node->record(context.get(), result.slot, &arena, &record2, 0);
       REQUIRE(record.size == record2.size);
@@ -163,10 +163,10 @@ struct BtreeKeyFixture : BaseFixture {
     ups_record_t record = ups_make_record((void *)data, size);
 
     bnpp.node->set_record(context.get(), result.slot, &record, 0, flags, 0);
-    if (ISSET(flags, UPS_DUPLICATE))
+    if (IS_SET(flags, UPS_DUPLICATE))
       REQUIRE(bnpp.node->record_count(context.get(), result.slot) > 1);
 
-    if (NOTSET(flags, UPS_DUPLICATE)) {
+    if (NOT_SET(flags, UPS_DUPLICATE)) {
       ups_record_t record2;
       bnpp.node->record(context.get(), result.slot, &arena, &record2, 0);
       REQUIRE(record.size == record2.size);

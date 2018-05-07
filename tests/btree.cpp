@@ -213,7 +213,7 @@ struct BtreeFixture : BaseFixture {
     REQUIRE((page = lenv()->page_manager->fetch(&context, 1024 * 16)));
     context.changeset.clear(); // unlock pages
     PBtreeNode *node = PBtreeNode::from_page(page);
-    REQUIRE(ISSET(node->flags(), PBtreeNode::kLeafNode));
+    REQUIRE(IS_SET(node->flags(), PBtreeNode::kLeafNode));
   }
 
   void internalNodeTest() {
@@ -236,7 +236,7 @@ struct BtreeFixture : BaseFixture {
     REQUIRE((page = lenv()->page_manager->fetch(&context, 1024 * 16)));
     context.changeset.clear(); // unlock pages
     node = btree_index()->get_node_from_page(page);
-    REQUIRE(ISSET(node->flags(), PBtreeNode::kLeafNode));
+    REQUIRE(IS_SET(node->flags(), PBtreeNode::kLeafNode));
 #ifdef HAVE_GCC_ABI_DEMANGLE
     std::string expected_internalname = "upscaledb::BtreeNodeProxyImpl<upscaledb::PaxNodeImpl<upscaledb::PodKeyList<unsigned int>, upscaledb::InternalRecordList>, upscaledb::NumericCompare<unsigned int> >";
     std::string expected_leafname = "upscaledb::BtreeNodeProxyImpl<upscaledb::PaxNodeImpl<upscaledb::PodKeyList<unsigned int>, upscaledb::InlineRecordList>, upscaledb::NumericCompare<unsigned int> >";
@@ -259,7 +259,7 @@ struct BtreeFixture : BaseFixture {
     REQUIRE((page = lenv()->page_manager->fetch(&context, 1024 * 16)));
     context.changeset.clear(); // unlock pages
     node = btree_index()->get_node_from_page(page);
-    REQUIRE(ISSET(node->flags(), PBtreeNode::kLeafNode));
+    REQUIRE(IS_SET(node->flags(), PBtreeNode::kLeafNode));
 #ifdef HAVE_GCC_ABI_DEMANGLE
     REQUIRE(node->test_get_classname() == expected_leafname);
 #endif
@@ -268,7 +268,7 @@ struct BtreeFixture : BaseFixture {
     REQUIRE((page = lenv()->page_manager->fetch(&context, 2 * 1024 * 16)));
     context.changeset.clear(); // unlock pages
     node = btree_index()->get_node_from_page(page);
-    REQUIRE(ISSET(node->flags(), PBtreeNode::kLeafNode));
+    REQUIRE(IS_SET(node->flags(), PBtreeNode::kLeafNode));
 #ifdef HAVE_GCC_ABI_DEMANGLE
     REQUIRE(node->test_get_classname() == expected_leafname);
 #endif
@@ -277,7 +277,7 @@ struct BtreeFixture : BaseFixture {
     REQUIRE((page = lenv()->page_manager->fetch(&context, 3 * 1024 * 16)));
     context.changeset.clear(); // unlock pages
     node = btree_index()->get_node_from_page(page);
-    REQUIRE(NOTSET(node->flags(), PBtreeNode::kLeafNode));
+    REQUIRE(NOT_SET(node->flags(), PBtreeNode::kLeafNode));
 #ifdef HAVE_GCC_ABI_DEMANGLE
     REQUIRE(node->test_get_classname() == expected_internalname);
 #endif

@@ -278,32 +278,32 @@ flush_transaction_to_journal(LocalTxn *txn)
   if (unlikely(journal == 0))
     return;
  
-  if (NOTSET(txn->flags, UPS_TXN_TEMPORARY))
+  if (NOT_SET(txn->flags, UPS_TXN_TEMPORARY))
     journal->append_txn_begin(txn, txn->name.empty() ? 0 : txn->name.c_str(),
                     txn->lsn);
 
   for (TxnOperation *op = txn->oldest_op;
                   op != 0;
                   op = op->next_in_txn) {
-    if (ISSET(op->flags, TxnOperation::kErase)) {
+    if (IS_SET(op->flags, TxnOperation::kErase)) {
       journal->append_erase(op->node->db, txn,
                       op->node->key(), op->referenced_duplicate,
                       op->original_flags, op->lsn);
       continue;
     }
-    if (ISSET(op->flags, TxnOperation::kInsert)) {
+    if (IS_SET(op->flags, TxnOperation::kInsert)) {
       journal->append_insert(op->node->db, txn,
                       op->node->key(), &op->record,
                       op->original_flags, op->lsn);
       continue;
     }
-    if (ISSET(op->flags, TxnOperation::kInsertOverwrite)) {
+    if (IS_SET(op->flags, TxnOperation::kInsertOverwrite)) {
       journal->append_insert(op->node->db, txn,
                       op->node->key(), &op->record,
                       op->original_flags | UPS_OVERWRITE, op->lsn);
       continue;
     }
-    if (ISSET(op->flags, TxnOperation::kInsertDuplicate)) {
+    if (IS_SET(op->flags, TxnOperation::kInsertDuplicate)) {
       journal->append_insert(op->node->db, txn,
                     op->node->key(), &op->record,
                       op->original_flags | UPS_DUPLICATE, op->lsn);
@@ -312,7 +312,7 @@ flush_transaction_to_journal(LocalTxn *txn)
     assert(!"shouldn't be here");
   }
 
-  if (NOTSET(txn->flags, UPS_TXN_TEMPORARY))
+  if (NOT_SET(txn->flags, UPS_TXN_TEMPORARY))
     journal->append_txn_commit(txn, lenv->lsn_manager.next());
 }
 
@@ -402,17 +402,17 @@ TxnIndex::get(ups_key_t *key, uint32_t flags)
   TxnNode tmp(db, key);
 
   // search if node already exists - if yes, return it
-  if (ISSET(flags, UPS_FIND_GEQ_MATCH)) {
+  if (IS_SET(flags, UPS_FIND_GEQ_MATCH)) {
     node = rbt_nsearch(this, &tmp);
     if (node)
       match = compare(&tmp, node);
   }
-  else if (ISSET(flags, UPS_FIND_LEQ_MATCH)) {
+  else if (IS_SET(flags, UPS_FIND_LEQ_MATCH)) {
     node = rbt_psearch(this, &tmp);
     if (node)
       match = compare(&tmp, node);
   }
-  else if (ISSET(flags, UPS_FIND_GT_MATCH)) {
+  else if (IS_SET(flags, UPS_FIND_GT_MATCH)) {
     node = rbt_search(this, &tmp);
     if (node)
       node = node->next_sibling();
@@ -420,7 +420,7 @@ TxnIndex::get(ups_key_t *key, uint32_t flags)
       node = rbt_nsearch(this, &tmp);
     match = 1;
   }
-  else if (ISSET(flags, UPS_FIND_LT_MATCH)) {
+  else if (IS_SET(flags, UPS_FIND_LT_MATCH)) {
     node = rbt_search(this, &tmp);
     if (node)
       node = node->previous_sibling();
@@ -498,23 +498,23 @@ struct KeyCounter : TxnIndex::Visitor {
         continue;
 
       if (optxn->is_committed() || txn == optxn) {
-        if (ISSET(op->flags, TxnOperation::kIsFlushed))
+        if (IS_SET(op->flags, TxnOperation::kIsFlushed))
           continue;
 
         // if key was erased then it doesn't exist
-        if (ISSET(op->flags, TxnOperation::kErase)) {
+        if (IS_SET(op->flags, TxnOperation::kErase)) {
           counter--;
           return;
         }
 
-        if (ISSET(op->flags, TxnOperation::kInsert)) {
+        if (IS_SET(op->flags, TxnOperation::kInsert)) {
           counter++;
           return;
         }
 
         // key exists - include it
-        if (ISSET(op->flags, TxnOperation::kInsert)
-            || (ISSET(op->flags, TxnOperation::kInsertOverwrite))) {
+        if (IS_SET(op->flags, TxnOperation::kInsert)
+            || (IS_SET(op->flags, TxnOperation::kInsertOverwrite))) {
           // check if the key already exists in the btree - if yes,
           // we do not count it (it will be counted later)
           if (UPS_KEY_NOT_FOUND
@@ -523,7 +523,7 @@ struct KeyCounter : TxnIndex::Visitor {
           return;
         }
 
-        if (ISSET(op->flags, TxnOperation::kInsertDuplicate)) {
+        if (IS_SET(op->flags, TxnOperation::kInsertDuplicate)) {
           // check if btree has other duplicates
           if (0 == be->find(context, 0, node->key(), 0, 0, 0, 0)) {
             // yes, there's another one
@@ -540,7 +540,7 @@ struct KeyCounter : TxnIndex::Visitor {
           continue;
         }
 
-        if (NOTSET(op->flags, TxnOperation::kNop)) {
+        if (NOT_SET(op->flags, TxnOperation::kNop)) {
           assert(!"shouldn't be here");
           return;
         }
@@ -584,8 +584,8 @@ LocalTxnManager::commit(Txn *htxn)
     flush_transaction_to_journal(txn);
 
     // flush committed transactions
-    if (likely(NOTSET(lenv()->flags(), UPS_DONT_FLUSH_TRANSACTIONS))) {
-      if (unlikely(ISSET(lenv()->flags(), UPS_FLUSH_TRANSACTIONS_IMMEDIATELY)
+    if (likely(NOT_SET(lenv()->flags(), UPS_DONT_FLUSH_TRANSACTIONS))) {
+      if (unlikely(IS_SET(lenv()->flags(), UPS_FLUSH_TRANSACTIONS_IMMEDIATELY)
                 || count_flushable_transactions(this)
                         >= Globals::ms_flush_threshold)) {
         flush_committed_txns_impl(this, &context);
@@ -610,8 +610,8 @@ LocalTxnManager::abort(Txn *htxn)
     txn->abort();
 
     // flush committed transactions
-    if (likely(NOTSET(lenv()->flags(), UPS_DONT_FLUSH_TRANSACTIONS))) {
-      if (unlikely(ISSET(lenv()->flags(), UPS_FLUSH_TRANSACTIONS_IMMEDIATELY)
+    if (likely(NOT_SET(lenv()->flags(), UPS_DONT_FLUSH_TRANSACTIONS))) {
+      if (unlikely(IS_SET(lenv()->flags(), UPS_FLUSH_TRANSACTIONS_IMMEDIATELY)
                 || count_flushable_transactions(this)
                         >= Globals::ms_flush_threshold)) {
         flush_committed_txns_impl(this, &context);
@@ -647,7 +647,7 @@ LocalTxnManager::flush_txn_to_changeset(Context *context, LocalTxn *txn)
     TxnNode *node = op->node;
 
     // perform the actual operation in the btree
-    if (NOTSET(op->flags, TxnOperation::kIsFlushed))
+    if (NOT_SET(op->flags, TxnOperation::kIsFlushed))
       node->db->flush_txn_operation(context, txn, op);
 
     assert(op->lsn > highest_lsn);

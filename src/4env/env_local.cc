@@ -47,7 +47,7 @@ namespace upscaledb {
 static inline void
 recover(LocalEnv *env, uint32_t flags)
 {
-  assert(ISSET(env->flags(), UPS_ENABLE_TRANSACTIONS));
+  assert(IS_SET(env->flags(), UPS_ENABLE_TRANSACTIONS));
 
   Context context(env);
   env->journal.reset(new Journal(env));
@@ -64,7 +64,7 @@ recover(LocalEnv *env, uint32_t flags)
 
   /* success - check if we need recovery */
   if (!env->journal->is_empty()) {
-    if (ISSET(flags, UPS_AUTO_RECOVERY)) {
+    if (IS_SET(flags, UPS_AUTO_RECOVERY)) {
       env->journal->recover((LocalTxnManager *)env->txn_manager.get());
     }
     else {
@@ -118,12 +118,12 @@ mark_header_page_dirty(LocalEnv *env, Context *context)
 ups_status_t
 LocalEnv::create()
 {
-  if (ISSET(config.flags, UPS_IN_MEMORY))
+  if (IS_SET(config.flags, UPS_IN_MEMORY))
     config.flags |= UPS_DISABLE_RECLAIM_INTERNAL;
 
   /* initialize the device if it does not yet exist */
   device.reset(DeviceFactory::create(config));
-  if (ISSET(config.flags, UPS_ENABLE_TRANSACTIONS))
+  if (IS_SET(config.flags, UPS_ENABLE_TRANSACTIONS))
     txn_manager.reset(new LocalTxnManager(this));
 
   /* create the file */
@@ -152,8 +152,8 @@ LocalEnv::create()
   blob_manager.reset(BlobManagerFactory::create(this, config.flags));
 
   /* create a logfile and a journal (if requested) */
-  if (ISSET(flags(), UPS_ENABLE_TRANSACTIONS)
-        && NOTSET(flags(), UPS_DISABLE_RECOVERY)) {
+  if (IS_SET(flags(), UPS_ENABLE_TRANSACTIONS)
+        && NOT_SET(flags(), UPS_DISABLE_RECOVERY)) {
     journal.reset(new Journal(this));
     journal->create();
   }
@@ -185,7 +185,7 @@ LocalEnv::open()
   /* open the file */
   device->open();
 
-  if (ISSET(config.flags, UPS_ENABLE_TRANSACTIONS))
+  if (IS_SET(config.flags, UPS_ENABLE_TRANSACTIONS))
     txn_manager.reset(new LocalTxnManager(this));
 
   /*
@@ -275,7 +275,7 @@ fail_with_fake_cleansing:
   blob_manager.reset(BlobManagerFactory::create(this, config.flags));
 
   /* check if recovery is required */
-  if (ISSET(flags(), UPS_ENABLE_TRANSACTIONS))
+  if (IS_SET(flags(), UPS_ENABLE_TRANSACTIONS))
     recover(this, config.flags);
 
   /* load the state of the PageManager */
@@ -366,8 +366,8 @@ LocalEnv::flush(uint32_t flags)
   if (likely(txn_manager.get() != 0))
     txn_manager->flush_committed_txns(&context);
 
-  if (ISSET(flags, UPS_FLUSH_COMMITTED_TRANSACTIONS)
-         || ISSET(this->flags(), UPS_IN_MEMORY))
+  if (IS_SET(flags, UPS_FLUSH_COMMITTED_TRANSACTIONS)
+         || IS_SET(this->flags(), UPS_IN_MEMORY))
     return 0;
 
   /* Flush all open pages to disk. This operation is blocking. */
@@ -405,7 +405,7 @@ LocalEnv::select_range(const char *query, Cursor *begin,
 
   // optimization: if duplicates are disabled then the query is always
   // non-distinct
-  if (NOTSET(db->flags(), UPS_ENABLE_DUPLICATE_KEYS))
+  if (NOT_SET(db->flags(), UPS_ENABLE_DUPLICATE_KEYS))
     stmt.distinct = true;
 
   // The Database object will do the remaining work
@@ -448,7 +448,7 @@ LocalEnv::do_create_db(DbConfig &dbconfig, const ups_parameter_t *param)
               ups_trace(("invalid key size %u - must be < 0xffff"));
               throw Exception(UPS_INV_KEY_SIZE);
             }
-            if (ISSET(dbconfig.flags, UPS_RECORD_NUMBER32)) {
+            if (IS_SET(dbconfig.flags, UPS_RECORD_NUMBER32)) {
               if (param->value > 0 && param->value != sizeof(uint32_t)) {
                 ups_trace(("invalid key size %u - must be 4 for "
                            "UPS_RECORD_NUMBER32 databases",
@@ -456,7 +456,7 @@ LocalEnv::do_create_db(DbConfig &dbconfig, const ups_parameter_t *param)
                 throw Exception(UPS_INV_KEY_SIZE);
               }
             }
-            if (ISSET(dbconfig.flags, UPS_RECORD_NUMBER64)) {
+            if (IS_SET(dbconfig.flags, UPS_RECORD_NUMBER64)) {
               if (param->value > 0 && param->value != sizeof(uint64_t)) {
                 ups_trace(("invalid key size %u - must be 8 for "
                            "UPS_RECORD_NUMBER64 databases",
@@ -483,7 +483,7 @@ LocalEnv::do_create_db(DbConfig &dbconfig, const ups_parameter_t *param)
     }
   }
 
-  if (ISSET(dbconfig.flags, UPS_RECORD_NUMBER32)) {
+  if (IS_SET(dbconfig.flags, UPS_RECORD_NUMBER32)) {
     if (dbconfig.key_type == UPS_TYPE_UINT8
         || dbconfig.key_type == UPS_TYPE_UINT16
         || dbconfig.key_type == UPS_TYPE_UINT64
@@ -495,7 +495,7 @@ LocalEnv::do_create_db(DbConfig &dbconfig, const ups_parameter_t *param)
     }
     dbconfig.key_type = UPS_TYPE_UINT32;
   }
-  else if (ISSET(dbconfig.flags, UPS_RECORD_NUMBER64)) {
+  else if (IS_SET(dbconfig.flags, UPS_RECORD_NUMBER64)) {
     if (dbconfig.key_type == UPS_TYPE_UINT8
         || dbconfig.key_type == UPS_TYPE_UINT16
         || dbconfig.key_type == UPS_TYPE_UINT32
@@ -711,7 +711,7 @@ LocalEnv::erase_db(uint16_t name, uint32_t)
    * if it's an in-memory environment then it's enough to purge the
    * database from the environment header
    */
-  if (ISSET(this->flags(), UPS_IN_MEMORY)) {
+  if (IS_SET(this->flags(), UPS_IN_MEMORY)) {
     for (uint16_t dbi = 0; dbi < header->max_databases(); dbi++) {
       PBtreeHeader *desc = btree_header(header.get(), dbi);
       if (name == desc->dbname) {
@@ -801,14 +801,14 @@ LocalEnv::do_close(uint32_t flags)
 
   /* close the device */
   if (likely(device && device->is_open())) {
-    if (NOTSET(this->flags(), UPS_READ_ONLY))
+    if (NOT_SET(this->flags(), UPS_READ_ONLY))
       device->flush();
     device->close();
   }
 
   /* close the log and the journal */
   if (journal)
-    journal->close(ISSET(flags, UPS_DONT_CLEAR_LOG));
+    journal->close(IS_SET(flags, UPS_DONT_CLEAR_LOG));
 
   return 0;
 }

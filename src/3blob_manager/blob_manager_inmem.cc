@@ -97,7 +97,7 @@ InMemoryBlobManager::read(Context *context, uint64_t blobid,
 
   // is the record compressed? if yes then decompress directly in the
   // caller's memory arena to avoid additional memcpys
-  if (ISSET(blob_header->flags, PBlobHeader::kIsCompressed)) {
+  if (IS_SET(blob_header->flags, PBlobHeader::kIsCompressed)) {
     Compressor *compressor = context->db->record_compressor.get();
     compressor->decompress(blob_data,
                   blob_header->allocated_size - sizeof(PBlobHeader),
@@ -107,7 +107,7 @@ InMemoryBlobManager::read(Context *context, uint64_t blobid,
   }
 
   // no compression
-  if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+  if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
     arena->resize(blob_size);
     record->data = arena->data();
   }

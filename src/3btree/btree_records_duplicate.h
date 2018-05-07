@@ -140,11 +140,11 @@ struct DuplicateTable {
     uint8_t flags;
     uint8_t *p = record_data(duplicate_index, &flags);
 
-    if (ISSET(flags, BtreeRecord::kBlobSizeTiny))
+    if (IS_SET(flags, BtreeRecord::kBlobSizeTiny))
       return p[sizeof(uint64_t) - 1];
-    if (ISSET(flags, BtreeRecord::kBlobSizeSmall))
+    if (IS_SET(flags, BtreeRecord::kBlobSizeSmall))
       return sizeof(uint64_t);
-    if (ISSET(flags, BtreeRecord::kBlobSizeEmpty))
+    if (IS_SET(flags, BtreeRecord::kBlobSizeEmpty))
       return 0;
     return _blob_manager->blob_size(context, *(uint64_t *)p);
   }
@@ -155,7 +155,7 @@ struct DuplicateTable {
   void record(Context *context, ByteArray *arena, ups_record_t *record,
                   uint32_t flags, int duplicate_index) {
     assert(duplicate_index < record_count());
-    bool direct_access = ISSET(flags, UPS_DIRECT_ACCESS);
+    bool direct_access = IS_SET(flags, UPS_DIRECT_ACCESS);
 
     uint8_t record_flags;
     uint8_t *p = record_data(duplicate_index, &record_flags);
@@ -167,18 +167,18 @@ struct DuplicateTable {
 
     assert(_store_flags == true);
 
-    if (ISSET(record_flags, BtreeRecord::kBlobSizeEmpty)) {
+    if (IS_SET(record_flags, BtreeRecord::kBlobSizeEmpty)) {
       record->data = 0;
       record->size = 0;
       return;
     }
 
-    if (ISSET(record_flags, BtreeRecord::kBlobSizeTiny)) {
+    if (IS_SET(record_flags, BtreeRecord::kBlobSizeTiny)) {
       assign_record(p, p[sizeof(uint64_t) - 1], direct_access, arena, record);
       return;
     }
 
-    if (ISSET(record_flags, BtreeRecord::kBlobSizeSmall)) {
+    if (IS_SET(record_flags, BtreeRecord::kBlobSizeSmall)) {
       assign_record(p, sizeof(uint64_t), direct_access, arena, record);
       return;
     }
@@ -197,7 +197,7 @@ struct DuplicateTable {
     bool use_regions = false;
 
     // the duplicate is overwritten
-    if (ISSET(flags, UPS_OVERWRITE)) {
+    if (IS_SET(flags, UPS_OVERWRITE)) {
       uint8_t record_flags;
       uint8_t *p = record_data(duplicate_index, &record_flags);
 
@@ -237,9 +237,9 @@ struct DuplicateTable {
       }
 
       // adjust flags
-      if (ISSET(flags, UPS_DUPLICATE_INSERT_BEFORE) && duplicate_index == 0)
+      if (IS_SET(flags, UPS_DUPLICATE_INSERT_BEFORE) && duplicate_index == 0)
         flags |= UPS_DUPLICATE_INSERT_FIRST;
-      else if (ISSET(flags, UPS_DUPLICATE_INSERT_AFTER)) {
+      else if (IS_SET(flags, UPS_DUPLICATE_INSERT_AFTER)) {
         if (duplicate_index == count)
           flags |= UPS_DUPLICATE_INSERT_LAST;
         else {
@@ -253,14 +253,14 @@ struct DuplicateTable {
         grow_duplicate_table();
 
       // handle overwrites or inserts/appends
-      if (ISSET(flags, UPS_DUPLICATE_INSERT_FIRST)) {
+      if (IS_SET(flags, UPS_DUPLICATE_INSERT_FIRST)) {
         if (count) {
           uint8_t *ptr = raw_record_data(0);
           ::memmove(ptr + record_width(), ptr, count * record_width());
         }
         duplicate_index = 0;
       }
-      else if (ISSET(flags, UPS_DUPLICATE_INSERT_BEFORE)) {
+      else if (IS_SET(flags, UPS_DUPLICATE_INSERT_BEFORE)) {
         uint8_t *ptr = raw_record_data(duplicate_index);
         ::memmove(ptr + record_width(), ptr,
                     (count - duplicate_index) * record_width());
@@ -389,7 +389,7 @@ struct DuplicateTable {
     if (direct_access)
       record->data = record_data;
     else {
-      if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+      if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
         arena->resize(record->size);
         record->data = arena->data();
       }
@@ -684,7 +684,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
   // Returns the number of duplicates for a slot
   int record_count(Context *context, int slot) {
     uint32_t offset = index_.get_absolute_chunk_offset(slot);
-    if (ISSET(data_[offset], BtreeRecord::kExtendedDuplicates)) {
+    if (IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates)) {
       DuplicateTable *dt = duplicate_table(context, record_id(slot));
       return dt->record_count();
     }
@@ -703,14 +703,14 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
                   int duplicate_index) {
     // forward to duplicate table?
     uint32_t offset = index_.get_absolute_chunk_offset(slot);
-    if (unlikely(ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
+    if (unlikely(IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
       DuplicateTable *dt = duplicate_table(context, record_id(slot));
       dt->record(context, arena, record, flags, duplicate_index);
       return;
     }
 
     assert(duplicate_index < (int)inline_record_count(slot));
-    bool direct_access = ISSET(flags, UPS_DIRECT_ACCESS);
+    bool direct_access = IS_SET(flags, UPS_DIRECT_ACCESS);
 
     // the record is always stored inline
     const uint8_t *ptr = record_data(slot, duplicate_index);
@@ -718,7 +718,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
     if (direct_access)
       record->data = (void *)ptr;
     else {
-      if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+      if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
         arena->resize(record->size);
         record->data = arena->data();
       }
@@ -755,8 +755,8 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
     uint32_t record_count = inline_record_count(slot);
     size_t required_size = 1 + (record_count + 1) * record_size_;
 
-    if (NOTSET(data_[chunk_offset], BtreeRecord::kExtendedDuplicates)
-           && NOTSET(flags, UPS_OVERWRITE)) {
+    if (NOT_SET(data_[chunk_offset], BtreeRecord::kExtendedDuplicates)
+           && NOT_SET(flags, UPS_OVERWRITE)) {
       bool force_duptable = record_count >= duptable_threshold_;
       if (!force_duptable
             && !index_.can_allocate_space(node->length(),
@@ -805,7 +805,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
     }
 
     // forward to duplicate table?
-    if (unlikely(ISSET(data_[chunk_offset],
+    if (unlikely(IS_SET(data_[chunk_offset],
                             BtreeRecord::kExtendedDuplicates))) {
       uint64_t table_id = record_id(slot);
       DuplicateTable *dt = duplicate_table(context, table_id);
@@ -819,7 +819,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
     }
 
     // the duplicate is overwritten
-    if (ISSET(flags, UPS_OVERWRITE)) {
+    if (IS_SET(flags, UPS_OVERWRITE)) {
       // the record is always stored inline w/ fixed length
       uint8_t *p = (uint8_t *)record_data(slot, duplicate_index);
       ::memcpy(p, record->data, record->size);
@@ -842,9 +842,9 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
     }
 
     // adjust flags
-    if (ISSET(flags, UPS_DUPLICATE_INSERT_BEFORE) && duplicate_index == 0)
+    if (IS_SET(flags, UPS_DUPLICATE_INSERT_BEFORE) && duplicate_index == 0)
       flags |= UPS_DUPLICATE_INSERT_FIRST;
-    else if (ISSET(flags, UPS_DUPLICATE_INSERT_AFTER)) {
+    else if (IS_SET(flags, UPS_DUPLICATE_INSERT_AFTER)) {
       if (duplicate_index == (int)record_count)
         flags |= UPS_DUPLICATE_INSERT_LAST;
       else {
@@ -854,14 +854,14 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
     }
 
     // handle overwrites or inserts/appends
-    if (ISSET(flags, UPS_DUPLICATE_INSERT_FIRST)) {
+    if (IS_SET(flags, UPS_DUPLICATE_INSERT_FIRST)) {
       if (record_count > 0) {
         uint8_t *ptr = record_data(slot, 0);
         ::memmove(record_data(slot, 1), ptr, record_count * record_size_);
       }
       duplicate_index = 0;
     }
-    else if (ISSET(flags, UPS_DUPLICATE_INSERT_BEFORE)) {
+    else if (IS_SET(flags, UPS_DUPLICATE_INSERT_BEFORE)) {
       ::memmove(record_data(slot, duplicate_index),
                   record_data(slot, duplicate_index + 1),
                   (record_count - duplicate_index) * record_size_);
@@ -886,7 +886,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
     uint32_t offset = index_.get_absolute_chunk_offset(slot);
 
     // forward to external duplicate table?
-    if (unlikely(ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
+    if (unlikely(IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
       uint64_t table_id = record_id(slot);
       DuplicateTable *dt = duplicate_table(context, table_id);
       uint64_t new_table_id = dt->erase_record(context, duplicate_index,
@@ -940,7 +940,7 @@ struct DuplicateInlineRecordList : DuplicateRecordList {
                   bool = false) const {
     for (size_t i = 0; i < node_count; i++) {
       uint32_t offset = index_.get_absolute_chunk_offset(i);
-      if (ISSET(data_[offset], BtreeRecord::kExtendedDuplicates)) {
+      if (IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates)) {
         assert((data_[offset] & 0x7f) == 0);
       }
     }
@@ -1078,7 +1078,7 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
   // Returns the number of duplicates
   int record_count(Context *context, int slot) {
     uint32_t offset = index_.get_absolute_chunk_offset(slot);
-    if (unlikely(ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
+    if (unlikely(IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
       DuplicateTable *dt = duplicate_table(context, record_id(slot));
       return dt->record_count();
     }
@@ -1089,7 +1089,7 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
   // Returns the size of a record
   uint64_t record_size(Context *context, int slot, int duplicate_index = 0) {
     uint32_t offset = index_.get_absolute_chunk_offset(slot);
-    if (unlikely(ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
+    if (unlikely(IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
       DuplicateTable *dt = duplicate_table(context, record_id(slot));
       return dt->record_size(context, duplicate_index);
     }
@@ -1097,11 +1097,11 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
     uint8_t *p = &data_[offset + 1 + 9 * duplicate_index];
     uint8_t flags = *(p++);
 
-    if (ISSET(flags, BtreeRecord::kBlobSizeTiny))
+    if (IS_SET(flags, BtreeRecord::kBlobSizeTiny))
       return p[sizeof(uint64_t) - 1];
-    if (ISSET(flags, BtreeRecord::kBlobSizeSmall))
+    if (IS_SET(flags, BtreeRecord::kBlobSizeSmall))
       return sizeof(uint64_t);
-    if (ISSET(flags, BtreeRecord::kBlobSizeEmpty))
+    if (IS_SET(flags, BtreeRecord::kBlobSizeEmpty))
       return 0;
     return blob_manager->blob_size(context, *(uint64_t *)p);
   }
@@ -1112,30 +1112,30 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
                   ups_record_t *record, uint32_t flags, int duplicate_index) {
     // forward to duplicate table?
     uint32_t offset = index_.get_absolute_chunk_offset(slot);
-    if (unlikely(ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
+    if (unlikely(IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
       DuplicateTable *dt = duplicate_table(context, record_id(slot));
       dt->record(context, arena, record, flags, duplicate_index);
       return;
     }
 
     assert(duplicate_index < (int)inline_record_count(slot));
-    bool direct_access = ISSET(flags, UPS_DIRECT_ACCESS);
+    bool direct_access = IS_SET(flags, UPS_DIRECT_ACCESS);
 
     uint8_t *p = &data_[offset + 1 + 9 * duplicate_index];
     uint8_t record_flags = *(p++);
 
-    if (ISSET(record_flags, BtreeRecord::kBlobSizeEmpty)) {
+    if (IS_SET(record_flags, BtreeRecord::kBlobSizeEmpty)) {
       record->data = 0;
       record->size = 0;
       return;
     }
 
-    if (ISSET(record_flags, BtreeRecord::kBlobSizeTiny)) {
+    if (IS_SET(record_flags, BtreeRecord::kBlobSizeTiny)) {
       record->size = p[sizeof(uint64_t) - 1];
       if (direct_access)
         record->data = &p[0];
       else {
-        if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+        if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
           arena->resize(record->size);
           record->data = arena->data();
         }
@@ -1144,12 +1144,12 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
       return;
     }
 
-    if (ISSET(record_flags, BtreeRecord::kBlobSizeSmall)) {
+    if (IS_SET(record_flags, BtreeRecord::kBlobSizeSmall)) {
       record->size = sizeof(uint64_t);
       if (direct_access)
         record->data = &p[0];
       else {
-        if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+        if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
           arena->resize(record->size);
           record->data = arena->data();
         }
@@ -1187,8 +1187,8 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
     uint32_t record_count = inline_record_count(slot);
     size_t required_size = 1 + (record_count + 1) * 9;
 
-    if (NOTSET(data_[chunk_offset], BtreeRecord::kExtendedDuplicates)
-           && NOTSET(flags, UPS_OVERWRITE)) {
+    if (NOT_SET(data_[chunk_offset], BtreeRecord::kExtendedDuplicates)
+           && NOT_SET(flags, UPS_OVERWRITE)) {
       bool force_duptable = record_count >= duptable_threshold_;
       if (!force_duptable
             && !index_.can_allocate_space(node->length(),
@@ -1232,7 +1232,7 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
     }
 
     // forward to duplicate table?
-    if (unlikely(ISSET(data_[chunk_offset],
+    if (unlikely(IS_SET(data_[chunk_offset],
                             BtreeRecord::kExtendedDuplicates))) {
       uint64_t table_id = record_id(slot);
       DuplicateTable *dt = duplicate_table(context, table_id);
@@ -1250,7 +1250,7 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
     uint8_t *p = 0;
 
     // the (inline) duplicate is overwritten
-    if (ISSET(flags, UPS_OVERWRITE)) {
+    if (IS_SET(flags, UPS_OVERWRITE)) {
       record_flags = &data_[chunk_offset + 1 + 9 * duplicate_index];
       p = record_flags + 1;
 
@@ -1286,9 +1286,9 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
     }
 
     // adjust flags
-    if (ISSET(flags, UPS_DUPLICATE_INSERT_BEFORE) && duplicate_index == 0)
+    if (IS_SET(flags, UPS_DUPLICATE_INSERT_BEFORE) && duplicate_index == 0)
       flags |= UPS_DUPLICATE_INSERT_FIRST;
-    else if (ISSET(flags, UPS_DUPLICATE_INSERT_AFTER)) {
+    else if (IS_SET(flags, UPS_DUPLICATE_INSERT_AFTER)) {
       if (duplicate_index == (int)record_count)
         flags |= UPS_DUPLICATE_INSERT_LAST;
       else {
@@ -1298,14 +1298,14 @@ struct DuplicateDefaultRecordList : DuplicateRecordList {
     }
 
     // handle overwrites or inserts/appends
-    if (ISSET(flags, UPS_DUPLICATE_INSERT_FIRST)) {
+    if (IS_SET(flags, UPS_DUPLICATE_INSERT_FIRST)) {
       if (record_count > 0) {
         uint8_t *ptr = &data_[chunk_offset + 1];
         ::memmove(&data_[chunk_offset + 1 + 9], ptr, record_count * 9);
       }
       duplicate_index = 0;
     }
-    else if (ISSET(flags, UPS_DUPLICATE_INSERT_BEFORE)) {
+    else if (IS_SET(flags, UPS_DUPLICATE_INSERT_BEFORE)) {
       ::memmove(&data_[chunk_offset + 1 + 9 * (duplicate_index + 1)],
                   &data_[chunk_offset + 1 + 9 * duplicate_index],
                   (record_count - duplicate_index) * 9);
@@ -1353,7 +1353,7 @@ write_record:
     uint32_t offset = index_.get_absolute_chunk_offset(slot);
 
     // forward to external duplicate table?
-    if (unlikely(ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
+    if (unlikely(IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates))) {
       uint64_t table_id = record_id(slot);
       DuplicateTable *dt = duplicate_table(context, table_id);
       uint64_t new_table_id = dt->erase_record(context, duplicate_index,
@@ -1423,7 +1423,7 @@ write_record:
   void check_integrity(Context *, size_t node_count) const {
     for (size_t i = 0; i < node_count; i++) {
       uint32_t offset = index_.get_absolute_chunk_offset(i);
-      if (ISSET(data_[offset], BtreeRecord::kExtendedDuplicates))
+      if (IS_SET(data_[offset], BtreeRecord::kExtendedDuplicates))
         assert((data_[offset] & 0x7f) == 0);
     }
 

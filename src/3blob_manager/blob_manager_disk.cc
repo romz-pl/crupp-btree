@@ -445,10 +445,10 @@ DiskBlobManager::read(Context *context, uint64_t blob_id,
 
   // if the blob is in memory-mapped storage (and the user does not require
   // a copy of the data): simply return a pointer
-  if (NOTSET(flags, UPS_FORCE_DEEP_COPY)
+  if (NOT_SET(flags, UPS_FORCE_DEEP_COPY)
         && device->is_mapped(blob_id, blobsize)
-        && NOTSET(blob_header->flags, PBlobHeader::kIsCompressed)
-        && NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+        && NOT_SET(blob_header->flags, PBlobHeader::kIsCompressed)
+        && NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
     record->data = read_chunk(this, context, page, 0,
                         blob_id + sizeof(PBlobHeader), true, true);
   }
@@ -457,7 +457,7 @@ DiskBlobManager::read(Context *context, uint64_t blob_id,
     // read the blob data. if compression is enabled then
     // read into the Compressor's arena, otherwise read directly into the
     // caller's arena
-    if (ISSET(blob_header->flags, PBlobHeader::kIsCompressed)) {
+    if (IS_SET(blob_header->flags, PBlobHeader::kIsCompressed)) {
       Compressor *compressor = context->db->record_compressor.get();
       assert(compressor != 0);
 
@@ -471,7 +471,7 @@ DiskBlobManager::read(Context *context, uint64_t blob_id,
                     blob_header->allocated_size - sizeof(PBlobHeader), true);
 
       // now uncompress into the caller's memory arena
-      if (ISSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+      if (IS_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
         compressor->decompress(dest->data(),
                       blob_header->allocated_size - sizeof(PBlobHeader),
                       blobsize, (uint8_t *)record->data);
@@ -487,7 +487,7 @@ DiskBlobManager::read(Context *context, uint64_t blob_id,
     // if the data is uncompressed then allocate storage and read
     // into the allocated buffer
     else {
-      if (NOTSET(record->flags, UPS_RECORD_USER_ALLOC)) {
+      if (NOT_SET(record->flags, UPS_RECORD_USER_ALLOC)) {
         arena->resize(blobsize);
         record->data = arena->data();
       }
@@ -501,7 +501,7 @@ DiskBlobManager::read(Context *context, uint64_t blob_id,
   // multi-page blobs store their CRC in the first freelist offset
   PBlobPageHeader *header = PBlobPageHeader::from_page(page);
   if (unlikely(header->num_pages > 1
-        && ISSET(config->flags, UPS_ENABLE_CRC32))) {
+        && IS_SET(config->flags, UPS_ENABLE_CRC32))) {
     uint32_t old_crc32 = header->freelist[0].offset;
     uint32_t new_crc32;
     MurmurHash3_x86_32(record->data, record->size, 0, &new_crc32);
@@ -587,7 +587,7 @@ DiskBlobManager::overwrite(Context *context, uint64_t old_blobid,
 
     // multi-page blobs store their CRC in the first freelist offset
     if (unlikely(header->num_pages > 1
-            && ISSET(config->flags, UPS_ENABLE_CRC32))) {
+            && IS_SET(config->flags, UPS_ENABLE_CRC32))) {
       uint32_t crc32 = 0;
       MurmurHash3_x86_32(record->data, record->size, 0, &crc32);
       header->freelist[0].offset = crc32;
@@ -637,7 +637,7 @@ DiskBlobManager::overwrite_regions(Context *context, uint64_t old_blob_id,
   // - blob is compressed
   if (alloc_size > blob_header->allocated_size
         || header->num_pages == 1
-        || ISSET(blob_header->flags, PBlobHeader::kIsCompressed))
+        || IS_SET(blob_header->flags, PBlobHeader::kIsCompressed))
     return overwrite(context, old_blob_id, record, flags);
 
   uint8_t *chunk_data[2];
@@ -683,7 +683,7 @@ DiskBlobManager::overwrite_regions(Context *context, uint64_t old_blob_id,
 
   // multi-page blobs store their CRC in the first freelist offset
   if (unlikely(header->num_pages > 1
-          && ISSET(config->flags, UPS_ENABLE_CRC32))) {
+          && IS_SET(config->flags, UPS_ENABLE_CRC32))) {
     uint32_t crc32 = 0;
     MurmurHash3_x86_32(record->data, record->size, 0, &crc32);
     header->freelist[0].offset = crc32;
