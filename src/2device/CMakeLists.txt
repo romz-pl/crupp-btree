@@ -3,6 +3,7 @@ set( LIB_NAME ups-2device )
 
 add_library( ${LIB_NAME} STATIC
     device_disk.cc
+    device_inmem.cc
 )
 
 target_include_directories( ${LIB_NAME} PRIVATE 
