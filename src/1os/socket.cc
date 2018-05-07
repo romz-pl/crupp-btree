@@ -1,16 +1,16 @@
 #include "0root/root.h"
 
-#include "1base/error.h"
-
-#include "socket.h"
-#include "file.h"
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+
+#include "1base/error.h"
+#include "1os/os.h"
+#include "socket.h"
+#include "file.h"
 
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"
@@ -25,10 +25,25 @@ namespace upscaledb {
 #endif
 
 
+//
+// Constructor creates an empty socket
+//
+Socket::Socket()
+    : m_socket( UPS_INVALID_FD )
+{
+}
 
+//
+// Destructor closes the socket
+//
+Socket::~Socket()
+{
+    close();
+}
 
-
-
+//
+// Connects to a remote host
+//
 void
 Socket::connect(const char *hostname, uint16_t port, uint32_t timeout_sec)
 {
@@ -72,18 +87,27 @@ Socket::connect(const char *hostname, uint16_t port, uint32_t timeout_sec)
   m_socket = s;
 }
 
+//
+// Sends data to the connected server
+//
 void
 Socket::send(const uint8_t *data, size_t len)
 {
   File::os_write(m_socket, data, len);
 }
 
+//
+// Receives data from the connected server; blocking!
+//
 void
 Socket::recv(uint8_t *data, size_t len)
 {
   File::os_read(m_socket, data, len);
 }
 
+//
+// Closes the connection; no problem if socket was already closed
+//
 void
 Socket::close()
 {

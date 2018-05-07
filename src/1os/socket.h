@@ -29,13 +29,6 @@
 
 #include "0root/root.h"
 
-#include <stdio.h>
-#include <limits.h>
-
-
-// Always verify that a file of level N does not include headers > N!
-#include "1os/os.h"
-
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"
 #endif
@@ -44,30 +37,16 @@ namespace upscaledb {
 
 class Socket
 {
-  public:
-    // Constructor creates an empty socket
-    Socket()
-      : m_socket(UPS_INVALID_FD) {
-    }
+public:
+    Socket();
+    ~Socket();
 
-    // Destructor closes the socket
-    ~Socket() {
-      close();
-    }
-
-    // Connects to a remote host
-    void connect(const char *hostname, uint16_t port, uint32_t timeout_sec);
-
-    // Sends data to the connected server
-    void send(const uint8_t *data, size_t len);
-
-    // Receives data from the connected server; blocking!
-    void recv(uint8_t *data, size_t len);
-
-    // Closes the connection; no problem if socket was already closed
+    void connect( const char *hostname, uint16_t port, uint32_t timeout_sec );
+    void send( const uint8_t *data, size_t len );
+    void recv( uint8_t *data, size_t len );
     void close();
 
-  private:
+private:
     int m_socket;
 };
 
