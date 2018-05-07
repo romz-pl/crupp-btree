@@ -29,8 +29,6 @@
 
 #include "0root/root.h"
 
-#include "ups/upscaledb.h"
-
 // Always verify that a file of level N does not include headers > N!
 #include "2config/env_config.h"
 
