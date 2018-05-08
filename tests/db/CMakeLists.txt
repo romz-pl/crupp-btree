@@ -1,4 +1,4 @@
-set( TEST_NAME db_test )
+set( TEST_NAME db )
 
 add_executable( ${TEST_NAME}
     db1.cpp
@@ -7,7 +7,6 @@ add_executable( ${TEST_NAME}
     db4.cpp
     db5.cpp
     db6.cpp
-    disk_device.cpp
     env1.cpp
     env2.cpp
     env3.cpp

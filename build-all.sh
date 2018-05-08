@@ -24,7 +24,8 @@ make -j5 || exit 1
 #
 ctest --verbose
 # ctest
-#./tests/unita/btree_test
-#./tests/db/db_test
+#./tests/unita/unita
+#./tests/unitb/unitb
+#./tests/db/db
 
 
