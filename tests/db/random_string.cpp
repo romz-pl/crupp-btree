@@ -12,9 +12,9 @@ std::string random_string( std::size_t max_length )
                                 "abcdefghijklmnopqrstuvwxyz"
                                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
 
-    std::random_device rd;
-    std::mt19937 g( rd() );
-    // std::mt19937 g( rand() );
+    // std::random_device rd;
+    // std::mt19937 g( rd() );
+    std::mt19937 g( rand() ); // The test must be repeatable!
     std::uniform_int_distribution< std::size_t > pick( 0, alphabet.size() - 1 );
 
 

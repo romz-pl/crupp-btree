@@ -39,6 +39,8 @@ TEST( db, record_number )
         const std::string s = random_string( max_length );
         oryg.push_back( s );
 
+        // std::cout << s << "\n";
+
         record.data = const_cast< char* >( s.c_str() );
         record.size = s.size() + 1; // also store the terminating 0-byte
         st = ups_db_insert( db, 0, &key, &record, 0 );
