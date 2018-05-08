@@ -27,6 +27,8 @@
 #include "1mem/mem.h"
 #include "1base/intrusive_list.h"
 #include "3btree/btree_cursor.h"
+#include "ppage_header.h"
+#include "ppage_data.h"
 
 namespace upscaledb {
 
@@ -35,48 +37,9 @@ struct BtreeCursor;
 struct BtreeNodeProxy;
 struct LocalDb;
 
-#include "1base/packstart.h"
 
-/*
- * This header is only available if the (non-persistent) flag
- * kNpersNoHeader is not set! Blob pages do not have this header.
- */
-typedef UPS_PACK_0 struct UPS_PACK_1 PPageHeader {
-  // flags of this page - currently only used for the Page::kType* codes
-  uint32_t flags;
 
-  // crc32
-  uint32_t crc32;
 
-  // the lsn of the last operation
-  uint64_t lsn;
-
-  // the persistent data blob
-  uint8_t payload[1];
-
-} UPS_PACK_2 PPageHeader;
-
-#include "1base/packstop.h"
-
-#include "1base/packstart.h"
-
-/*
- * A union combining the page header and a pointer to the raw page data.
- *
- * This structure definition is present outside of @ref Page scope
- * to allow compile-time OFFSETOF macros to correctly judge the size,
- * depending on platform and compiler settings.
- */
-typedef UPS_PACK_0 union UPS_PACK_1 PPageData {
-  // the persistent header
-  struct PPageHeader header;
-
-  // a char pointer to the allocated storage on disk
-  uint8_t payload[1];
-
-} UPS_PACK_2 PPageData;
-
-#include "1base/packstop.h"
 
 class Page {
   public:
