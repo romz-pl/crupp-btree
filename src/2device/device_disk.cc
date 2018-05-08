@@ -190,8 +190,8 @@ void DiskDevice::write(uint64_t offset, void *buffer, size_t len) const
 }
 
 //
-// allocate storage from this device; this function
-// will *NOT* return mmapped memory
+// Allocate storage from this device.
+// This function will *NOT* return mmapped memory.
 //
 uint64_t DiskDevice::alloc( size_t requested_length )
 {
