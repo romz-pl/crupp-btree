@@ -1,4 +1,5 @@
 #include "device_disk.h"
+#include "1mem/mem.h"
 #include "2page/page.h"
 
 namespace upscaledb {
