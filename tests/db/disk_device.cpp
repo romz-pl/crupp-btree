@@ -4,9 +4,11 @@
 TEST( DiskDevice, create_open )
 {
 	upscaledb::EnvConfig config;
+	config.filename = "test.db";
+	
 	upscaledb::DiskDevice dd( config );
 	
-	dd.create();
+	ASSERT_NO_THROW( dd.create() );
 	
 }
 

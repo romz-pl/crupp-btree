@@ -11,7 +11,7 @@ DiskDevice::DiskDevice( const EnvConfig &config )
     : Device( config )
 {
     State state;
-    state.mmapptr = 0;
+    state.mmapptr = nullptr;
     state.mapped_size = 0;
     state.file_size = 0;
     state.excess_at_end = 0;
