@@ -196,48 +196,45 @@ void DiskDevice::write(uint64_t offset, void *buffer, size_t len) const
 uint64_t DiskDevice::alloc( size_t requested_length )
 {
     ScopedSpinlock lock( m_mutex );
-    uint64_t address;
 
     if( m_state.excess_at_end >= requested_length )
     {
-        address = m_state.file_size - m_state.excess_at_end;
+        const uint64_t address = m_state.file_size - m_state.excess_at_end;
         m_state.excess_at_end -= requested_length;
+        return address;
     }
-    else
+
+    uint64_t excess = 0;
+    bool allocate_excess = true;
+
+    //
+    // If the file is large enough then allocate more space to avoid frequent calls to ftruncate().
+    // These calls cause bad performance spikes.
+    //
+    if( allocate_excess )
     {
-        uint64_t excess = 0;
-        bool allocate_excess = true;
-
-        // If the file is large enough then allocate more space to avoid
-        // frequent calls to ftruncate(); these calls cause bad performance
-        // spikes.
-        //
-        // Disabled on win32 because truncating a mapped file is not allowed!
-
-        if( allocate_excess )
+        if( m_state.file_size < requested_length * 100 )
         {
-            if( m_state.file_size < requested_length * 100 )
-            {
-                excess = 0;
-            }
-            else if( m_state.file_size < requested_length * 250 )
-            {
-                excess = requested_length * 100;
-            }
-            else if( m_state.file_size < requested_length * 1000 )
-            {
-                excess = requested_length * 250;
-            }
-            else
-            {
-                excess = requested_length * 1000;
-            }
+            excess = 0;
         }
-
-        address = m_state.file_size;
-        truncate_nolock( address + requested_length + excess );
-        m_state.excess_at_end = excess;
+        else if( m_state.file_size < requested_length * 250 )
+        {
+            excess = requested_length * 100;
+        }
+        else if( m_state.file_size < requested_length * 1000 )
+        {
+            excess = requested_length * 250;
+        }
+        else
+        {
+            excess = requested_length * 1000;
+        }
     }
+
+    const uint64_t address = m_state.file_size;
+    truncate_nolock( address + requested_length + excess );
+    m_state.excess_at_end = excess;
+
     return address;
 }
 
