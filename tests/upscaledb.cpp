@@ -1624,7 +1624,7 @@ struct UpscaledbFixture : BaseFixture {
 
   void posixFadviseTest() {
     ups_parameter_t pin[] = {
-        {UPS_PARAM_POSIX_FADVISE, UPS_POSIX_FADVICE_RANDOM},
+        {UPS_PARAM_POSIX_FADVISE, EnvConfig::UPS_POSIX_FADVICE_RANDOM},
         {0, 0}
     };
     ups_parameter_t pout[] = {
@@ -1635,7 +1635,7 @@ struct UpscaledbFixture : BaseFixture {
     close();
     require_create(0, pin);
     REQUIRE(0 == ups_env_get_parameters(env, &pout[0]));
-    REQUIRE(UPS_POSIX_FADVICE_RANDOM == pout[0].value);
+    REQUIRE(EnvConfig::UPS_POSIX_FADVICE_RANDOM == pout[0].value);
     REQUIRE(0 == ups_env_close(env, UPS_AUTO_CLEANUP));
 
     // open, make sure the property was not persisted
@@ -1647,7 +1647,7 @@ struct UpscaledbFixture : BaseFixture {
     // open with flag
     REQUIRE(0 == ups_env_open(&env, "test.db", 0, &pin[0]));
     REQUIRE(0 == ups_env_get_parameters(env, &pout[0]));
-    REQUIRE(UPS_POSIX_FADVICE_RANDOM == pout[0].value);
+    REQUIRE(EnvConfig::UPS_POSIX_FADVICE_RANDOM == pout[0].value);
   }
 
   // Open an existing environment and use the ErrorInducer for a failure in

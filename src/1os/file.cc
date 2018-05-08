@@ -174,7 +174,7 @@ size_t File::granularity()
 //
 // Sets the parameter for posix_fadvise()
 //
-void File::set_posix_advice(int advice)
+void File::set_posix_advice( uint32_t advice )
 {
     m_posix_advice = advice;
     assert(m_fd != UPS_INVALID_FD);

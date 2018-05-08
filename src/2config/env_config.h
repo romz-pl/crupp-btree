@@ -75,7 +75,7 @@ struct EnvConfig
     size_t journal_switch_threshold;
 
     // parameter for posix_fadvise()
-    int posix_advice;
+    uint32_t posix_advice;
 
 public:
     // the default cache size is 2 MB
@@ -85,10 +85,10 @@ public:
     static const uint32_t UPS_DEFAULT_PAGE_SIZE;
 
     // Value for @ref UPS_PARAM_POSIX_FADVISE
-    static const int UPS_POSIX_FADVICE_NORMAL;
+    static const uint32_t UPS_POSIX_FADVICE_NORMAL;
 
     // Value for @ref UPS_PARAM_POSIX_FADVISE
-    static const int UPS_POSIX_FADVICE_RANDOM;
+    static const uint32_t UPS_POSIX_FADVICE_RANDOM;
 };
 
 } // namespace upscaledb

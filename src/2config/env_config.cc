@@ -10,10 +10,10 @@ const uint64_t EnvConfig::UPS_DEFAULT_CACHE_SIZE = ( 2 * 1024 * 1024 );
 const uint32_t EnvConfig::UPS_DEFAULT_PAGE_SIZE = ( 16 * 1024 );
 
 // Value for @ref UPS_PARAM_POSIX_FADVISE
-const int EnvConfig::UPS_POSIX_FADVICE_NORMAL = 0;
+const uint32_t EnvConfig::UPS_POSIX_FADVICE_NORMAL = 0;
 
 // Value for @ref UPS_PARAM_POSIX_FADVISE
-const int EnvConfig::UPS_POSIX_FADVICE_RANDOM = 1;
+const uint32_t EnvConfig::UPS_POSIX_FADVICE_RANDOM = 1;
 
 EnvConfig::EnvConfig()
     : flags( 0 )
