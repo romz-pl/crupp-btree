@@ -1795,8 +1795,7 @@ ups_db_get_parameters(ups_db_t *db, ups_parameter_t *param);
 
 
 
-/** Value for @ref UPS_PARAM_POSIX_FADVISE */
-#define UPS_POSIX_FADVICE_RANDOM                 1
+
 
 /** Value for unlimited record sizes */
 #define UPS_RECORD_SIZE_UNLIMITED       ((uint32_t)-1)
