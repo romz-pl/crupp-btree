@@ -12,18 +12,19 @@ namespace upscaledb {
  * This header is only available if the (non-persistent) flag
  * kNpersNoHeader is not set! Blob pages do not have this header.
  */
-typedef UPS_PACK_0 struct UPS_PACK_1 PPageHeader {
-  // flags of this page - currently only used for the Page::kType* codes
-  uint32_t flags;
+typedef UPS_PACK_0 struct UPS_PACK_1 PPageHeader
+{
+    // flags of this page - currently only used for the Page::kType* codes
+    uint32_t flags;
 
-  // crc32
-  uint32_t crc32;
+    // crc32
+    uint32_t crc32;
 
-  // the lsn of the last operation
-  uint64_t lsn;
+    // the lsn of the last operation
+    uint64_t lsn;
 
-  // the persistent data blob
-  uint8_t payload[1];
+    // the persistent data blob
+    uint8_t payload[ 1 ];
 
 } UPS_PACK_2 PPageHeader;
 

@@ -3,6 +3,7 @@ set( LIB_NAME ups-2page )
 
 add_library( ${LIB_NAME} STATIC
     page.cc
+    persisted_data.cc
 )
 
 target_include_directories( ${LIB_NAME} PRIVATE 
