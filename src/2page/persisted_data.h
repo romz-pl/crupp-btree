@@ -12,7 +12,11 @@ struct PersistedData
 {
     PersistedData();
 
-    PersistedData(const PersistedData &other);
+    PersistedData( const PersistedData& ) = delete;
+    PersistedData& operator=( const PersistedData& ) = delete;
+
+    PersistedData( PersistedData&& ) = delete;
+    PersistedData& operator=( PersistedData&& ) = delete;
 
     ~PersistedData();
 
