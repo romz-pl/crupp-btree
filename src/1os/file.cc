@@ -387,6 +387,7 @@ void File::truncate( uint64_t newsize ) const
 //
 void File::create(const char *filename, uint32_t mode)
 {
+    assert( filename && filename[ 0 ] != '\0' );
     const int osflags = O_CREAT | O_RDWR | O_TRUNC | O_NOATIME ;
 
     const int fd = ::open( filename, osflags, mode ? mode : 0644 );
