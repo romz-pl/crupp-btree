@@ -10,25 +10,11 @@ namespace upscaledb {
 // A wrapper around the persisted page data
 struct PersistedData
 {
-    PersistedData()
-        : address(0), size(0), is_dirty(false), is_allocated(false),
-          is_without_header(false), raw_data(0) {
-    }
+    PersistedData();
 
-    PersistedData(const PersistedData &other)
-        : address(other.address), size(other.size), is_dirty(other.is_dirty),
-          is_allocated(other.is_allocated),
-          is_without_header(other.is_without_header), raw_data(other.raw_data) {
-    }
+    PersistedData(const PersistedData &other);
 
-    ~PersistedData() {
-#ifdef NDEBUG
-        mutex.safe_unlock();
-#endif
-        if (is_allocated)
-            Memory::release(raw_data);
-        raw_data = 0;
-    }
+    ~PersistedData();
 
     // The spinlock is locked if the page is in use or written to disk
     Spinlock mutex;
