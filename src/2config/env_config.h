@@ -26,19 +26,8 @@
 #ifndef UPS_ENV_CONFIG_H
 #define UPS_ENV_CONFIG_H
 
-#include "0root/root.h"
-
+#include <cstddef>
 #include <string>
-#include <limits>
-
-#include <ups/upscaledb.h>
-
-// Always verify that a file of level N does not include headers > N!
-
-#ifndef UPS_ROOT_H
-#  error "root.h was not included"
-#endif
-
 
 namespace upscaledb {
 
@@ -80,13 +69,13 @@ struct EnvConfig
     bool is_encryption_enabled;
 
     // the AES encryption key
-    uint8_t encryption_key[16];
+    uint8_t encryption_key[ 16 ];
 
     // threshold for switching journal files
     size_t journal_switch_threshold;
 
     // parameter for posix_fadvise()
-    int posix_advice;
+    uint32_t posix_advice;
 
 public:
     // the default cache size is 2 MB
@@ -96,7 +85,10 @@ public:
     static const uint32_t UPS_DEFAULT_PAGE_SIZE;
 
     // Value for @ref UPS_PARAM_POSIX_FADVISE
-    static const int UPS_POSIX_FADVICE_NORMAL;
+    static const uint32_t UPS_POSIX_FADVICE_NORMAL;
+
+    // Value for @ref UPS_PARAM_POSIX_FADVISE
+    static const uint32_t UPS_POSIX_FADVICE_RANDOM;
 };
 
 } // namespace upscaledb

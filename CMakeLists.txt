@@ -45,6 +45,7 @@ add_subdirectory(src/4uqi)
 
 add_subdirectory(src/5upscaledb)
 
-add_subdirectory(tests)
+add_subdirectory(tests/unita)
+add_subdirectory(tests/unitb)
 add_subdirectory(tests/db)
 

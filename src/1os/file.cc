@@ -11,6 +11,7 @@
 #include "file.h"
 #include "1errorinducer/errorinducer.h"
 #include "1os/os.h"
+#include "2config/env_config.h"
 
 #ifndef UPS_ROOT_H
 #  error "root.h was not included"
@@ -173,13 +174,13 @@ size_t File::granularity()
 //
 // Sets the parameter for posix_fadvise()
 //
-void File::set_posix_advice(int advice)
+void File::set_posix_advice( uint32_t advice )
 {
     m_posix_advice = advice;
     assert(m_fd != UPS_INVALID_FD);
 
 
-    if( m_posix_advice == UPS_POSIX_FADVICE_RANDOM )
+    if( m_posix_advice == EnvConfig::UPS_POSIX_FADVICE_RANDOM )
     {
         const int r = ::posix_fadvise( m_fd, 0, 0, POSIX_FADV_RANDOM );
         if( r != 0 )
@@ -217,7 +218,7 @@ void File::mmap(uint64_t position, size_t size, bool readonly, uint8_t **buffer)
         throw Exception( UPS_IO_ERROR );
     }
 
-    if( m_posix_advice == UPS_POSIX_FADVICE_RANDOM )
+    if( m_posix_advice == EnvConfig::UPS_POSIX_FADVICE_RANDOM )
     {
         const int r = ::madvise( *buffer, size, MADV_RANDOM );
         if( r != 0 )
@@ -386,6 +387,7 @@ void File::truncate( uint64_t newsize ) const
 //
 void File::create(const char *filename, uint32_t mode)
 {
+    assert( filename && filename[ 0 ] != '\0' );
     const int osflags = O_CREAT | O_RDWR | O_TRUNC | O_NOATIME ;
 
     const int fd = ::open( filename, osflags, mode ? mode : 0644 );

@@ -53,7 +53,7 @@ public:
 
     void flush() const;
 
-    void set_posix_advice( int parameter );
+    void set_posix_advice( uint32_t parameter );
 
     void mmap( uint64_t position, size_t size, bool readonly, uint8_t **buffer ) const;
     void munmap( void *buffer, size_t size ) const;
@@ -81,7 +81,7 @@ private:
     int m_fd;
 
     // Parameter for posix_fadvise()
-    int m_posix_advice;
+    uint32_t m_posix_advice;
 };
 
 } // namespace upscaledb

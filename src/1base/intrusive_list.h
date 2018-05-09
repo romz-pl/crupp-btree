@@ -46,121 +46,149 @@
 #ifndef UPS_INTRUSIVE_LIST_H
 #define UPS_INTRUSIVE_LIST_H
 
-#include "0root/root.h"
-
-// Always verify that a file of level N does not include headers > N!
-
-#ifndef UPS_ROOT_H
-#  error "root.h was not included"
-#endif
+#include <stddef.h>
 
 namespace upscaledb {
 
-template<typename T, int I = 1>
-struct IntrusiveListNode {
-  IntrusiveListNode() {
-    for (int i = 0; i < I; i++)
-      previous[i] = next[i] = 0;
-  }
+template< typename T, int I = 1 >
+struct IntrusiveListNode
+{
+    IntrusiveListNode()
+    {
+        for( int i = 0; i < I; i++ )
+        {
+            previous[ i ] = next[ i ] = 0;
+        }
+    }
 
-  IntrusiveListNode(const IntrusiveListNode&) = delete;
-  IntrusiveListNode& operator=(const IntrusiveListNode&) = delete;
+    IntrusiveListNode( const IntrusiveListNode& ) = delete;
+    IntrusiveListNode& operator=( const IntrusiveListNode& ) = delete;
 
-  T *previous[I];
-  T *next[I];
+    T* previous[ I ];
+    T* next[ I ];
 };
 
-template<typename T, int I = 0>
-struct IntrusiveList {
-  IntrusiveList() {
-    clear();
-  }
-
-  T *head() const {
-    return head_;
-  }
-
-  T *tail() const {
-    return tail_;
-  }
-
-  bool is_empty() const {
-    return size_ == 0;
-  }
-
-  size_t size() const {
-    return size_;
-  }
-
-  void put(T *t) {
-    t->list_node.previous[I] = 0;
-    t->list_node.next[I] = 0;
-    if (head_) {
-      t->list_node.next[I] = head_;
-      head_->list_node.previous[I] = t;
+template< typename T, int I = 0 >
+struct IntrusiveList
+{
+    IntrusiveList()
+    {
+        clear();
     }
-    head_ = t;
-    if (!tail_)
-      tail_ = t;
-    size_++;
-  }
 
-  void append(T *t) {
-    t->list_node.previous[I] = 0;
-    t->list_node.next[I] = 0;
-    if (!head_) {
-      assert(tail_ == 0);
-      head_ = t;
-      tail_ = t;
+    T* head() const
+    {
+        return head_;
     }
-    else {
-      tail_->list_node.next[I] = t;
-      tail_ = t;
-      if (!head_)
+
+    T* tail() const
+    {
+        return tail_;
+    }
+
+    bool is_empty() const
+    {
+        return size_ == 0;
+    }
+
+    size_t size() const
+    {
+        return size_;
+    }
+
+    void put( T* t )
+    {
+        t->list_node.previous[ I ] = nullptr;
+        t->list_node.next[ I ] = nullptr;
+        if( head_ )
+        {
+            t->list_node.next[ I ] = head_;
+            head_->list_node.previous[ I ] = t;
+        }
         head_ = t;
+        if( !tail_ )
+        {
+            tail_ = t;
+        }
+        size_++;
     }
-    size_++;
-  }
 
-  void del(T *t) {
-    assert(has(t));
-
-    if (t == tail_)
-      tail_ = t->list_node.previous[I];
-    if (t == head_) {
-      T *next = head_->list_node.next[I];
-      if (next)
-        next->list_node.previous[I] = 0;
-      head_ = next;
+    void append( T* t )
+    {
+        t->list_node.previous[ I ] = nullptr;
+        t->list_node.next[ I ] = nullptr;
+        if( !head_ )
+        {
+            assert( tail_ == nullptr );
+            head_ = t;
+            tail_ = t;
+        }
+        else
+        {
+            tail_->list_node.next[ I ] = t;
+            tail_ = t;
+            if( !head_ )
+            {
+                head_ = t;
+            }
+        }
+        size_++;
     }
-    else {
-      T *next = t->list_node.next[I];
-      T *prev = t->list_node.previous[I];
-      if (prev)
-        prev->list_node.next[I] = next;
-      if (next)
-        next->list_node.previous[I] = prev;
+
+    void del( T* t )
+    {
+        assert( has( t ) );
+
+        if( t == tail_ )
+        {
+            tail_ = t->list_node.previous[ I ];
+        }
+
+        if( t == head_ )
+        {
+            T* next = head_->list_node.next[ I ];
+            if( next )
+            {
+                next->list_node.previous[ I ] = nullptr;
+            }
+            head_ = next;
+        }
+        else
+        {
+            T* next = t->list_node.next[ I ];
+            T* prev = t->list_node.previous[ I ];
+            if( prev )
+            {
+                prev->list_node.next[I] = next;
+            }
+
+            if( next )
+            {
+                next->list_node.previous[ I ] = prev;
+            }
+        }
+        t->list_node.next[ I ] = nullptr;
+        t->list_node.previous[ I ] = nullptr;
+        size_--;
     }
-    t->list_node.next[I] = 0;
-    t->list_node.previous[I] = 0;
-    size_--;
-  }
 
-  bool has(const T *t) const {
-    return t->list_node.previous[I] != 0
-            || t->list_node.next[I] != 0
-            || t == head_;
-  }
+    bool has( const T* t ) const
+    {
+        return t->list_node.previous[ I ] != nullptr
+                || t->list_node.next[ I ] != nullptr
+                || t == head_;
+    }
 
-  void clear() {
-    head_ = 0;
-    tail_ = 0;
-    size_ = 0;
-  }
+    void clear()
+    {
+        head_ = nullptr;
+        tail_ = nullptr;
+        size_ = 0;
+    }
 
-  T *head_;
-  T *tail_;
-  size_t size_;
+    T* head_;
+    T* tail_;
+    size_t size_;
 };
 
 } // namespace upscaledb

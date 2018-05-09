@@ -1,4 +1,4 @@
-set( TEST_NAME btree_test )
+set( TEST_NAME unita )
 
 add_executable( ${TEST_NAME}
     #aes.cpp

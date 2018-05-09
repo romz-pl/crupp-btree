@@ -386,7 +386,7 @@ ups_env_create(ups_env_t **henv, const char *filename,
         return UPS_NOT_IMPLEMENTED;
 #endif
       case UPS_PARAM_POSIX_FADVISE:
-        config.posix_advice = (int)param->value;
+        config.posix_advice = (uint32_t)param->value;
         break;
       default:
         ups_trace(("unknown parameter %d", (int)param->name));
@@ -532,7 +532,7 @@ ups_env_open(ups_env_t **henv, const char *filename, uint32_t flags,
         return UPS_NOT_IMPLEMENTED;
 #endif
       case UPS_PARAM_POSIX_FADVISE:
-        config.posix_advice = (int)param->value;
+        config.posix_advice = (uint32_t)param->value;
         break;
       default:
         ups_trace(("unknown parameter %d", (int)param->name));

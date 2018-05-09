@@ -1,17 +1,8 @@
-set( TEST_NAME db )
+set( TEST_NAME unitb )
 
 add_executable( ${TEST_NAME}
-    db1.cpp
-    db2.cpp
-    db3.cpp
-    db4.cpp
-    db5.cpp
-    db6.cpp
-    env1.cpp
-    env2.cpp
-    env3.cpp
+    disk_device.cpp
     main.cpp
-    random_string.cpp
 )
 
 target_compile_options( ${TEST_NAME} PRIVATE ${ROMZ_CXX_FLAGS} )
@@ -39,14 +30,14 @@ target_link_libraries( ${TEST_NAME}
     ups-3btree
     ups-3blob_manager
     ups-2config
+    ups-2device
     ups-2page
     ups-2compressor
-    ups-2device
     ups-1os
     ups-1mem
-    ups-1globals
     ups-1errorinducer
     ups-1base
+    ups-1globals
     MurmurHash3
     for
     lzf

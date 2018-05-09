@@ -1,4 +1,5 @@
 #include "device_disk.h"
+#include "1mem/mem.h"
 #include "2page/page.h"
 
 namespace upscaledb {
@@ -10,7 +11,7 @@ DiskDevice::DiskDevice( const EnvConfig &config )
     : Device( config )
 {
     State state;
-    state.mmapptr = 0;
+    state.mmapptr = nullptr;
     state.mapped_size = 0;
     state.file_size = 0;
     state.excess_at_end = 0;
@@ -189,54 +190,51 @@ void DiskDevice::write(uint64_t offset, void *buffer, size_t len) const
 }
 
 //
-// allocate storage from this device; this function
-// will *NOT* return mmapped memory
+// Allocate storage from this device.
+// This function will *NOT* return mmapped memory.
 //
 uint64_t DiskDevice::alloc( size_t requested_length )
 {
     ScopedSpinlock lock( m_mutex );
-    uint64_t address;
 
     if( m_state.excess_at_end >= requested_length )
     {
-        address = m_state.file_size - m_state.excess_at_end;
+        const uint64_t address = m_state.file_size - m_state.excess_at_end;
         m_state.excess_at_end -= requested_length;
+        return address;
     }
-    else
+
+    uint64_t excess = 0;
+    bool allocate_excess = true;
+
+    //
+    // If the file is large enough then allocate more space to avoid frequent calls to ftruncate().
+    // These calls cause bad performance spikes.
+    //
+    if( allocate_excess )
     {
-        uint64_t excess = 0;
-        bool allocate_excess = true;
-
-        // If the file is large enough then allocate more space to avoid
-        // frequent calls to ftruncate(); these calls cause bad performance
-        // spikes.
-        //
-        // Disabled on win32 because truncating a mapped file is not allowed!
-
-        if( allocate_excess )
+        if( m_state.file_size < requested_length * 100 )
         {
-            if( m_state.file_size < requested_length * 100 )
-            {
-                excess = 0;
-            }
-            else if( m_state.file_size < requested_length * 250 )
-            {
-                excess = requested_length * 100;
-            }
-            else if( m_state.file_size < requested_length * 1000 )
-            {
-                excess = requested_length * 250;
-            }
-            else
-            {
-                excess = requested_length * 1000;
-            }
+            excess = 0;
         }
-
-        address = m_state.file_size;
-        truncate_nolock( address + requested_length + excess );
-        m_state.excess_at_end = excess;
+        else if( m_state.file_size < requested_length * 250 )
+        {
+            excess = requested_length * 100;
+        }
+        else if( m_state.file_size < requested_length * 1000 )
+        {
+            excess = requested_length * 250;
+        }
+        else
+        {
+            excess = requested_length * 1000;
+        }
     }
+
+    const uint64_t address = m_state.file_size;
+    truncate_nolock( address + requested_length + excess );
+    m_state.excess_at_end = excess;
+
     return address;
 }
 
@@ -294,7 +292,6 @@ void DiskDevice::alloc_page( Page *page )
     uint8_t *p = Memory::allocate< uint8_t >( config.page_size_bytes );
     page->assign_allocated_buffer( p, address );
 }
-
 //
 // Frees a page on the device; plays counterpoint to |alloc_page|
 //
